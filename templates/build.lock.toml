@@ -8,7 +8,7 @@ commit = "CHANGE_ME"
 
 [pipeline]
 repo = "https://github.com/Found-in-Space/pipeline"
-commit = "2d4443be7c6cb533b7b4f90e4f0b6d346566007d"
+commit = "b2833cc04ca04bf02ef1831c3726acecb402b717"
 
 [octree]
 repo = "https://github.com/Found-in-Space/found-in-space-octree"

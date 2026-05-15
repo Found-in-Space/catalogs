@@ -38,6 +38,7 @@ Status: draft repository layout. No public catalogue release has been made yet.
 - [Configuration locations](docs/configuration.md)
 - [Overrides catalog](docs/overrides.md)
 - [Supplemental crossmatches](docs/crossmatches.md)
+- [Audit maintenance commands](docs/audit.md)
 - [Build records](docs/build-records.md)
 - [Release process](docs/release-process.md)
 

@@ -1,3 +1,7 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "found-in-space-catalogs"
 version = "0.0.0"
@@ -5,15 +9,28 @@ description = "Curated Found in Space catalog inputs, build manifests, and prove
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "click>=8.3.1",
     "found-in-space-pipeline",
 ]
+
+[project.scripts]
+fis-catalogs = "foundinspace.catalogs.cli:cli"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/foundinspace"]
 
 [dependency-groups]
 audit = [
     "matplotlib>=3.10.9",
     "scipy>=1.17.1",
 ]
-dev = []
+dev = [
+    "pytest>=8",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
 
 [tool.uv.sources]
-found-in-space-pipeline = { git = "https://github.com/Found-in-Space/pipeline.git", rev = "2d4443be7c6cb533b7b4f90e4f0b6d346566007d" }
+found-in-space-pipeline = { git = "https://github.com/Found-in-Space/pipeline.git", rev = "b2833cc04ca04bf02ef1831c3726acecb402b717" }
