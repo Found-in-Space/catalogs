@@ -1,9 +1,9 @@
 format_version = 1
-build_id = "bright-mag10-v0.1.0"
+build_id = "bright-mag10-20260515.1"
 
 [catalogs]
 repo = "https://github.com/Found-in-Space/catalogs"
-version = "v0.1.0"
+version = "20260515.1"
 commit = "CHANGE_ME"
 
 [pipeline]
@@ -23,5 +23,5 @@ release = "Hipparcos-2"
 source = "ESA Hipparcos catalogue"
 
 [corrections]
-overrides_version = "v0.1.0"
-gaia_hip_supplemental_version = "v0.1.0"
+overrides_version = "20260515.1"
+gaia_hip_supplemental_version = "20260515.1"

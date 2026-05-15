@@ -2,25 +2,32 @@
 
 Names should be boring, stable, lowercase, and easy to sort.
 
-## Catalogue Versions
+## Catalogue Releases
 
-Catalogue versions use semantic version tags:
+Catalogue releases use a date plus release number:
 
 ```text
-v0.1.0
-v0.2.0
-v1.0.0
+20260515.1
+20260515.2
+20260516.1
 ```
 
-Use a new patch version for corrections that do not change schema. Use a new
-minor version when rows are added or policy changes materially. Use a new major
-version when schemas or interpretation change incompatibly.
+The date is `YYYYMMDD`. The number after the dot is the release sequence for
+that date. Start each day at `.1`.
+
+Use a new release number whenever published rows, manifests, configs, or
+post-build records change. If a specific override or schema needs its own
+revision, use an additional local suffix such as `.v1` or `.v2` in that row ID
+or schema path, not in the catalogue release directory.
+
+Schema versions remain separate and use simple compatibility numbers such as
+`schemas/gaia-hip-supplemental/v1.json`.
 
 Directory names keep the dots:
 
 ```text
-overrides/v0.1.0/
-crossmatches/gaia-hip/v0.1.0/
+overrides/20260515.1/
+crossmatches/gaia-hip/20260515.1/
 ```
 
 File stems use snake case:
@@ -35,22 +42,22 @@ distance_quality_summary.csv
 Build IDs use lowercase kebab case:
 
 ```text
-bright-mag10-v0.1.0
-full-dr3-v0.1.0
-nearby-100pc-v0.1.0
+bright-mag10-20260515.1
+full-dr3-20260515.1
+nearby-100pc-20260515.1
 ```
 
 Recommended pattern:
 
 ```text
-<scope>-<selection>-<catalog_version>
+<scope>-<selection>-<catalog_release>
 ```
 
 Examples:
 
-- `bright-mag10-v0.1.0`
-- `full-dr3-v1.0.0`
-- `nearby-100pc-v0.2.0`
+- `bright-mag10-20260515.1`
+- `full-dr3-20260516.1`
+- `nearby-100pc-20260515.2`
 
 ## Override IDs
 

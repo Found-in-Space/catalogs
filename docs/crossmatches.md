@@ -7,7 +7,7 @@ payload values.
 ## Gaia-HIP Location
 
 ```text
-crossmatches/gaia-hip/<catalog_version>/
+crossmatches/gaia-hip/<catalog_release>/
   manifest.toml
   supplemental_gaia_hip.parquet
   supplemental_gaia_hip.csv
@@ -16,7 +16,7 @@ crossmatches/gaia-hip/<catalog_version>/
 Evidence lives separately:
 
 ```text
-evidence/gaia-hip/<catalog_version>/
+evidence/gaia-hip/<catalog_release>/
   manifest.toml
   match_evidence.parquet
   audit_match_report.json

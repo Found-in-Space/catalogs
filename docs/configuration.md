@@ -26,7 +26,7 @@ builds/<build_id>/
 - pipeline repository URL and commit SHA
 - octree repository URL and commit SHA
 - source catalogue releases used
-- correction catalogue versions used
+- correction catalogue releases used
 
 This file should not contain local scratch paths. Use repository URLs, release
 IDs, DOIs, and git SHAs.

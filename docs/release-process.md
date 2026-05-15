@@ -4,7 +4,7 @@ This process is for public catalogue releases from this repository.
 
 ## Before Release
 
-1. Choose a catalogue version, for example `v0.1.0`.
+1. Choose a catalogue release, for example `20260515.1`.
 2. Ensure every versioned catalogue directory has a `manifest.toml`.
 3. Validate override IDs are unique.
 4. Validate supplemental crossmatches are one-to-one.
@@ -30,7 +30,7 @@ Release notes should summarize:
 
 - new or changed overrides
 - new or changed supplemental crossmatches
-- source catalog versions
+- source catalog releases
 - build IDs included
 - known limitations
 - citation and acknowledgement notes

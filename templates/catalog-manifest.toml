@@ -1,5 +1,5 @@
 format_version = 1
-catalog_version = "v0.1.0"
+catalog_release = "20260515.1"
 catalog_family = "gaia-hip"
 status = "draft"
 

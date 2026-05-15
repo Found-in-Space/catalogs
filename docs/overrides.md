@@ -5,7 +5,7 @@ Overrides are curated stellar record edits. They are data, not pipeline config.
 ## Location
 
 ```text
-overrides/<catalog_version>/
+overrides/<catalog_release>/
   manifest.toml
   yaml/
     *.yaml

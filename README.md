@@ -4,7 +4,7 @@ Curated data products for Found in Space.
 
 This repository is intended to hold citable, versioned catalogue inputs and
 build records, not pipeline implementation code. The pipeline and octree
-builders consume these files as inputs and record the exact catalogue version
+builders consume these files as inputs and record the exact catalogue release
 that was used.
 
 Status: draft repository layout. No public catalogue release has been made yet.
@@ -16,7 +16,7 @@ Status: draft repository layout. No public catalogue release has been made yet.
 - `evidence/` - compact audit evidence that explains curated rows.
 - `builds/` - versioned build configs and post-build counts/checksums.
 - `schemas/` - machine-readable schemas for published tables and manifests.
-- `templates/` - starter files for new catalogue versions and builds.
+- `templates/` - starter files for new catalogue releases and builds.
 - `docs/` - maintenance rules, naming conventions, and release process.
 
 ## Principles

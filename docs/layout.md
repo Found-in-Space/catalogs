@@ -5,7 +5,7 @@ curated input catalogues, audit evidence, and build records.
 
 ```text
 overrides/
-  v0.1.0/
+  20260515.1/
     manifest.toml
     yaml/
       *.yaml
@@ -15,14 +15,14 @@ overrides/
 
 crossmatches/
   gaia-hip/
-    v0.1.0/
+    20260515.1/
       manifest.toml
       supplemental_gaia_hip.parquet
       supplemental_gaia_hip.csv
 
 evidence/
   gaia-hip/
-    v0.1.0/
+    20260515.1/
       manifest.toml
       match_evidence.parquet
       audit_match_report.json
@@ -67,7 +67,7 @@ row counts, and checksums here.
 
 `schemas/` contains machine-readable schemas for stable public artifacts.
 
-`templates/` contains starter files for new catalogue versions and builds.
+`templates/` contains starter files for new catalogue releases and builds.
 
 ## Do Not Store
 
