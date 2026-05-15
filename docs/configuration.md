@@ -3,6 +3,13 @@
 Build configuration is part of the published data product. Store the config
 that defines a build under `builds/<build_id>/`.
 
+## Maintenance Environment
+
+The repository root is a `uv` project. `pyproject.toml` pins the pipeline
+dependency used for catalogue maintenance commands. Optional audit-only
+dependencies, such as plotting and spatial indexing libraries, belong in the
+`audit` dependency group here rather than in the production pipeline.
+
 ## Build Directory
 
 ```text

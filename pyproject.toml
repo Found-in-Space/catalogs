@@ -1,0 +1,19 @@
+[project]
+name = "found-in-space-catalogs"
+version = "0.0.0"
+description = "Curated Found in Space catalog inputs, build manifests, and provenance records."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "found-in-space-pipeline",
+]
+
+[dependency-groups]
+audit = [
+    "matplotlib>=3.10.9",
+    "scipy>=1.17.1",
+]
+dev = []
+
+[tool.uv.sources]
+found-in-space-pipeline = { git = "https://github.com/Found-in-Space/pipeline.git", rev = "2d4443be7c6cb533b7b4f90e4f0b6d346566007d" }

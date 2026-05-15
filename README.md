@@ -46,6 +46,24 @@ Status: draft repository layout. No public catalogue release has been made yet.
 - `Found-in-Space/pipeline` - catalogue processing and merge pipeline.
 - `Found-in-Space/found-in-space-octree` - octree packaging pipeline.
 
+## uv Environment
+
+This repo is a uv project so catalogue maintenance commands can run against a
+pinned pipeline checkout:
+
+```bash
+uv sync
+```
+
+The pipeline dependency is pinned in `pyproject.toml` by git SHA. Build records
+should repeat that SHA in `build.lock.toml`.
+
+Use the optional audit group for local catalog-quality analysis:
+
+```bash
+uv sync --group audit
+```
+
 ## License
 
 License is not selected yet. Choose and document the data license before the
