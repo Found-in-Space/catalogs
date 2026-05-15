@@ -1,0 +1,13 @@
+# Local scratch and generated caches
+.venv/
+.pytest_cache/
+__pycache__/
+*.pyc
+
+# Local, machine-specific working data
+scratch/
+tmp/
+local/
+
+# Keep public release artifacts intentional.
+*.log
