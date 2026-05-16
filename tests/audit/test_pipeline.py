@@ -198,27 +198,29 @@ def test_audit_match_classifies_and_writes_supplemental_maps(tmp_path: Path):
     assert by_pair[("103", "202")] == "manual_review"
     assert by_pair[("104", "203")] == "manual_review"
     assert by_pair[("105", "204")] == "auto_match"
-    assert by_pair[("106", "205")] == "reject"
+    assert by_pair[("106", "205")] == "auto_match"
     assert ("300", "400") not in by_pair
 
     supplemental = pd.read_parquet(audit_dir / SUPPLEMENTAL_MAP_FILENAME)
     assert supplemental[["gaia_source_id", "hip_source_id"]].values.tolist() == [
         [100, 200],
         [105, 204],
+        [106, 205],
     ]
     assert set(supplemental["mapping_source"]) == {LOCAL_CLOSE_PAIR_MAPPING_SOURCE}
 
     combined = pd.read_parquet(audit_dir / COMBINED_MAP_FILENAME)
     assert list(combined.columns) == GAIA_HIP_MAP_COLS
-    assert len(combined) == 4
-    assert report.supplemental_rows == 2
+    assert len(combined) == 5
+    assert report.supplemental_rows == 3
     assert report.decision_counts["manual_review"] == 4
-    assert report.decision_counts["reject"] == 1
+    assert "reject" not in report.decision_counts
 
     threshold_summary = pd.read_csv(audit_dir / DISTANCE_THRESHOLD_SUMMARY_FILENAME)
     by_policy = threshold_summary.set_index("policy")
     assert by_policy.loc["tight or distance <= 10%", "matched_clean_count"] == 2
     assert by_policy.loc["tight or distance <= 25%", "matched_clean_count"] == 3
+    assert by_policy.loc["broad clean one-to-one", "matched_clean_count"] == 3
     assert (audit_dir / DISTANCE_HISTOGRAM_BINS_FILENAME).is_file()
     quality_summary = pd.read_csv(audit_dir / DISTANCE_QUALITY_SUMMARY_FILENAME)
     assert quality_summary["rows"].sum() == 3
