@@ -1,0 +1,18 @@
+format_version = 1
+release = "YYYYMMDD.N"
+title = "CHANGE_ME"
+status = "draft"
+
+[summary]
+description = "CHANGE_ME"
+
+[inputs]
+# Record the inputs that matter for this publication.
+
+[outputs]
+# Record the files this publication exposes.
+
+[provenance]
+created_by = "Found in Space"
+created_at = "YYYY-MM-DD"
+notes = "CHANGE_ME"

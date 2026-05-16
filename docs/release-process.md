@@ -1,36 +1,21 @@
 # Release Process
 
-This process is for public catalogue releases from this repository.
+This is the minimal release checklist. Each publication can add its own
+procedure inside `publications/<release>/README.md`.
 
-## Before Release
+1. Choose the next release ID.
+2. Create `publications/<release>/`.
+3. Add a README explaining what the publication is.
+4. Add a manifest recording the important inputs, outputs, decisions, and
+   provenance.
+5. Keep local scratch paths, credentials, and raw source dumps out of the
+   publication.
+6. If the publication includes counts, artifact metadata, or checksums,
+   generate them from the final files. Do not hand-edit generated records.
+7. Verify the publication can be understood from its directory alone.
+8. Commit the publication and housekeeping changes intentionally.
 
-1. Choose a catalogue release, for example `20260515.1`.
-2. Ensure every versioned catalogue directory has a `manifest.toml`.
-3. Validate override IDs are unique.
-4. Validate supplemental crossmatches are one-to-one.
-5. Run the pipeline build using the versioned configs.
-6. Run the octree build if the release includes octree build records.
-7. Write post-build counts and checksums.
-8. Confirm no local absolute paths, credentials, or scratch logs are included.
-9. Update `CITATION.cff` and `.zenodo.json` if present.
-10. Tag and create a GitHub release.
+The first clean sequence is expected to be:
 
-## Zenodo
-
-For now, Zenodo should archive the catalog repository release. The release
-records exact upstream git SHAs for pipeline and octree code, but does not
-vendor that source code.
-
-Use the version DOI for reproducibility in papers and build metadata. Use the
-concept DOI when referring to the evolving catalogue project as a whole.
-
-## Release Notes
-
-Release notes should summarize:
-
-- new or changed overrides
-- new or changed supplemental crossmatches
-- source catalog releases
-- build IDs included
-- known limitations
-- citation and acknowledgement notes
+- `20260515.1` - first clean mag-11 build publication.
+- `20260515.2` - first Gaia-HIP crossmatch publication.
