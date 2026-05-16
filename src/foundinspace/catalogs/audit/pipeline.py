@@ -46,7 +46,6 @@ DISTANCE_QUALITY_SUMMARY_FILENAME = "distance_quality_summary.csv"
 
 LOCAL_CLOSE_PAIR_MAPPING_SOURCE = "local_close_pair_v1"
 BATCH_SIZE = 250_000
-OCTREE_REVIEW_MAX_SEP_ARCSEC = 1.0
 DISTANCE_HISTOGRAM_BINS = [
     0,
     1,
@@ -488,26 +487,26 @@ def write_distance_threshold_diagnostics(
     finite = work.loc[np.isfinite(work["distance_frac_diff"])].copy()
 
     tight = clean["within_auto_thresholds"].astype(bool)
-    current = tight | clean["distance_frac_diff"].le(auto_distance_frac_diff)
+    old_distance_policy = tight | clean["distance_frac_diff"].le(
+        auto_distance_frac_diff
+    )
     pct25 = tight | clean["distance_frac_diff"].le(0.25)
-    sep3d1 = tight | clean["separation_3d_pc"].le(1.0)
-    sep3d1_strict = clean["separation_3d_pc"].le(1.0)
-    current_threshold_label = f"tight or distance <= {auto_distance_frac_diff:.0%}"
+    broad_scan = pd.Series(True, index=clean.index, dtype=bool)
 
     summary = pd.DataFrame(
         [
             {
                 "policy": "tight sky/mag only",
                 "matched_clean_count": int(tight.sum()),
-                "delta_vs_current_distance_threshold": int(
-                    tight.sum() - current.sum()
-                ),
+                "delta_vs_broad_scan_policy": int(tight.sum() - broad_scan.sum()),
                 "non_tight_added": 0,
             },
             {
-                "policy": current_threshold_label,
-                "matched_clean_count": int(current.sum()),
-                "delta_vs_current_distance_threshold": 0,
+                "policy": f"tight or distance <= {auto_distance_frac_diff:.0%}",
+                "matched_clean_count": int(old_distance_policy.sum()),
+                "delta_vs_broad_scan_policy": int(
+                    old_distance_policy.sum() - broad_scan.sum()
+                ),
                 "non_tight_added": int(
                     (
                         ~tight
@@ -518,20 +517,16 @@ def write_distance_threshold_diagnostics(
             {
                 "policy": "tight or distance <= 25%",
                 "matched_clean_count": int(pct25.sum()),
-                "delta_vs_current_distance_threshold": int(
-                    pct25.sum() - current.sum()
-                ),
+                "delta_vs_broad_scan_policy": int(pct25.sum() - broad_scan.sum()),
                 "non_tight_added": int(
                     (~tight & clean["distance_frac_diff"].le(0.25)).sum()
                 ),
             },
             {
-                "policy": "tight or 3D separation <= 1 pc",
-                "matched_clean_count": int(sep3d1.sum()),
-                "delta_vs_current_distance_threshold": int(
-                    sep3d1.sum() - current.sum()
-                ),
-                "non_tight_added": int((~tight & sep3d1_strict).sum()),
+                "policy": "broad clean one-to-one",
+                "matched_clean_count": int(broad_scan.sum()),
+                "delta_vs_broad_scan_policy": 0,
+                "non_tight_added": int((~tight).sum()),
             },
         ]
     )
@@ -554,6 +549,8 @@ def write_distance_threshold_diagnostics(
                 "clean_auto_eligible_candidates": int(len(clean)),
             },
             "policy_counts_clean_eligible": summary.to_dict(orient="records"),
+            "selected_policy": "broad clean one-to-one",
+            "distance_used_as_veto": False,
             "quantiles_clean_pct_diff": _quantiles(
                 clean["distance_frac_diff"] * 100.0
             ),
@@ -1005,8 +1002,8 @@ def _write_distance_histogram_plot(
     )
     threshold_pct = auto_distance_frac_diff * 100.0
     for x, color, label in [
-        (threshold_pct, "#b0415a", f"{threshold_pct:.0f}% current"),
-        (25.0, "#7048a8", "25% option"),
+        (threshold_pct, "#b0415a", f"{threshold_pct:.0f}% old veto"),
+        (25.0, "#7048a8", "25% reference"),
     ]:
         ax.axvline(x, color=color, lw=2.2, ls="--")
         ymax = ax.get_ylim()[1]
@@ -1051,20 +1048,22 @@ def _write_distance_histogram_plot(
         f"Clean eligible candidates: {len(clean):,}",
         "",
     ]
-    current_label = f"tight or distance <= {auto_distance_frac_diff:.0%}"
     for row in summary.itertuples(index=False):
-        delta = int(row.delta_vs_current_distance_threshold)
-        delta_text = "current" if row.policy == current_label else f"{delta:+,}"
+        delta = int(row.delta_vs_broad_scan_policy)
+        delta_text = (
+            "current" if row.policy == "broad clean one-to-one" else f"{delta:+,}"
+        )
         lines.append(str(row.policy))
         lines.append(f"  matched: {int(row.matched_clean_count):,}")
-        lines.append(f"  delta: {delta_text}")
+        lines.append(f"  delta vs broad: {delta_text}")
         lines.append(f"  non-tight added: {int(row.non_tight_added):,}")
         lines.append("")
     lines.extend(
         [
             "Key read:",
-            "25% adds rows whose 3D separation",
-            "can still be large.",
+            "distance disagreement follows",
+            "astrometry quality, so it is",
+            "diagnostic evidence, not a veto.",
         ]
     )
     ax_table.text(
@@ -1117,9 +1116,9 @@ def _write_distance_quality_plot(
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    current = auto_distance_frac_diff * 100.0
+    old_threshold = auto_distance_frac_diff * 100.0
     tight = plot["within_auto_thresholds"].astype(bool)
-    pct_current = plot["distance_pct_diff"].le(current)
+    pct_old_threshold = plot["distance_pct_diff"].le(old_threshold)
     pct25 = plot["distance_pct_diff"].le(25.0)
 
     categories = [
@@ -1131,21 +1130,21 @@ def _write_distance_quality_plot(
             0.75,
         ),
         (
-            f"distance <= {current:.0f}% extra",
-            ~tight & pct_current,
+            f"non-tight <= {old_threshold:.0f}% distance",
+            ~tight & pct_old_threshold,
             "#3b82b7",
             18,
             0.55,
         ),
         (
-            f"{current:.0f}-25% option",
-            ~tight & ~pct_current & pct25,
+            f"non-tight {old_threshold:.0f}-25% distance",
+            ~tight & ~pct_old_threshold & pct25,
             "#7048a8",
             18,
             0.55,
         ),
         (
-            ">25% distance disagreement",
+            "non-tight >25% distance",
             ~tight & ~pct25,
             "#b26b3d",
             16,
@@ -1175,8 +1174,8 @@ def _write_distance_quality_plot(
         )
 
     for y, color, label in [
-        (current, "#b0415a", f"{current:.0f}% current"),
-        (25.0, "#7048a8", "25% option"),
+        (old_threshold, "#b0415a", f"{old_threshold:.0f}% old veto"),
+        (25.0, "#7048a8", "25% reference"),
     ]:
         ax.axhline(y, color=color, lw=2.0, ls="--")
         ax.text(
@@ -1251,6 +1250,8 @@ def _write_distance_quality_plot(
                 "Lower quality values are better.",
                 "HIP quality often dominates the",
                 "worst-pair score in this sample.",
+                "Distance disagreement is recorded",
+                "but no longer vetoes clean links.",
                 "",
                 f"log-log correlation: {corr:.2f}",
             ]
@@ -1354,25 +1355,14 @@ def _classify_evidence_row(rec: pd.Series) -> tuple[str, str, str, list[str]]:
     if not bool(rec["one_to_one"]):
         reasons.append("ambiguous_many_to_one_candidate")
         return "manual_review", "inspect_ambiguous_close_pair", "high", reasons
+    reasons.append("clean_one_to_one_broad_scan_match")
     if bool(rec["within_auto_thresholds"]):
-        reasons.append("clean_one_to_one_local_match")
-        return "auto_match", "add_supplemental_crossmatch", "medium", reasons
-    if bool(rec["within_distance_threshold"]):
-        reasons.append("distance_agreement_within_10_percent")
-        return "auto_match", "add_supplemental_crossmatch", "medium", reasons
-    if math.isfinite(_safe_float(rec["distance_frac_diff"])):
-        reasons.append("distance_disagreement_display_safe")
-        return "reject", "ignore", "low", reasons
-    if _safe_float(rec["separation_arcsec"]) <= OCTREE_REVIEW_MAX_SEP_ARCSEC:
-        reasons.append("outside_auto_threshold_but_visually_close")
-        return (
-            "octree_review",
-            "suppress_candidate_duplicate_in_display",
-            "medium",
-            reasons,
-        )
-    reasons.append("outside_useful_review_threshold")
-    return "reject", "ignore", "low", reasons
+        reasons.append("tight_sky_mag_match")
+    elif math.isfinite(_safe_float(rec["distance_frac_diff"])):
+        reasons.append("distance_disagreement_recorded_not_vetoed")
+    else:
+        reasons.append("distance_unavailable_not_vetoed")
+    return "auto_match", "add_supplemental_crossmatch", "medium", reasons
 
 
 def _load_processed_candidates(paths: Iterable[Path], source_name: str) -> pd.DataFrame:

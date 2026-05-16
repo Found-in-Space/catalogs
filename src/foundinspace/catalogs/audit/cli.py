@@ -67,7 +67,7 @@ def _load_project_or_die(project_path: Path, *required: str):
     type=float,
     default=0.10,
     show_default=True,
-    help="Maximum fractional distance difference for automatic supplemental matches.",
+    help="Legacy fractional-distance threshold retained for diagnostics only.",
 )
 def match_cmd(
     project_path: Path,

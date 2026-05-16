@@ -1,0 +1,28 @@
+format_version = 1
+release = "20260515.1"
+title = "Gaia/HIP source download evidence"
+status = "draft"
+
+[summary]
+description = "Source-data evidence package for deriving the Gaia download cutoff used by the Gaia-HIP mapping publication."
+
+[inputs]
+hipparcos_catalog = "Vizier I/311/hip2"
+official_gaia_hip_crossmatch = "gaiadr3.hipparcos2_best_neighbour"
+gaia_photometry_source = "gaiadr3.gaia_source"
+local_scratch_root = "local/runs/source-20260515.1"
+
+[outputs]
+magnitude_relationship_plot = "evidence/hip_gaia_magnitude_relationship.png"
+magnitude_relationship_data = "evidence/hip_gaia_magnitude_relationship.parquet"
+magnitude_relationship_outliers = "evidence/hip_gaia_magnitude_outliers.csv"
+magnitude_relationship_summary = "evidence/hip_gaia_magnitude_summary.json"
+healpix_cone_footprint_summary = "evidence/hip_healpix_cone_footprint_summary.csv"
+healpix_neighbor_footprint_summary = "evidence/hip_healpix_neighbor_footprint_summary.csv"
+healpix_footprint_summary = "evidence/hip_healpix_footprint_summary.json"
+run_log = "run_log.md"
+
+[provenance]
+created_by = "Found in Space"
+created_at = "2026-05-16"
+notes = "Draft evidence publication. Raw downloads and processed source shards are currently local scratch artifacts, not committed release payloads."

@@ -1,0 +1,90 @@
+{
+  "format_version": 1,
+  "release": "20260515.1",
+  "purpose": "Evidence for deriving a Gaia G download cutoff from Hipparcos Hp coverage.",
+  "inputs": {
+    "hipparcos_ecsv": "local/runs/source-20260515.1/data/catalogs/hipparcos2.ecsv",
+    "processed_hip_parquet": "local/runs/source-20260515.1/data/processed/hip_stars.parquet",
+    "official_gaia_hip_gmag_join_ecsv": "local/runs/source-20260515.1/data/catalogs/gaia_hip_official_gmag.ecsv"
+  },
+  "rows": {
+    "hip_raw": 117955,
+    "hip_processed_finite_distance": 113942,
+    "hip_dropped_invalid_distance": 4013,
+    "official_gaia_hip_join": 99525,
+    "official_gaia_hip_join_finite_g": 99463,
+    "official_gaia_hip_join_nonfinite_g": 62,
+    "raw_hip_without_official_match": 18430,
+    "processed_hip_without_official_match": 18040
+  },
+  "hip_hpmag": {
+    "raw": {
+      "rows": 117955,
+      "finite_rows": 117955,
+      "min": -1.0875999927520752,
+      "p50": 8.55090045928955,
+      "p90": 9.992600440979004,
+      "p95": 10.538960170745847,
+      "p99": 11.669837856292721,
+      "p999": 12.606902355194102,
+      "max": 14.562199592590332
+    },
+    "processed_finite_distance": {
+      "rows": 113942,
+      "finite_rows": 113942,
+      "min": -1.0875999927520752,
+      "p50": 8.519800186157227,
+      "p90": 9.937979793548585,
+      "p95": 10.459699630737305,
+      "p99": 11.578894767761229,
+      "p999": 12.495123972892738,
+      "max": 14.562199592590332
+    },
+    "processed_without_official_match": {
+      "rows": 18040,
+      "finite_rows": 18040,
+      "min": -1.0875999927520752,
+      "p50": 8.468949794769287,
+      "p90": 9.91680030822754,
+      "p95": 10.430344772338866,
+      "p99": 11.613781995773325,
+      "p999": 12.536085211753841,
+      "max": 13.759499549865723
+    }
+  },
+  "official_match_gaia_g": {
+    "rows": 99525,
+    "finite_rows": 99463,
+    "min": 1.9425238370895386,
+    "p50": 8.241662979125977,
+    "p90": 9.72491569519043,
+    "p95": 10.233269977569579,
+    "p99": 11.205108089447025,
+    "p999": 12.581213415145873,
+    "max": 21.342897415161133
+  },
+  "official_match_gaia_g_minus_hip_hp": {
+    "rows": 99525,
+    "finite_rows": 99463,
+    "min": -3.9772701263427734,
+    "p50": -0.2741365432739258,
+    "p90": -0.02329187393188476,
+    "p95": 0.010147857666015614,
+    "p99": 0.4227113819122322,
+    "p999": 1.7028765048980756,
+    "max": 19.705714106559753
+  },
+  "threshold_counts": {
+    "hip_processed_hpmag_max": 14.562199592590332,
+    "official_matches_with_gaia_g_gt_hip_processed_hpmag_max": 30,
+    "official_matches_with_gaia_g_gt_14_6": 30,
+    "official_matches_with_gaia_g_gt_15_0": 27,
+    "official_matches_with_gaia_g_gt_15_5": 25,
+    "official_matches_with_gaia_g_gt_16_0": 25
+  },
+  "artifacts": {
+    "backing_data": "evidence/hip_gaia_magnitude_relationship.parquet",
+    "outliers": "evidence/hip_gaia_magnitude_outliers.csv",
+    "plot": "evidence/hip_gaia_magnitude_relationship.png"
+  }
+}

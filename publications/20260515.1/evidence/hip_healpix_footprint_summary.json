@@ -1,0 +1,58 @@
+{
+  "purpose": "Evidence for the alternate targeted HEALPix/cone Gaia fetch strategy around faint Hipparcos stars.",
+  "source": "local/runs/source-20260515.1/data/catalogs/hipparcos2.ecsv",
+  "coordinate_note": "Raw Hipparcos RArad/DErad were converted from radians to degrees. These are raw Hipparcos source positions, not the processed J2016 propagated positions.",
+  "selection_counts": {
+    "raw_11_lt_Hpmag_le_12": 2500,
+    "raw_12_lt_Hpmag_le_15": 630,
+    "raw_11_lt_Hpmag_le_15": 3130
+  },
+  "method": {
+    "neighbor_expansion": "Count the HEALPix cell containing each HIP target plus all immediate neighbour cells.",
+    "cone_footprint": "Use astropy-healpix cone_search_lonlat to count HEALPix cells intersecting a cone around each HIP target.",
+    "healpix_ordering": "nested"
+  },
+  "key_examples": {
+    "hpmag_12_to_15_cone_l10_5arcsec": {
+      "selection": "raw_12_lt_Hpmag_le_15",
+      "radius_arcsec": 5,
+      "healpix_level": 10,
+      "footprint_pixels": 698,
+      "footprint_area_deg2": 2.288387
+    },
+    "hpmag_12_to_15_cone_l10_60arcsec": {
+      "selection": "raw_12_lt_Hpmag_le_15",
+      "radius_arcsec": 60,
+      "healpix_level": 10,
+      "footprint_pixels": 1545,
+      "footprint_area_deg2": 5.065268
+    },
+    "hpmag_11_to_15_cone_l10_5arcsec": {
+      "selection": "raw_11_lt_Hpmag_le_15",
+      "radius_arcsec": 5,
+      "healpix_level": 10,
+      "footprint_pixels": 3412,
+      "footprint_area_deg2": 11.186211
+    },
+    "hpmag_11_to_15_cone_l10_60arcsec": {
+      "selection": "raw_11_lt_Hpmag_le_15",
+      "radius_arcsec": 60,
+      "healpix_level": 10,
+      "footprint_pixels": 7618,
+      "footprint_area_deg2": 24.975543
+    },
+    "hpmag_11_to_15_neighbor_l10": {
+      "selection": "raw_11_lt_Hpmag_le_15",
+      "healpix_level": 10,
+      "containing_pixels": 2698,
+      "neighbor_expanded_pixels": 24231,
+      "area_containing_deg2": 8.845368,
+      "area_neighbor_expanded_deg2": 79.441111
+    }
+  },
+  "decision_context": "Targeted cone/HEALPix fetching remains a fallback option. The current next attempt is a full-sky Gaia G<=15 skinny field download because the pipeline-shaped count was 36,635,159 rows, lower than initially feared.",
+  "artifacts": {
+    "cone_footprint_summary": "hip_healpix_cone_footprint_summary.csv",
+    "neighbor_footprint_summary": "hip_healpix_neighbor_footprint_summary.csv"
+  }
+}
