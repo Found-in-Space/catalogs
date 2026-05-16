@@ -250,6 +250,807 @@ evidence package.
       download because the pipeline-shaped count was `36,635,159` rows, lower
       than initially feared.
 
+11. Ran the exact skinny Gaia `G <= 15` count and downloaded the full matching
+    table as a single authenticated Gaia Archive job.
+
+    Exact skinny count query:
+
+    ```sql
+    SELECT
+      (source_id / 9007199254740992) AS hp3,
+      COUNT(*) AS n
+    FROM gaiadr3.gaia_source
+    WHERE
+      phot_g_mean_mag <= 15
+    GROUP BY 1
+    ORDER BY n DESC
+    ```
+
+    Count result:
+
+    - Total rows: `36,909,365`
+    - HP3 rows: `768`
+    - Maximum rows in one HP3 cell: `519,591`
+    - Query hash:
+      `48d43a314d949054579a5b2a55df8bb3081fe241d3021d4b3d57eed20b8bf465`
+    - Local count table:
+      `local/runs/source-20260515.1/data/catalogs/gaia-g15-match/gaia_g15_skinny_hp3_counts.csv`
+
+    Download query:
+
+    ```sql
+    SELECT
+      source_id,
+      ra,
+      dec,
+      phot_g_mean_mag,
+      phot_bp_mean_mag,
+      phot_rp_mean_mag
+    FROM gaiadr3.gaia_source
+    WHERE
+      phot_g_mean_mag <= 15
+    ```
+
+    Download result:
+
+    - Gaia job name: `fis-gaia-g15-skinny-full-0af47fb1`
+    - Gaia job ID: `bdf01b39-5109-11f1-8c53-bc97e148b76b-O`
+    - Query hash:
+      `0af47fb17b8ef017d638cc17f58a5a775997b4e8dc9257e546b800c7a0afef37`
+    - Local output:
+      `local/runs/source-20260515.1/data/catalogs/gaia-g15-match/gaia_g15_skinny_full.vot.gz`
+    - Downloaded bytes: `1,309,708,009`
+    - SHA-256:
+      `8a34f9f7d8b392575b6fcfc993efef1f26c64ba5bbec30c97340bae27fbb9a99`
+    - Gzip integrity check: passed.
+    - Remote Gaia job was deleted after download.
+
+12. Converted the skinny Gaia `G <= 15` VOTable into a local Parquet working
+    table for matching.
+
+    Conversion used `votpipe.parse_votable` to stream the gzipped VOTable into
+    Arrow batches, then wrote a Zstandard-compressed Parquet file.
+
+    Working input:
+
+    - `local/runs/source-20260515.1/data/catalogs/gaia-g15-match/gaia_g15_skinny_full.vot.gz`
+
+    Working outputs:
+
+    - `local/runs/source-20260515.1/data/processed/gaia-g15-match/gaia_g15_skinny.parquet`
+    - `local/runs/source-20260515.1/data/processed/gaia-g15-match/gaia_g15_skinny.summary.json`
+
+    Conversion result:
+
+    - Rows: `36,909,365`
+    - Row groups / streamed batches: `74`
+    - Elapsed time: `132.158` seconds
+    - Parquet bytes: `1,303,169,438`
+    - Parquet SHA-256:
+      `04386c5ac024799ab18a41556c2ce96ceaf27787f3f525caec05d98280c66944`
+    - Summary SHA-256:
+      `a7d1a4226a9946c1c525863d688a95d2cb88bae547cc070f1ec0949ff0104d0d`
+    - Verified Parquet metadata rows: `36,909,365`
+    - Verified Parquet metadata row groups: `74`
+
+    Schema:
+
+    ```text
+    source_id           uint64
+    ra                  double
+    dec                 double
+    phot_g_mean_mag     double
+    phot_bp_mean_mag    double
+    phot_rp_mean_mag    double
+    ```
+
+13. Added and ran a raw Gaia-HIP sky/magnitude matching scan.
+
+    Matching policy:
+
+    - Use Gaia DR3 skinny rows directly:
+      `source_id`, `ra`, `dec`, `phot_g_mean_mag`, `phot_bp_mean_mag`,
+      `phot_rp_mean_mag`.
+    - Use raw Hipparcos rows with no parallax, distance, or quality gate.
+    - Propagate Hipparcos sky positions from J1991.25 to Gaia's J2016.0 epoch
+      using raw `pmRA` and `pmDE`.
+    - Match only on close sky position and close apparent magnitude:
+      `separation <= 5.0 arcsec` and `abs(G - Hp) <= 0.5 mag`.
+    - Classify clean one-to-one non-official candidates as supplemental
+      mappings.
+    - Keep official Gaia-HIP pairs in evidence for recall checks, but do not
+      duplicate them in the supplemental mapping.
+    - Send official conflicts and many-to-one / one-to-many local candidates to
+      manual review.
+
+    Implementation note:
+
+    - The first full scan correctly failed validation with duplicate Gaia IDs in
+      the supplemental map.
+    - Inspection showed this was not astrophysical duplication, but a pandas
+      row-coercion precision bug for 64-bit Gaia source IDs above `2^53`.
+    - The matcher was fixed to materialize Gaia and HIP IDs as strings before
+      mixed numeric row iteration, and the scan was regenerated.
+
+    Command:
+
+    ```bash
+    uv run --group audit fis-catalogs audit raw-match \
+      --hip-ecsv local/runs/source-20260515.1/data/catalogs/hipparcos2.ecsv \
+      --gaia-parquet local/runs/source-20260515.1/data/processed/gaia-g15-match/gaia_g15_skinny.parquet \
+      --official-crossmatch local/runs/source-20260515.1/data/catalogs/gaia_hip_official_gmag.ecsv \
+      --output-dir local/runs/source-20260515.1/data/processed/gaia-hip-raw-match \
+      --max-sep-arcsec 5.0 \
+      --max-mag-delta 0.5 \
+      --force
+    ```
+
+    Working outputs:
+
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-raw-match/raw_hip_match_sources.parquet`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-raw-match/raw_match_evidence.parquet`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-raw-match/raw_supplemental_gaia_hip_map.parquet`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-raw-match/raw_combined_gaia_hip_map.parquet`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-raw-match/raw_match_report.json`
+
+    Scan result:
+
+    - Gaia rows scanned: `36,909,365`
+    - Gaia rows skipped for non-finite match fields: `0`
+    - Raw HIP rows: `117,955`
+    - Prepared HIP match rows: `117,955`
+    - Evidence rows: `94,172`
+    - Official Gaia-HIP rows: `99,525`
+    - Official pairs in raw evidence: `77,571`
+    - Official pairs confirmed cleanly: `77,398`
+    - Supplemental one-to-one mappings: `15,984`
+    - Combined map rows: `115,509`
+    - Manual review evidence rows: `790`
+
+    Decision counts:
+
+    ```text
+    official_confirmed    77,398
+    supplemental_match    15,984
+    manual_review            790
+    ```
+
+    Manual review split:
+
+    ```text
+    inspect_official_conflict          407
+    inspect_ambiguous_raw_match        210
+    inspect_ambiguous_official_pair    173
+    ```
+
+    Official recall note:
+
+    - `21,954` official rows were not found in the broad raw evidence.
+    - Of those, `21,865` had finite Gaia `G <= 15`.
+    - For the finite `G <= 15` official misses, nearly all were excluded by the
+      conservative `abs(G - Hp) <= 0.5` threshold:
+
+    ```text
+    abs(G - Hp) <= 0.5       3
+    0.5 < abs(G - Hp) <= 1.0 19,197
+    1.0 < abs(G - Hp) <= 2.0 2,487
+    2.0 < abs(G - Hp) <= 5.0 155
+    5.0 < abs(G - Hp) <= 10  22
+    abs(G - Hp) > 10         1
+    ```
+
+    Working output checksums:
+
+    ```text
+    64ac2fd8fd87d53d3be78ac93d2c8d729e274398b5579f0433e7c979177f74d8  raw_hip_match_sources.parquet
+    573ddc131a32f28f42ed5f0f77c6f9e79b6b9caf0c1df71bbbb60fe6e61bdff4  raw_match_evidence.parquet
+    619ae6b01c89226f3022a9dc1cce4c396c3d0aa467d39cb36f35893f9125db2b  raw_supplemental_gaia_hip_map.parquet
+    c97d44095828a8dd265d0fcb398fcf8108fdb554f5ecf9ab7280761fae130198  raw_combined_gaia_hip_map.parquet
+    0bdafbc838e2df5534bb8bbbaf20774d193c4e4d93f7f95456d6bace3a637225  raw_match_report.json
+    ```
+
+14. Analysed Gaia `G` vs Hipparcos `Hp` differences in the official
+    Gaia-HIP crossmatch to calibrate the magnitude gate.
+
+    Working outputs:
+
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-raw-match/magnitude-calibration/official_g_hp_calibration.parquet`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-raw-match/magnitude-calibration/official_g_hp_by_color_bin.csv`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-raw-match/magnitude-calibration/official_g_hp_threshold_summary.csv`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-raw-match/magnitude-calibration/official_g_hp_quantiles.csv`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-raw-match/magnitude-calibration/official_g_hp_poly3_coefficients.json`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-raw-match/magnitude-calibration/official_g_minus_hp_histogram.png`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-raw-match/magnitude-calibration/official_g_minus_hp_vs_bp_rp.png`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-raw-match/magnitude-calibration/official_g_minus_hp_color_residual_histogram.png`
+
+    Key result:
+
+    - The fixed `abs(G - Hp) <= 0.5` criterion is too strict and not physically
+      well centred for the official Gaia-HIP relation.
+    - For official rows with finite `G <= 15`, the median `G - Hp` is
+      `-0.274220`.
+    - The relation is strongly colour-dependent: redder stars have more
+      negative `G - Hp`.
+
+    Fixed-threshold recovery for official rows with finite `G <= 15`:
+
+    ```text
+    abs(G - Hp) <= 0.25    43,456 / 99,436  43.7%
+    abs(G - Hp) <= 0.50    77,574 / 99,436  78.0%
+    abs(G - Hp) <= 0.75    92,352 / 99,436  92.9%
+    abs(G - Hp) <= 1.00    96,771 / 99,436  97.3%
+    abs(G - Hp) <= 1.25    98,291 / 99,436  98.8%
+    ```
+
+    Colour trend examples from official rows:
+
+    ```text
+    BP-RP median    median(G-Hp)
+    -0.072          -0.001
+     0.116          -0.045
+     0.383          -0.125
+     0.636          -0.216
+     0.831          -0.291
+     1.160          -0.427
+     1.344          -0.512
+     1.610          -0.644
+     1.860          -0.771
+     2.179          -0.933
+     2.687          -1.201
+     3.333          -1.517
+     4.430          -1.967
+    ```
+
+    Robust third-order colour correction fitted to official pairs:
+
+    ```text
+    c = BP - RP
+    expected(G - Hp) =
+      0.014335595891044701 * c^3
+    - 0.11014332763057445  * c^2
+    - 0.24593654992633962  * c
+    - 0.020857069669247257
+    ```
+
+    In the colour-fit domain, a residual gate
+    `abs((G - Hp) - expected(G - Hp)) <= 0.5` recovers `97,558` official pairs
+    (`98.3%` of rows with a valid colour residual).
+
+    Decision:
+
+    - Do not simply keep `abs(G - Hp) <= 0.5` for the release matching scan.
+    - Prefer a colour-corrected magnitude residual when Gaia `BP-RP` is finite.
+    - Treat missing-colour candidates conservatively, likely as review-only
+      unless also passing a broader fixed fallback gate.
+    - If a simple fixed fallback is needed, `abs(G - Hp) <= 1.0` is a much more
+      realistic broad gate than `0.5`, but the colour-corrected gate is better
+      justified.
+
+    Working output checksums:
+
+    ```text
+    1dca16be9d1a7f04d461807e03eb1eec9ffff2908850f259fc83ff1de14bb781  official_g_hp_calibration.parquet
+    e9adff80646c5c0102d54a8097a06fa48461c301cdb9cdd67fc3e174f00a486c  official_g_hp_by_color_bin.csv
+    dabe8ffffcfd06e9fd082d246f084f11b21cb7d1ce53649c3902604784cd69ac  official_g_hp_threshold_summary.csv
+    9c5cac6c02ea6f3f854f79d000691479e4e8ecb30ece7290eeb20b0cfec6eeee  official_g_hp_quantiles.csv
+    9140264f1bb6d93538292427aa3a4db921f86ef2bbf6230bbf1f589b3abc918a  official_g_hp_poly3_coefficients.json
+    88f4d970cad04eab7ed33a37b764d74da5e7385b9d9e769dce3d24729d089496  official_g_minus_hp_histogram.png
+    e87a6136e8ae54326b2fba488ec07a9c03a86f084eaf0ac8724b306c81c2477e  official_g_minus_hp_vs_bp_rp.png
+    402ba4d7d10e7b194bbb2d70972178496752905a32114e9685968ff084342102  official_g_minus_hp_color_residual_histogram.png
+    ```
+
+15. Reviewed the published Gaia crossmatch methodology for the official
+    `gaiadr3.hipparcos2_best_neighbour` table.
+
+    Sources:
+
+    - Gaia@AIP metadata for `gaiadr3.hipparcos2_best_neighbour`:
+      <https://gaia.aip.de/metadata/gaiadr3/hipparcos2_best_neighbour/>
+    - Gaia@AIP metadata for `gaiadr3.hipparcos2_neighbourhood`:
+      <https://gaia.aip.de/metadata/gaiadr3/hipparcos2_neighbourhood/>
+    - Marrese et al. 2019, "Gaia Data Release 2. Cross-match with external
+      catalogues - Algorithms and results", A&A 621, A144:
+      <https://doi.org/10.1051/0004-6361/201834142>
+
+    Key methodology notes:
+
+    - The official Hipparcos2 best-neighbour table is positional and
+      non-symmetric: Hipparcos2 is treated as the sparse leading catalogue and
+      Gaia as the searched catalogue.
+    - The best neighbour is selected among "good neighbours" using a figure of
+      merit based on the likelihood ratio of match-vs-chance hypotheses.
+    - The method uses angular distance, position errors, epoch differences,
+      Gaia astrometric covariance when available, and the local Gaia source
+      density.
+    - It is explicitly not a simple cone search.
+    - For sparse catalogues such as Hipparcos2, the official method forces a
+      one-to-one best match; additional good Gaia neighbours belong in the
+      neighbourhood table.
+    - Photometry is not part of the official best-neighbour decision. Marrese
+      et al. used magnitude and colour distributions as validation diagnostics.
+    - Marrese et al. noted no special binary-star treatment in the Gaia DR2
+      external-catalogue crossmatch. They specifically identified Hipparcos2
+      missing matches as plausibly caused by non-optimal astrometric solutions
+      from multiplicity, variability, and/or peculiarities.
+    - For DR2 Hipparcos2, Marrese et al. found that only about two-thirds of
+      Hipparcos2 objects had a Gaia counterpart compatible within the official
+      position-error criterion, and separately published a 1 arcsec cone-search
+      association list because the team expected almost all Hipparcos2 sources
+      to have Gaia counterparts.
+
+    Decision impact:
+
+    - Our supplemental catalogue should not try to reproduce the full DPAC
+      figure-of-merit method unless we also bring in astrometric covariance,
+      position errors, local-density scoring, and the official neighbourhood
+      table.
+    - For this release, our raw local scan remains a conservative supplemental
+      catalogue: close sky position plus one-to-one field uniqueness are the
+      primary criteria.
+    - The magnitude relation should be treated as a sanity/ambiguity filter,
+      not as a physical identity score that must be close to zero.
+    - Next best evidence step is to fetch/use `gaiadr3.hipparcos2_neighbourhood`
+      and compare our local candidates against official good-neighbour scores,
+      not only against `best_neighbour`.
+
+16. Downloaded `gaiadr3.hipparcos2_neighbourhood` and compared it with the raw
+    local Gaia-HIP evidence.
+
+    Query:
+
+    ```sql
+    SELECT
+      source_id,
+      original_ext_source_id,
+      angular_distance,
+      score,
+      xm_flag
+    FROM gaiadr3.hipparcos2_neighbourhood
+    ```
+
+    Working inputs:
+
+    - Raw local evidence:
+      `local/runs/source-20260515.1/data/processed/gaia-hip-raw-match/raw_match_evidence.parquet`
+    - Official best-neighbour join:
+      `local/runs/source-20260515.1/data/catalogs/gaia_hip_official_gmag.ecsv`
+
+    Working outputs:
+
+    - `local/runs/source-20260515.1/data/catalogs/gaia-hip-neighbourhood/hipparcos2_neighbourhood.adql`
+    - `local/runs/source-20260515.1/data/catalogs/gaia-hip-neighbourhood/hipparcos2_neighbourhood.vot.gz`
+    - `local/runs/source-20260515.1/data/catalogs/gaia-hip-neighbourhood/hipparcos2_neighbourhood_state.json`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-neighbourhood/hipparcos2_neighbourhood.parquet`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-neighbourhood/hipparcos2_neighbourhood.summary.json`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-neighbourhood-comparison/neighbourhood_comparison_summary.json`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-neighbourhood-comparison/raw_evidence_with_neighbourhood.parquet`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-neighbourhood-comparison/raw_evidence_neighbourhood_by_decision.csv`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-neighbourhood-comparison/manual_review_neighbourhood_by_action.csv`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-neighbourhood-comparison/neighbourhood_nonbest_rows.parquet`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-neighbourhood-comparison/neighbourhood_nonbest_raw_overlap.parquet`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-neighbourhood-comparison/neighbourhood_nonbest_raw_overlap.csv`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-neighbourhood-comparison/raw_supplemental_in_neighbourhood.csv`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-neighbourhood-comparison/raw_manual_review_in_neighbourhood.csv`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-neighbourhood-comparison/best_not_in_neighbourhood.parquet`
+
+    Neighbourhood table summary:
+
+    - Rows: `100,010`
+    - Unique Gaia source IDs: `100,010`
+    - Unique HIP source IDs: `99,525`
+    - Duplicate Gaia-HIP pair rows: `0`
+    - HIP sources with multiple official good neighbours: `483`
+    - Maximum official good neighbours for one HIP source: `3`
+    - Gaia source IDs linked to multiple HIP sources: `0`
+    - `xm_flag` counts:
+
+    ```text
+    8     82,593
+    16     1,999
+    72    15,418
+    ```
+
+    Comparison with official best-neighbour rows:
+
+    - Official best-neighbour rows in local input: `99,525`
+    - Best-neighbour pairs found in neighbourhood: `99,525`
+    - Best-neighbour pairs missing from neighbourhood: `0`
+    - Non-best neighbourhood rows: `485`
+    - Non-best neighbourhood rows also present in raw local evidence: `45`
+
+    Comparison with raw local evidence:
+
+    ```text
+    decision             rows    in neighbourhood    best pair
+    manual_review          790                 218          173
+    official_confirmed  77,398              77,398       77,398
+    supplemental_match  15,984                   0            0
+    ```
+
+    Manual-review split:
+
+    ```text
+    recommended_action              rows    in neighbourhood    best pair
+    inspect_ambiguous_official_pair  173                 173          173
+    inspect_ambiguous_raw_match      210                   0            0
+    inspect_official_conflict        407                  45            0
+    ```
+
+    Separation distribution for raw supplemental candidates:
+
+    ```text
+    <= 0.10 arcsec    11,644
+    <= 0.25 arcsec    14,973 cumulative
+    <= 0.50 arcsec    15,752 cumulative
+    <= 1.00 arcsec    15,915 cumulative
+    <= 5.00 arcsec    15,984 cumulative
+    ```
+
+    Decision impact:
+
+    - The neighbourhood table is useful for identifying a small set of official
+      ambiguity/conflict cases, but it does not explain the main display
+      duplicate problem.
+    - None of the `15,984` clean raw supplemental candidates are official
+      Hipparcos2 neighbourhood rows.
+    - This means the display artefact correction is necessarily a local
+      Found-In-Space policy decision rather than simply "use all official good
+      neighbours".
+    - Absence from neighbourhood should be recorded as a lower-confidence flag,
+      not an automatic veto, because most supplemental candidates are extremely
+      close on the sky at the display epoch.
+
+    Working output checksums:
+
+    ```text
+    138b669e613e799ec9e4d10fa99b9c922a1462328e20eaff3cafdeb11b8a264a  hipparcos2_neighbourhood.adql
+    c4c2d3eb353278ebf53f98e1f6a0dc3ddedf42bdb54d70565bc68da4317f51f5  hipparcos2_neighbourhood_state.json
+    f69efb2e069d08929ea416e7d9a6467055ba107f1820e4c4a53511785dc5e8cf  hipparcos2_neighbourhood.vot.gz
+    94db42c15c951adafdeedbdc5597de297335ac742d47201b3765e27d06dc4681  hipparcos2_neighbourhood.parquet
+    6fc97c06ad8266180cacadf0b7f7f831a9101e1d5118e1c199777768d1003e83  hipparcos2_neighbourhood.summary.json
+    4599c0b2f9ba8ec1e14acca3ed691bdfcae926453402e3a9210e603b90dbef9b  neighbourhood_comparison_summary.json
+    7ea474fe240f323b8ef176f9e4b19e818b431a36e0422d183300f3e943c58f25  raw_evidence_neighbourhood_by_decision.csv
+    5956f5434c29b6a97f1f56ef8b093421cce042f4173f947ecb60a706030ecb39  manual_review_neighbourhood_by_action.csv
+    d05c16cba44c97a01a33fc74f93286a7ea1d12eeabb7345d0cf11416e58fa6b5  neighbourhood_nonbest_raw_overlap.csv
+    ```
+
+17. Consolidated methodology and assumption audit for using the official Gaia
+    Hipparcos2 crossmatch tables.
+
+    Purpose:
+
+    - Document what the official Gaia/Hipparcos2 crossmatch tables claim to
+      represent.
+    - State the assumptions this publication makes about those tables.
+    - Record the local data checks used to validate those assumptions before
+      deriving a Found-In-Space supplemental display de-duplication catalogue.
+
+    Literature and table documentation reviewed:
+
+    - Marrese et al. 2017, Gaia DR1 crossmatch paper, for the original
+      definitions of `BestNeighbour` and `Neighbourhood`.
+    - Marrese et al. 2019, Gaia DR2 crossmatch paper, for the updated Gaia
+      external-catalogue crossmatch algorithm and the specific Hipparcos2
+      discussion.
+    - Gaia DR3 table metadata for:
+      - `gaiadr3.hipparcos2_best_neighbour`
+      - `gaiadr3.hipparcos2_neighbourhood`
+
+    Summary of the official method:
+
+    - Hipparcos2 is treated as a sparse external catalogue.
+    - For sparse catalogues, the external catalogue is the leading catalogue
+      and Gaia is searched for counterparts.
+    - The official match is not symmetric.
+    - The algorithm is positional/astrometric, not photometric.
+    - A "good neighbour" is a nearby Gaia source whose position is compatible
+      with the Hipparcos2 target within the relevant position-error model.
+    - The method uses angular distance, position errors, epoch differences,
+      Gaia astrometric covariance where available, external-catalogue position
+      errors, and local Gaia source density.
+    - The best neighbour is chosen from the good neighbours using a score /
+      figure of merit based on match-vs-chance hypotheses.
+    - The method is explicitly not equivalent to a simple cone search.
+    - For sparse catalogues, a one-to-one best match is forced.
+    - Additional good Gaia neighbours, when present, are represented in the
+      neighbourhood table rather than the best-neighbour table.
+    - The Gaia crossmatch papers use magnitudes and colours for validation and
+      diagnostics, not as the primary best-neighbour decision rule.
+    - Marrese et al. explicitly identify Hipparcos2 as difficult: missing
+      official matches are plausibly linked to non-optimal astrometric
+      solutions caused by multiplicity, variability, and/or peculiar sources.
+    - Marrese et al. also published a separate 1 arcsec Hipparcos2 cone-search
+      association list for DR2 because they expected almost all Hipparcos2
+      sources to have Gaia counterparts, even when the official
+      position-error compatibility criterion did not accept them.
+
+    Assumptions made for this Found-In-Space publication:
+
+    - `source_id` in the official tables is the Gaia source identifier.
+    - `original_ext_source_id` in the official tables is the Hipparcos2/HIP
+      identifier.
+    - `angular_distance` is in arcsec.
+    - `hipparcos2_best_neighbour` is the official winning one-to-one mapping
+      table for matched Hipparcos2 sources.
+    - `hipparcos2_neighbourhood` contains all official good-neighbour candidates
+      for matched Hipparcos2 sources, including the best-neighbour row.
+    - For any given HIP source, `score` is useful for official-neighbour
+      ranking, but we do not assume that scores are globally comparable across
+      unrelated HIP sources.
+    - A local Gaia-HIP pair absent from `hipparcos2_neighbourhood` was not
+      accepted as an official DPAC good neighbour under the published
+      positional/covariance/local-density method.
+    - Absence from `hipparcos2_neighbourhood` is therefore a confidence caveat,
+      but not a display-policy veto: our target problem is visible duplicate
+      artefacts after rendering, not a claim to supersede DPAC astrometry.
+    - Gaia/Hipparcos magnitude agreement should be a sanity or ambiguity
+      feature. It should not be treated as the core identity rule because the
+      official method is not photometric and because `G - Hp` is strongly
+      colour-dependent.
+
+    Local assertions performed against the downloaded official data:
+
+    - Downloaded an official best-neighbour plus Gaia photometry join from
+      Gaia Archive:
+      - rows: `99,525`
+      - finite Gaia `G`: `99,463`
+    - Downloaded `gaiadr3.hipparcos2_neighbourhood`:
+      - rows: `100,010`
+      - unique Gaia source IDs: `100,010`
+      - unique HIP source IDs: `99,525`
+      - duplicate Gaia-HIP pair rows: `0`
+      - HIP sources with multiple official good neighbours: `483`
+      - maximum official good neighbours for one HIP source: `3`
+      - Gaia source IDs linked to multiple HIP sources: `0`
+    - Confirmed every downloaded best-neighbour pair is present in
+      `hipparcos2_neighbourhood`:
+      - best rows checked: `99,525`
+      - best rows found in neighbourhood: `99,525`
+      - best rows missing from neighbourhood: `0`
+    - Confirmed the neighbourhood table adds only a small number of non-best
+      official good-neighbour rows:
+      - non-best neighbourhood rows: `485`
+      - non-best neighbourhood rows also found by our raw local evidence scan:
+        `45`
+    - Confirmed our raw local evidence correctly recovers official winners when
+      they pass our sky/magnitude scan:
+
+    ```text
+    decision             rows    in neighbourhood    best pair
+    official_confirmed  77,398              77,398       77,398
+    manual_review          790                 218          173
+    supplemental_match  15,984                   0            0
+    ```
+
+    - Confirmed no clean raw supplemental candidate is an official
+      neighbourhood row:
+      - supplemental candidates: `15,984`
+      - supplemental candidates in neighbourhood: `0`
+    - Confirmed the conservative raw supplemental candidates are mostly far
+      below visual separability:
+
+    ```text
+    <= 0.10 arcsec    11,644
+    <= 0.25 arcsec    14,973 cumulative
+    <= 0.50 arcsec    15,752 cumulative
+    <= 1.00 arcsec    15,915 cumulative
+    <= 5.00 arcsec    15,984 cumulative
+    ```
+
+    - Calibrated Gaia `G` against Hipparcos `Hp` using the official
+      best-neighbour pairs and confirmed that a naive `abs(G - Hp) <= 0.5`
+      threshold is not an appropriate reproduction of official matching:
+      - median `G - Hp` for official finite `G <= 15` rows: `-0.274220`
+      - `abs(G - Hp) <= 0.5` recovers only `78.0%` of official finite
+        `G <= 15` rows
+      - `abs(G - Hp) <= 1.0` recovers `97.3%`
+      - a colour-corrected residual gate better represents the official
+        passband relationship
+
+    Conclusion:
+
+    - The official Gaia Hipparcos2 crossmatch tables are internally consistent
+      with the assumptions above.
+    - The official neighbourhood table is useful as an ambiguity/conflict flag,
+      but it cannot solve the main Found-In-Space visible duplicate problem:
+      none of the clean local supplemental candidates are official
+      neighbourhood rows.
+    - The Found-In-Space supplemental mapping should therefore be documented as
+      a display de-duplication policy catalogue derived from local sky
+      proximity, one-to-one candidate uniqueness, and magnitude sanity checks.
+    - It should not be described as a replacement for, or correction to, the
+      DPAC scientific crossmatch.
+
+18. Ran a proximity-only diagnostic to decide whether the supplemental display
+    de-duplication policy needs a magnitude gate.
+
+    Purpose:
+
+    - Determine how many Gaia-HIP candidate pairs appear when the raw local
+      scan uses sky proximity only.
+    - Separate official best-neighbour recovery from non-official supplemental
+      display candidates.
+    - Decide whether magnitude should be a hard gate, a sanity flag, or omitted
+      from automatic policy.
+
+    Working outputs:
+
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-proximity-diagnostic/proximity_pairs_5arcsec.parquet`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-proximity-diagnostic/proximity_threshold_summary.csv`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-proximity-diagnostic/proximity_official_adjusted_summary.csv`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-proximity-diagnostic/proximity_diagnostic_summary.json`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-proximity-diagnostic/proximity_one_to_one_5arcsec.csv`
+
+    Full proximity-only scan result:
+
+    - Gaia rows scanned: `36,909,365`
+    - HIP rows scanned: `117,955`
+    - Gaia-HIP pairs within `5 arcsec`: `126,220`
+    - Unique Gaia IDs in proximity pairs: `126,220`
+    - Unique HIP IDs in proximity pairs: `117,837`
+    - One-to-one sky pairs within `5 arcsec`: `109,549`
+    - Isolated sky pairs within `5 arcsec`: `109,549`
+
+    One-to-one sky pairs after removing official best-neighbour pairs:
+
+    ```text
+    sep <= 0.05 arcsec     7,634 non-official pairs
+    sep <= 0.10 arcsec    12,428 non-official pairs
+    sep <= 0.25 arcsec    15,803 non-official pairs
+    sep <= 0.50 arcsec    16,639 non-official pairs
+    sep <= 1.00 arcsec    16,829 non-official pairs
+    sep <= 2.00 arcsec    16,879 non-official pairs
+    sep <= 5.00 arcsec    16,929 non-official pairs
+    ```
+
+    For these non-official one-to-one sky pairs, none are official
+    neighbourhood rows at any tested threshold.
+
+    Effect of simple `abs(G - Hp)` gates on non-official one-to-one sky pairs:
+
+    ```text
+    sep <= 0.25 arcsec:
+      total non-official one-to-one      15,803
+      abs(G-Hp) <= 0.5                  13,918
+      abs(G-Hp) <= 0.75                 15,331
+      abs(G-Hp) <= 1.0                  15,637
+
+    sep <= 5.00 arcsec:
+      total non-official one-to-one      16,929
+      abs(G-Hp) <= 0.5                  14,829
+      abs(G-Hp) <= 0.75                 16,364
+      abs(G-Hp) <= 1.0                  16,729
+    ```
+
+    Effect of colour-corrected residual gates on non-official one-to-one sky
+    pairs:
+
+    ```text
+    sep <= 0.25 arcsec:
+      rows with finite colour residual   15,783
+      abs(residual) <= 0.25              15,366
+      abs(residual) <= 0.5               15,658
+      abs(residual) <= 0.75              15,775
+
+    sep <= 5.00 arcsec:
+      rows with finite colour residual   16,909
+      abs(residual) <= 0.25              16,358
+      abs(residual) <= 0.5               16,710
+      abs(residual) <= 0.75              16,882
+    ```
+
+    Decision:
+
+    - A strict raw `abs(G - Hp) <= 0.5` gate is too aggressive for display
+      de-duplication. It removes about `1,885` otherwise clean non-official
+      one-to-one pairs at `0.25 arcsec`, and about `2,100` at `5 arcsec`.
+    - Proximity and one-to-one sky uniqueness are the primary display
+      de-duplication evidence.
+    - Magnitude should remain in the evidence table and should be used as a
+      review/sanity signal, preferably as a colour-corrected residual.
+    - For automatic supplemental mapping, the likely policy is:
+      - allow very tight one-to-one sky pairs without a hard raw magnitude gate;
+      - flag large raw `G-Hp` differences, missing colour, and large
+        colour-corrected residuals for review or lower confidence;
+      - use a broader raw fallback such as `abs(G-Hp) <= 1.0` only when colour
+        is unavailable and the pair is not extremely tight.
+
+    Working output checksums:
+
+    ```text
+    2d1dbce90e8bef080627d876d5b25a0a5885c8805b6caa645c522793cc6db689  proximity_pairs_5arcsec.parquet
+    cbceadddf0bc21c8d65d1b59771c56a40af73d59ec8d74f7e0dd16d130627c6f  proximity_threshold_summary.csv
+    222fc79f321e1695f4ad39ce7c501d5b04fdf83c4b65a7fcb0613fda8f481e8b  proximity_official_adjusted_summary.csv
+    7b9dc7b97a340d0790b71605572e82408d5e3bd721cb743d748bc12760b20477  proximity_diagnostic_summary.json
+    ```
+
+19. Finalised the current display de-duplication decision lines from the
+    gathered evidence.
+
+    Problem restatement:
+
+    - The target problem is visible Gaia/Hipparcos duplicate artefacts in
+      rendered sky views.
+    - The target output is a deterministic display de-duplication mapping.
+    - This is not a claim that the supplemental mapping is a scientifically
+      superior replacement for the DPAC Gaia/Hipparcos2 crossmatch.
+    - The policy should avoid subjective visual judgement and should be
+      explainable entirely from measured catalogue fields and rendering-risk
+      thresholds.
+
+    Evidence used:
+
+    - Official `hipparcos2_best_neighbour` is internally consistent and should
+      remain the baseline mapping.
+    - Official `hipparcos2_neighbourhood` does not explain the local display
+      duplicates:
+      - clean raw supplemental candidates in neighbourhood: `0 / 15,984`
+    - Most non-official one-to-one proximity candidates are extremely close:
+      - `15,803` non-official one-to-one pairs within `0.25 arcsec`
+      - `16,929` non-official one-to-one pairs within `5 arcsec`
+    - Raw `abs(G-Hp)` is not a suitable hard decision gate:
+      - it is not part of the official matching method;
+      - it is colour-dependent;
+      - `abs(G-Hp) <= 0.5` removes about `1,885` otherwise clean
+        non-official one-to-one pairs at `0.25 arcsec`.
+    - A colour-corrected magnitude residual is useful as evidence, but does not
+      materially change the candidate set:
+      - at `0.25 arcsec`, `abs(residual) <= 0.5` keeps
+        `15,658 / 15,783` rows with finite colour residual;
+      - at `5 arcsec`, `abs(residual) <= 0.5` keeps
+        `16,710 / 16,909` rows with finite colour residual.
+
+    Current deterministic policy:
+
+    1. Official best-neighbour pairs:
+       - include as the baseline Gaia-HIP mapping.
+
+    2. Non-official local Gaia-HIP pairs:
+       - require one-to-one sky uniqueness;
+       - require no official best-neighbour conflict;
+       - require no official neighbourhood conflict.
+
+    3. Automatic supplemental display merge:
+       - if sky separation `<= 0.25 arcsec`, merge for display;
+       - otherwise, if `0.25 < sky separation <= 5 arcsec`, merge for display
+         only when rendered 3D separation is `<= 1 pc`.
+
+    4. Leave both stars visible:
+       - if `0.25 < sky separation <= 5 arcsec` and rendered 3D separation is
+         `> 1 pc`;
+       - if the local field is ambiguous;
+       - if the pair conflicts with an official best-neighbour or official
+         neighbourhood candidate.
+
+    5. Magnitude and colour:
+       - do not use raw `abs(G-Hp)` as a hard gate;
+       - do not use colour-corrected residual as a hard gate in the current
+         policy;
+       - retain raw magnitude delta, `BP-RP`, expected `G-Hp`, and
+         colour-corrected residual in evidence/report outputs for audit and
+         future diagnostics.
+
+    6. Diagnostic outputs:
+       - emit rows that are close on sky but not merged, with explicit reason
+         codes such as:
+         - `ambiguous_local_field`
+         - `official_best_conflict`
+         - `official_neighbourhood_conflict`
+         - `rendered_3d_separation_gt_1pc`
+         - `missing_rendered_distance`
+       - these diagnostics are not a subjective manual merge queue; they are a
+         trace of deterministic non-merge decisions and potential future
+         external-evidence work.
+
+    Remaining implementation requirement:
+
+    - The final supplemental catalogue generation needs to compute
+      `rendered_3d_separation_pc` for proximity candidates using the same
+      display-distance inputs used by the build pipeline.
+    - The source evidence currently available for this release already contains
+      the sky-proximity, official-table, and magnitude/colour diagnostics needed
+      for the rest of the policy.
+
 ## Release Artifacts Created So Far
 
 ```text

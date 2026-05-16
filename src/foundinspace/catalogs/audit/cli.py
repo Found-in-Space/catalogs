@@ -7,6 +7,7 @@ from foundinspace.catalogs.audit.pipeline import (
     run_audit_match,
     run_audit_report,
 )
+from foundinspace.catalogs.audit.raw_match import run_raw_gaia_hip_match
 from foundinspace.pipeline.project import load_project
 
 
@@ -124,6 +125,105 @@ def match_cmd(
         f"evidence={report.evidence_rows:,}, "
         f"supplemental={report.supplemental_rows:,}, "
         f"combined={report.combined_rows:,}"
+    )
+
+
+@cli.command(name="raw-match")
+@click.option(
+    "--hip-ecsv",
+    required=True,
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    help="Raw Hipparcos ECSV input.",
+)
+@click.option(
+    "--gaia-parquet",
+    required=True,
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    help="Skinny Gaia Parquet input with source_id, ra, dec, and phot_g_mean_mag.",
+)
+@click.option(
+    "--official-crossmatch",
+    required=True,
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    help="Official Gaia-HIP crossmatch, as pipeline Parquet or Gaia ECSV.",
+)
+@click.option(
+    "--output-dir",
+    required=True,
+    type=click.Path(file_okay=False, path_type=Path),
+    help="Directory for raw match evidence and crossmatch outputs.",
+)
+@click.option("--force", "-f", is_flag=True, default=False)
+@click.option(
+    "--max-sep-arcsec",
+    type=float,
+    default=5.0,
+    show_default=True,
+    help="Maximum angular separation for raw local Gaia/HIP evidence.",
+)
+@click.option(
+    "--max-mag-delta",
+    type=float,
+    default=0.5,
+    show_default=True,
+    help="Maximum Gaia G / Hipparcos Hp apparent-magnitude difference.",
+)
+@click.option(
+    "--batch-size",
+    type=int,
+    default=500_000,
+    show_default=True,
+    help="Gaia rows per streaming scan batch.",
+)
+@click.option(
+    "--workers",
+    type=int,
+    default=-1,
+    show_default=True,
+    help="SciPy cKDTree worker count; -1 uses all available workers.",
+)
+def raw_match_cmd(
+    hip_ecsv: Path,
+    gaia_parquet: Path,
+    official_crossmatch: Path,
+    output_dir: Path,
+    force: bool,
+    max_sep_arcsec: float,
+    max_mag_delta: float,
+    batch_size: int,
+    workers: int,
+) -> None:
+    """Build raw sky-and-apparent-magnitude Gaia/HIP match evidence."""
+    try:
+        report = run_raw_gaia_hip_match(
+            hip_ecsv_path=hip_ecsv,
+            gaia_parquet_path=gaia_parquet,
+            official_crossmatch_path=official_crossmatch,
+            output_dir=output_dir,
+            max_sep_arcsec=max_sep_arcsec,
+            max_mag_delta=max_mag_delta,
+            batch_size=batch_size,
+            workers=workers,
+            force=force,
+        )
+    except (RuntimeError, ValueError, FileExistsError, FileNotFoundError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(f"HIP match sources: {Path(report.hip_match_sources_path).resolve()}")
+    click.echo(f"Raw match evidence: {Path(report.match_evidence_path).resolve()}")
+    click.echo(
+        f"Raw supplemental crossmatch: "
+        f"{Path(report.supplemental_crossmatch_path).resolve()}"
+    )
+    click.echo(
+        f"Raw combined crossmatch: {Path(report.combined_crossmatch_path).resolve()}"
+    )
+    click.echo(f"Report: {Path(report.report_path).resolve()}")
+    click.echo(
+        "Summary: "
+        f"gaia_scanned={report.gaia_rows_scanned:,}, "
+        f"evidence={report.evidence_rows:,}, "
+        f"supplemental={report.supplemental_rows:,}, "
+        f"official_confirmed={report.official_pairs_confirmed:,}"
     )
 
 
