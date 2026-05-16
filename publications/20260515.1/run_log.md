@@ -1302,10 +1302,40 @@ evidence package.
     aef5ed119449bd3c14cc0abaf53ef931759c4db4f8d4687b1191dcc551f5e548  evidence/gaia_g15_parallax_conversion_summary.json
     ```
 
+24. Added explicit licensing and upstream publication notices.
+
+    Decision:
+
+    - Treat this publication as an academic public-interest data work.
+    - Release Found-in-Space original material in the publication under
+      CC BY 4.0.
+    - Preserve upstream source terms and credit requirements for Gaia,
+      Hipparcos/Tycho, VizieR/CDS, and source-derived evidence.
+    - Add explicit references to the scientific publications that underpin the
+      source catalogues and crossmatch methodology.
+
+    Added files:
+
+    ```text
+    LICENSE.txt
+    NOTICE.md
+    ```
+
+    Root repository licensing was also clarified:
+
+    - repository software and Found-in-Space-authored maintenance docs:
+      MIT License;
+    - catalog publications:
+      publication-specific license and notice files;
+    - upstream-derived evidence:
+      upstream terms apply.
+
 ## Release Artifacts Created So Far
 
 ```text
 publications/20260515.1/
+  LICENSE.txt
+  NOTICE.md
   README.md
   checksums.sha256
   manifest.toml

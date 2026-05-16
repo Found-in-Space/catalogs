@@ -7,7 +7,7 @@ and build records, not pipeline implementation code. Downstream builders can
 consume these files as inputs and record the exact publication releases that
 were used.
 
-Status: draft repository layout. No public publication has been made yet.
+Status: public repository with initial catalog publication work in progress.
 
 ## Repository Roles
 
@@ -59,5 +59,10 @@ uv sync --group <group>
 
 ## License
 
-License is not selected yet. Choose and document the data license before the
-first public release.
+Repository software, scripts, schemas, templates, and Found-in-Space-authored
+documentation are released under the MIT License. See [LICENSE](LICENSE).
+
+Catalog publications are academic data works and may carry publication-specific
+license and notice files. Source catalog data and derived evidence may remain
+subject to upstream source terms. See [NOTICE.md](NOTICE.md) and the
+`LICENSE.txt` / `NOTICE.md` files inside each publication directory.

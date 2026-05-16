@@ -1,0 +1,55 @@
+# License for Publication 20260515.1
+
+Publication: Gaia-HIP supplemental display de-duplication map
+
+This publication is an academic public-interest data work.
+
+## Found in Space Original Material
+
+To the extent that Found in Space holds copyright, database rights, or related
+rights in the original material in this publication, that material is released
+under the Creative Commons Attribution 4.0 International License (CC BY 4.0).
+
+This includes:
+
+- publication text and documentation;
+- Found-in-Space-authored figures and generated summary files;
+- the Found-in-Space supplemental mapping delta in
+  `catalog/fis_gaia_hip_supplemental_display_map.parquet`;
+- selection, arrangement, and explanatory material authored for this release.
+
+License text: https://creativecommons.org/licenses/by/4.0/
+
+Suggested attribution:
+
+> Found in Space, "Gaia-HIP supplemental display de-duplication map",
+> publication 20260515.1, 2026.
+
+## Upstream Data and Derived Evidence
+
+This publication includes evidence and metadata derived from upstream
+astronomical catalogues. Those upstream data and any rights in them remain
+subject to their source terms, citation requirements, and credit requirements.
+
+In particular:
+
+- Gaia DR3 data are open and free to use provided credit is given to
+  ESA/Gaia/DPAC, and Gaia asks users to cite the Gaia mission and DR3 release
+  papers.
+- ESA states that the Hipparcos and Tycho catalogues are distributed under the
+  Creative Commons Attribution-NonCommercial 3.0 IGO License (CC BY-NC 3.0 IGO)
+  and require credit to ESA.
+- VizieR/CDS catalogue access should be acknowledged where it was used.
+
+The evidence files in `evidence/` are provided for scholarly provenance and
+reproducibility. They should be reused with attention to the upstream terms
+listed in `NOTICE.md`.
+
+## No Warranty
+
+This publication is provided as-is, without warranty of any kind. It is a
+display de-duplication aid for Found in Space catalog builds, not a replacement
+for the official Gaia or Hipparcos scientific catalogues.
+
+Use of upstream catalog names, identifiers, or data does not imply endorsement
+by ESA, DPAC, CDS, VizieR, or the original catalogue authors.

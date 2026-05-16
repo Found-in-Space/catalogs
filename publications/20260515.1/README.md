@@ -12,6 +12,15 @@ Gaia-HIP display mapping.
 Large source downloads remain in local scratch and are recorded by checksum and
 query metadata rather than committed as release payloads.
 
+## License And Notice
+
+Found in Space original material in this publication is released under CC BY
+4.0, as described in `LICENSE.txt`.
+
+Source catalogue data and source-derived evidence remain subject to upstream
+terms and credit requirements. See `NOTICE.md` for Gaia, Hipparcos/Tycho,
+VizieR/CDS acknowledgements and publication references.
+
 ## Catalog
 
 - `catalog/fis_gaia_hip_supplemental_display_map.parquet` - the published

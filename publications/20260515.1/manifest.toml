@@ -29,8 +29,25 @@ healpix_neighbor_footprint_summary = "evidence/hip_healpix_neighbor_footprint_su
 healpix_footprint_summary = "evidence/hip_healpix_footprint_summary.json"
 run_log = "run_log.md"
 checksums = "checksums.sha256"
+license = "LICENSE.txt"
+notice = "NOTICE.md"
 
 [provenance]
 created_by = "Found in Space"
 created_at = "2026-05-16"
 notes = "Publishes only the Found-In-Space supplemental mapping delta. The official Gaia Hipparcos2 best-neighbour map and the local combined build-convenience map are not included."
+
+[license]
+found_in_space_original_material = "CC-BY-4.0"
+upstream_terms_apply = true
+summary = "Found in Space original publication material is released under CC BY 4.0. Upstream Gaia, Hipparcos/Tycho, VizieR/CDS terms and credit requirements apply to source-derived evidence."
+
+[references]
+gaia_mission = "Gaia Collaboration et al. 2016, A&A 595, A1, doi:10.1051/0004-6361/201629272"
+gaia_dr3 = "Gaia Collaboration et al. 2023, A&A 674, A1, doi:10.1051/0004-6361/202243940"
+gaia_dr1_crossmatch = "Marrese et al. 2017, A&A 605, A105, doi:10.1051/0004-6361/201629920"
+gaia_dr2_crossmatch = "Marrese et al. 2019, A&A 621, A144, doi:10.1051/0004-6361/201834142"
+hipparcos_new_reduction_validation = "van Leeuwen 2007, A&A 474, 653-664, doi:10.1051/0004-6361:20078357"
+hipparcos_new_reduction_book = "van Leeuwen 2007, Hipparcos, the New Reduction of the Raw Data, Astrophysics and Space Science Library 350"
+hipparcos_tycho_catalogues = "ESA 1997, The Hipparcos and Tycho Catalogues, ESA SP-1200"
+vizier = "Ochsenbein et al. 2000, A&AS 143, 23-32, doi:10.1051/aas:2000169"
