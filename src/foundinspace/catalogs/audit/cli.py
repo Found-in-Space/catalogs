@@ -148,6 +148,12 @@ def match_cmd(
     help="Official Gaia-HIP crossmatch, as pipeline Parquet or Gaia ECSV.",
 )
 @click.option(
+    "--official-neighbourhood",
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    default=None,
+    help="Optional Gaia hipparcos2_neighbourhood table for conflict checks.",
+)
+@click.option(
     "--output-dir",
     required=True,
     type=click.Path(file_okay=False, path_type=Path),
@@ -164,9 +170,22 @@ def match_cmd(
 @click.option(
     "--max-mag-delta",
     type=float,
-    default=0.5,
+    default=None,
+    help="Optional hard Gaia G / Hipparcos Hp magnitude gate. Omit to record only.",
+)
+@click.option(
+    "--auto-sep-arcsec",
+    type=float,
+    default=0.25,
     show_default=True,
-    help="Maximum Gaia G / Hipparcos Hp apparent-magnitude difference.",
+    help="Maximum sky separation for automatic tight display matches.",
+)
+@click.option(
+    "--max-rendered-separation-pc",
+    type=float,
+    default=1.0,
+    show_default=True,
+    help="Maximum parallax-derived 3D separation for non-tight display matches.",
 )
 @click.option(
     "--batch-size",
@@ -186,10 +205,13 @@ def raw_match_cmd(
     hip_ecsv: Path,
     gaia_parquet: Path,
     official_crossmatch: Path,
+    official_neighbourhood: Path | None,
     output_dir: Path,
     force: bool,
     max_sep_arcsec: float,
-    max_mag_delta: float,
+    max_mag_delta: float | None,
+    auto_sep_arcsec: float,
+    max_rendered_separation_pc: float,
     batch_size: int,
     workers: int,
 ) -> None:
@@ -199,9 +221,12 @@ def raw_match_cmd(
             hip_ecsv_path=hip_ecsv,
             gaia_parquet_path=gaia_parquet,
             official_crossmatch_path=official_crossmatch,
+            official_neighbourhood_path=official_neighbourhood,
             output_dir=output_dir,
             max_sep_arcsec=max_sep_arcsec,
             max_mag_delta=max_mag_delta,
+            auto_sep_arcsec=auto_sep_arcsec,
+            max_rendered_separation_pc=max_rendered_separation_pc,
             batch_size=batch_size,
             workers=workers,
             force=force,

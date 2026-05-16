@@ -137,6 +137,159 @@ def test_raw_supplemental_crossmatch_is_empty_without_clean_matches():
     assert supplemental.empty
 
 
+def test_raw_match_uses_parallax_distance_for_non_tight_pairs(tmp_path: Path):
+    pytest.importorskip("scipy")
+
+    hip_ecsv = tmp_path / "hip.ecsv"
+    gaia_path = tmp_path / "gaia.parquet"
+    official_path = tmp_path / "official.parquet"
+    output_dir = tmp_path / "raw"
+    Table(
+        {
+            "HIP": [10, 11],
+            "RArad": [10.0, 20.0],
+            "DErad": [0.0, 0.0],
+            "Plx": [10.0, 10.0],
+            "e_Plx": [0.1, 0.1],
+            "pmRA": [0.0, 0.0],
+            "pmDE": [0.0, 0.0],
+            "Hpmag": [9.0, 8.0],
+        }
+    ).write(hip_ecsv, format="ascii.ecsv", overwrite=True)
+    arcsec = 1.0 / 3600.0
+    _write_parquet(
+        pd.DataFrame(
+            {
+                "source_id": [100, 101],
+                "ra": [10.0 + 1.0 * arcsec, 20.0 + 1.0 * arcsec],
+                "dec": [0.0, 0.0],
+                "phot_g_mean_mag": [11.0, 8.1],
+                "phot_bp_mean_mag": [11.5, 8.5],
+                "phot_rp_mean_mag": [10.5, 7.5],
+                "parallax": [10.05, 5.0],
+                "parallax_error": [0.1, 0.1],
+            }
+        ),
+        gaia_path,
+    )
+    _write_parquet(
+        pd.DataFrame(
+            columns=[
+                "gaia_source_id",
+                "hip_source_id",
+                "mapping_source",
+                "number_of_neighbours",
+                "angular_distance",
+            ]
+        ),
+        official_path,
+    )
+
+    run_raw_gaia_hip_match(
+        hip_ecsv_path=hip_ecsv,
+        gaia_parquet_path=gaia_path,
+        official_crossmatch_path=official_path,
+        output_dir=output_dir,
+        max_sep_arcsec=5.0,
+        batch_size=2,
+        workers=1,
+        force=True,
+    )
+
+    evidence = pd.read_parquet(output_dir / RAW_MATCH_EVIDENCE_FILENAME)
+    by_pair = {
+        (row.gaia_source_id, row.hip_source_id): row
+        for row in evidence.itertuples(index=False)
+    }
+    assert by_pair[("100", "10")].decision == "supplemental_match"
+    assert bool(by_pair[("100", "10")].within_rendered_distance_threshold) is True
+    assert by_pair[("100", "10")].rendered_3d_separation_pc < 1.0
+    assert by_pair[("100", "10")].apparent_mag_delta > 0.5
+
+    assert by_pair[("101", "11")].decision == "display_separate"
+    assert by_pair[("101", "11")].rendered_3d_separation_pc > 1.0
+
+    supplemental = pd.read_parquet(output_dir / RAW_SUPPLEMENTAL_MAP_FILENAME)
+    assert supplemental[["gaia_source_id", "hip_source_id"]].values.tolist() == [
+        [100, 10]
+    ]
+
+
+def test_raw_match_respects_official_neighbourhood_conflicts(tmp_path: Path):
+    pytest.importorskip("scipy")
+
+    hip_ecsv = tmp_path / "hip.ecsv"
+    gaia_path = tmp_path / "gaia.parquet"
+    official_path = tmp_path / "official.parquet"
+    neighbourhood_path = tmp_path / "neighbourhood.parquet"
+    output_dir = tmp_path / "raw"
+    Table(
+        {
+            "HIP": [10],
+            "RArad": [10.0],
+            "DErad": [0.0],
+            "Plx": [10.0],
+            "e_Plx": [0.1],
+            "pmRA": [0.0],
+            "pmDE": [0.0],
+            "Hpmag": [9.0],
+        }
+    ).write(hip_ecsv, format="ascii.ecsv", overwrite=True)
+    arcsec = 1.0 / 3600.0
+    _write_parquet(
+        pd.DataFrame(
+            {
+                "source_id": [100],
+                "ra": [10.0 + 0.1 * arcsec],
+                "dec": [0.0],
+                "phot_g_mean_mag": [9.1],
+                "phot_bp_mean_mag": [9.5],
+                "phot_rp_mean_mag": [8.5],
+                "parallax": [10.0],
+                "parallax_error": [0.1],
+            }
+        ),
+        gaia_path,
+    )
+    columns = [
+        "gaia_source_id",
+        "hip_source_id",
+        "mapping_source",
+        "number_of_neighbours",
+        "angular_distance",
+    ]
+    _write_parquet(pd.DataFrame(columns=columns), official_path)
+    _write_parquet(
+        pd.DataFrame(
+            {
+                "gaia_source_id": [999],
+                "hip_source_id": [10],
+                "mapping_source": ["neighbourhood"],
+                "number_of_neighbours": [1],
+                "angular_distance": [0.2],
+            }
+        ),
+        neighbourhood_path,
+    )
+
+    run_raw_gaia_hip_match(
+        hip_ecsv_path=hip_ecsv,
+        gaia_parquet_path=gaia_path,
+        official_crossmatch_path=official_path,
+        official_neighbourhood_path=neighbourhood_path,
+        output_dir=output_dir,
+        max_sep_arcsec=1.0,
+        batch_size=1,
+        workers=1,
+        force=True,
+    )
+
+    evidence = pd.read_parquet(output_dir / RAW_MATCH_EVIDENCE_FILENAME)
+    assert evidence.loc[0, "decision"] == "manual_review"
+    assert bool(evidence.loc[0, "official_neighbourhood_conflict"]) is True
+    assert "official_neighbourhood_conflict" in evidence.loc[0, "reasons"]
+
+
 def test_raw_match_preserves_large_gaia_source_ids(tmp_path: Path):
     pytest.importorskip("scipy")
 

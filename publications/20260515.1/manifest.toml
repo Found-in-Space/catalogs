@@ -1,18 +1,25 @@
 format_version = 1
 release = "20260515.1"
-title = "Gaia/HIP source download evidence"
-status = "draft"
+title = "Gaia-HIP supplemental display de-duplication map"
+status = "release-candidate"
 
 [summary]
-description = "Source-data evidence package for deriving the Gaia download cutoff used by the Gaia-HIP mapping publication."
+description = "Found-In-Space supplemental Gaia-Hipparcos2 display de-duplication map, with source-download and match-policy evidence."
 
 [inputs]
 hipparcos_catalog = "Vizier I/311/hip2"
 official_gaia_hip_crossmatch = "gaiadr3.hipparcos2_best_neighbour"
+official_gaia_hip_neighbourhood = "gaiadr3.hipparcos2_neighbourhood"
 gaia_photometry_source = "gaiadr3.gaia_source"
 local_scratch_root = "local/runs/source-20260515.1"
 
 [outputs]
+supplemental_display_map = "catalog/fis_gaia_hip_supplemental_display_map.parquet"
+display_match_evidence = "evidence/gaia_hip_display_match_evidence.parquet"
+display_match_report = "evidence/gaia_hip_display_match_report.json"
+gaia_parallax_download_query = "evidence/gaia_g15_parallax_download.adql"
+gaia_parallax_download_state = "evidence/gaia_g15_parallax_download_state.json"
+gaia_parallax_conversion_summary = "evidence/gaia_g15_parallax_conversion_summary.json"
 magnitude_relationship_plot = "evidence/hip_gaia_magnitude_relationship.png"
 magnitude_relationship_data = "evidence/hip_gaia_magnitude_relationship.parquet"
 magnitude_relationship_outliers = "evidence/hip_gaia_magnitude_outliers.csv"
@@ -21,8 +28,9 @@ healpix_cone_footprint_summary = "evidence/hip_healpix_cone_footprint_summary.cs
 healpix_neighbor_footprint_summary = "evidence/hip_healpix_neighbor_footprint_summary.csv"
 healpix_footprint_summary = "evidence/hip_healpix_footprint_summary.json"
 run_log = "run_log.md"
+checksums = "checksums.sha256"
 
 [provenance]
 created_by = "Found in Space"
 created_at = "2026-05-16"
-notes = "Draft evidence publication. Raw downloads and processed source shards are currently local scratch artifacts, not committed release payloads."
+notes = "Publishes only the Found-In-Space supplemental mapping delta. The official Gaia Hipparcos2 best-neighbour map and the local combined build-convenience map are not included."

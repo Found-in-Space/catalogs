@@ -1,0 +1,33 @@
+{
+  "hip_ecsv_path": "local/runs/source-20260515.1/data/catalogs/hipparcos2.ecsv",
+  "gaia_parquet_path": "local/runs/source-20260515.1/data/processed/gaia-g15-parallax-match/gaia_g15_parallax.parquet",
+  "official_crossmatch_path": "local/runs/source-20260515.1/data/catalogs/gaia_hip_official_gmag.ecsv",
+  "official_neighbourhood_path": "local/runs/source-20260515.1/data/processed/gaia-hip-neighbourhood/hipparcos2_neighbourhood.parquet",
+  "output_dir": "local/runs/source-20260515.1/data/processed/gaia-hip-raw-match-parallax",
+  "hip_match_sources_path": "local/runs/source-20260515.1/data/processed/gaia-hip-raw-match-parallax/raw_hip_match_sources.parquet",
+  "match_evidence_path": "local/runs/source-20260515.1/data/processed/gaia-hip-raw-match-parallax/raw_match_evidence.parquet",
+  "supplemental_crossmatch_path": "local/runs/source-20260515.1/data/processed/gaia-hip-raw-match-parallax/raw_supplemental_gaia_hip_map.parquet",
+  "combined_crossmatch_path": "local/runs/source-20260515.1/data/processed/gaia-hip-raw-match-parallax/raw_combined_gaia_hip_map.parquet",
+  "report_path": "local/runs/source-20260515.1/data/processed/gaia-hip-raw-match-parallax/raw_match_report.json",
+  "max_sep_arcsec": 5.0,
+  "max_mag_delta": null,
+  "auto_sep_arcsec": 0.25,
+  "max_rendered_separation_pc": 1.0,
+  "gaia_rows_scanned": 36909365,
+  "gaia_rows_skipped": 0,
+  "hip_rows_raw": 117955,
+  "hip_rows_prepared": 117955,
+  "evidence_rows": 126220,
+  "supplemental_rows": 15916,
+  "combined_rows": 115441,
+  "decision_counts": {
+    "official_confirmed": 92620,
+    "manual_review": 16753,
+    "supplemental_match": 15916,
+    "display_separate": 931
+  },
+  "official_rows": 99525,
+  "official_neighbourhood_rows": 100010,
+  "official_pairs_in_evidence": 99430,
+  "official_pairs_confirmed": 92620
+}

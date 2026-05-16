@@ -1042,23 +1042,282 @@ evidence package.
          trace of deterministic non-merge decisions and potential future
          external-evidence work.
 
-    Remaining implementation requirement:
+    Remaining implementation requirement at this point:
 
     - The final supplemental catalogue generation needs to compute
-      `rendered_3d_separation_pc` for proximity candidates using the same
-      display-distance inputs used by the build pipeline.
+      `rendered_3d_separation_pc` for proximity candidates.
     - The source evidence currently available for this release already contains
       the sky-proximity, official-table, and magnitude/colour diagnostics needed
       for the rest of the policy.
+    - Steps 20-22 below resolve the distance-evidence gap with a narrow
+      Gaia root-table parallax download rather than a full Gaia pipeline field
+      download.
+
+20. Reran the full-sky Gaia `G <= 15` matching download with only root-table
+    parallax fields added.
+
+    Reason:
+
+    - The previous `gaia_g15_skinny` download had the fields needed for sky
+      proximity and magnitude/colour diagnostics, but not distance evidence:
+      `source_id`, `ra`, `dec`, `phot_g_mean_mag`, `phot_bp_mean_mag`,
+      `phot_rp_mean_mag`.
+    - For display de-duplication we only need an approximate rendered-distance
+      comparison, so Gaia root-table `parallax` is sufficient evidence.
+    - `parallax_error` is included to allow later quality checks and to flag
+      cases where the parallax-derived distance is unreliable.
+    - No external distance or astrophysical-parameter joins were used.
+
+    Query:
+
+    ```sql
+    SELECT
+      source_id,
+      ra,
+      dec,
+      phot_g_mean_mag,
+      phot_bp_mean_mag,
+      phot_rp_mean_mag,
+      parallax,
+      parallax_error
+    FROM gaiadr3.gaia_source
+    WHERE
+      phot_g_mean_mag <= 15
+    ```
+
+    Result:
+
+    - Expected rows from the previous identical-`WHERE` count:
+      `36,909,365`
+    - Gaia job name: `fis-gaia-g15-parallax-52b3939a`
+    - Gaia job ID: `e6117c1e-512c-11f1-8c53-bc97e148b76b-O`
+    - Query hash:
+      `52b3939a5d3f00f88f38799446d83356ab9f69bf5bdaaf654c598337ee33f25c`
+    - Local query:
+      `local/runs/source-20260515.1/data/catalogs/gaia-g15-parallax-match/gaia_g15_parallax_full.adql`
+    - Local output:
+      `local/runs/source-20260515.1/data/catalogs/gaia-g15-parallax-match/gaia_g15_parallax_full.vot.gz`
+    - Downloaded bytes: `1,778,025,432`
+    - Gzip integrity check: passed.
+    - Remote Gaia job was deleted after download.
+
+    Checksums:
+
+    ```text
+    b38b3a83633027546a0f8d9a4e5d1a0c674189b7d9ca1e507857def1dec7540b  gaia_g15_parallax_full.adql
+    cec2c725469671d6745f0f21f335b2899092e5d560bd0c99d12a6464d232e9f7  gaia_g15_parallax_full.vot.gz
+    5061c7c32e8723cc8b01b2fb5e14a317d7c847e81ef8c5a2b26735563e60c0de  gaia_g15_parallax_full_state.json
+    ```
+
+21. Converted the Gaia `G <= 15` parallax VOTable into a raw Parquet working
+    table.
+
+    Purpose:
+
+    - Preserve the raw Gaia fields needed by the display de-duplication
+      matcher:
+      `source_id`, `ra`, `dec`, `phot_g_mean_mag`, `phot_bp_mean_mag`,
+      `phot_rp_mean_mag`, `parallax`, `parallax_error`.
+    - Avoid running the full Gaia pipeline transform for this catalogue
+      evidence step; the matcher needs candidate evidence, not dense star
+      output.
+
+    Conversion result:
+
+    - Input:
+      `local/runs/source-20260515.1/data/catalogs/gaia-g15-parallax-match/gaia_g15_parallax_full.vot.gz`
+    - Output:
+      `local/runs/source-20260515.1/data/processed/gaia-g15-parallax-match/gaia_g15_parallax.parquet`
+    - Summary:
+      `local/runs/source-20260515.1/data/processed/gaia-g15-parallax-match/gaia_g15_parallax.summary.json`
+    - Rows: `36,909,365`
+    - Streamed batches: `74`
+    - Batch size: `500,000`
+    - Elapsed time: `163.615` seconds
+    - Parquet bytes: `1,772,003,171`
+
+    Checksums:
+
+    ```text
+    f0085a618b7915b1ab9f98e240db90a17c5be519cd21cafa53c630afd49063f0  gaia_g15_parallax.parquet
+    aef5ed119449bd3c14cc0abaf53ef931759c4db4f8d4687b1191dcc551f5e548  gaia_g15_parallax.summary.json
+    ```
+
+22. Updated and reran the raw Gaia-HIP display matching scan with parallax
+    distance evidence.
+
+    Implementation change:
+
+    - The raw matcher now treats raw magnitude difference as evidence rather
+      than a hard default gate.
+    - The matcher records Gaia and HIP parallax-derived distances, parallax
+      fractional errors, and rendered 3D separation in parsecs.
+    - Automatic supplemental display matches use the deterministic policy from
+      step 19:
+      - one-to-one local sky candidate;
+      - no official best-neighbour conflict;
+      - no official neighbourhood conflict;
+      - sky separation `<= 0.25 arcsec`, or rendered 3D separation `<= 1 pc`.
+    - Pairs outside the display rule are retained in evidence as deterministic
+      `display_separate` diagnostics rather than subjective manual overrides.
+
+    Command:
+
+    ```bash
+    uv run --group audit fis-catalogs audit raw-match \
+      --hip-ecsv local/runs/source-20260515.1/data/catalogs/hipparcos2.ecsv \
+      --gaia-parquet local/runs/source-20260515.1/data/processed/gaia-g15-parallax-match/gaia_g15_parallax.parquet \
+      --official-crossmatch local/runs/source-20260515.1/data/catalogs/gaia_hip_official_gmag.ecsv \
+      --official-neighbourhood local/runs/source-20260515.1/data/processed/gaia-hip-neighbourhood/hipparcos2_neighbourhood.parquet \
+      --output-dir local/runs/source-20260515.1/data/processed/gaia-hip-raw-match-parallax \
+      --max-sep-arcsec 5.0 \
+      --auto-sep-arcsec 0.25 \
+      --max-rendered-separation-pc 1.0 \
+      --batch-size 500000 \
+      --workers -1 \
+      --force
+    ```
+
+    Outputs:
+
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-raw-match-parallax/raw_hip_match_sources.parquet`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-raw-match-parallax/raw_match_evidence.parquet`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-raw-match-parallax/raw_supplemental_gaia_hip_map.parquet`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-raw-match-parallax/raw_combined_gaia_hip_map.parquet`
+    - `local/runs/source-20260515.1/data/processed/gaia-hip-raw-match-parallax/raw_match_report.json`
+
+    Scan result:
+
+    - Gaia rows scanned: `36,909,365`
+    - Gaia rows skipped: `0`
+    - HIP rows prepared: `117,955`
+    - Evidence pairs within `5 arcsec`: `126,220`
+    - Supplemental display matches: `15,916`
+    - Combined official plus supplemental rows: `115,441`
+    - Official rows: `99,525`
+    - Official neighbourhood rows: `100,010`
+    - Official pairs found in evidence: `99,430`
+    - Official pairs confirmed without local ambiguity: `92,620`
+
+    Decision counts:
+
+    ```text
+    official_confirmed    92,620
+    manual_review         16,753
+    supplemental_match    15,916
+    display_separate         931
+    ```
+
+    Supplemental match split:
+
+    ```text
+    tight sky separation <= 0.25 arcsec          15,725
+    non-tight rendered 3D separation <= 1 pc        191
+    ```
+
+    Non-merged display diagnostics:
+
+    ```text
+    display_separate rows                         931
+    finite rendered 3D separation                 739
+    missing rendered 3D separation                192
+    ```
+
+    Supplemental apparent-magnitude evidence:
+
+    ```text
+    median abs(G-Hp)       0.244000
+    90th percentile        0.531337
+    95th percentile        0.655862
+    99th percentile        1.010475
+    max                    2.586314
+    abs(G-Hp) > 0.5        1,917 rows
+    abs(G-Hp) > 1.0          166 rows
+    ```
+
+    One-to-one validation:
+
+    - Supplemental map rows: `15,916`
+    - Supplemental unique Gaia IDs: `15,916`
+    - Supplemental unique HIP IDs: `15,916`
+    - Combined map rows: `115,441`
+    - Combined unique Gaia IDs: `115,441`
+    - Combined unique HIP IDs: `115,441`
+    - Supplemental `mapping_source`: `fis_raw_sky_render_v1`
+
+    Checksums:
+
+    ```text
+    64ac2fd8fd87d53d3be78ac93d2c8d729e274398b5579f0433e7c979177f74d8  raw_hip_match_sources.parquet
+    1a39dc68bdf9639db6a8bf240387e8aa125a632a7bf34fe7e07b6ffeb3bbef35  raw_match_evidence.parquet
+    576c47cf715d6649ccf6fcbfa4f277d76d4399d7227cfb31297778bc6b82e7ad  raw_supplemental_gaia_hip_map.parquet
+    dee4d88b0f5f42bb903cdf3680063daa50ba3d1d686f29d5f9472f9488caaff2  raw_combined_gaia_hip_map.parquet
+    1f5b85ccfc08ee1a7e68ebfe89e9558c242fc6a7aec1a9cd2b349f9042b2cd04  raw_match_report.json
+    ```
+
+    Verification:
+
+    ```text
+    uv run --group audit pytest -q        -> 9 passed
+    uv run --with ruff ruff check .       -> All checks passed
+    ```
+
+23. Prepared the publishable release artifact set.
+
+    Decision:
+
+    - Publish the Found-In-Space supplemental display map only.
+    - Do not publish the local combined official-plus-supplemental map. That
+      file is a build-convenience and validation artifact, and publishing it
+      would amount to republishing the official Gaia best-neighbour table with
+      our delta appended.
+    - Downstream builds should compose the official Gaia
+      `hipparcos2_best_neighbour` map with this supplemental map at build time.
+
+    Published catalog artifact:
+
+    - `catalog/fis_gaia_hip_supplemental_display_map.parquet`
+      - rows: `15,916`
+      - bytes: `241,298`
+      - SHA-256:
+        `576c47cf715d6649ccf6fcbfa4f277d76d4399d7227cfb31297778bc6b82e7ad`
+
+    Published evidence artifacts added in this step:
+
+    ```text
+    evidence/gaia_hip_display_match_evidence.parquet
+    evidence/gaia_hip_display_match_report.json
+    evidence/gaia_g15_parallax_download.adql
+    evidence/gaia_g15_parallax_download_state.json
+    evidence/gaia_g15_parallax_conversion_summary.json
+    ```
+
+    Checksums for the added evidence artifacts:
+
+    ```text
+    1a39dc68bdf9639db6a8bf240387e8aa125a632a7bf34fe7e07b6ffeb3bbef35  evidence/gaia_hip_display_match_evidence.parquet
+    1f5b85ccfc08ee1a7e68ebfe89e9558c242fc6a7aec1a9cd2b349f9042b2cd04  evidence/gaia_hip_display_match_report.json
+    b38b3a83633027546a0f8d9a4e5d1a0c674189b7d9ca1e507857def1dec7540b  evidence/gaia_g15_parallax_download.adql
+    5061c7c32e8723cc8b01b2fb5e14a317d7c847e81ef8c5a2b26735563e60c0de  evidence/gaia_g15_parallax_download_state.json
+    aef5ed119449bd3c14cc0abaf53ef931759c4db4f8d4687b1191dcc551f5e548  evidence/gaia_g15_parallax_conversion_summary.json
+    ```
 
 ## Release Artifacts Created So Far
 
 ```text
 publications/20260515.1/
   README.md
+  checksums.sha256
   manifest.toml
   run_log.md
+  catalog/
+    fis_gaia_hip_supplemental_display_map.parquet
   evidence/
+    gaia_g15_parallax_conversion_summary.json
+    gaia_g15_parallax_download.adql
+    gaia_g15_parallax_download_state.json
+    gaia_hip_display_match_evidence.parquet
+    gaia_hip_display_match_report.json
     hip_gaia_magnitude_relationship.parquet
     hip_gaia_magnitude_relationship.png
     hip_gaia_magnitude_outliers.csv
@@ -1070,12 +1329,5 @@ publications/20260515.1/
 
 ## Artifact Checksums
 
-```text
-5b13649244920aeb19071f61f9bb0502672d39f674ae224274d89b92b3a25777  evidence/hip_gaia_magnitude_outliers.csv
-b1218e2be847ab7dbd838a9f25504106ae7d91252a98a9df777565082e6506b4  evidence/hip_gaia_magnitude_relationship.parquet
-7d1d10020d9da6cb637230e78f8992b80f80c9df08a32527ab48136e47301f76  evidence/hip_gaia_magnitude_relationship.png
-e4764a5b931821e02653151371d758ba7c5079ac93c9bcd7e5989f12d5d75532  evidence/hip_gaia_magnitude_summary.json
-fb2246d7c383bbdbcd7ba1b0c4a184273f82af661b5311ebadd51af8bf08b9aa  evidence/hip_healpix_cone_footprint_summary.csv
-739403c8193441909f266444a1d0ec307a4c7af00a79fa95e07f7b1cd094c9d5  evidence/hip_healpix_footprint_summary.json
-c014472f97179be106bbdd8fa78748b2444d11dbc088bf8acd84c7a665814167  evidence/hip_healpix_neighbor_footprint_summary.csv
-```
+The complete generated checksum record for the publication is
+`checksums.sha256`.

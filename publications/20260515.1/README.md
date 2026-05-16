@@ -1,17 +1,48 @@
-# Gaia/HIP Source Download Evidence
+# Gaia-HIP Supplemental Display Map
 
 Release: `20260515.1`
 
-This draft publication is the source-data evidence package for the Gaia/HIP
-mapping work. So far it records the Hipparcos download/build and the first
-Hipparcos `Hp` versus Gaia `G` magnitude relationship evidence used to choose
-a Gaia download cutoff.
+This publication contains the Found-In-Space supplemental Gaia-Hipparcos2
+display de-duplication map and the evidence used to derive it.
 
-The source catalog downloads themselves remain in local scratch for now. The
-preserved release evidence is under `evidence/`.
+It does not republish the official Gaia `hipparcos2_best_neighbour` table. Use
+the supplemental map alongside the official Gaia table when building a complete
+Gaia-HIP display mapping.
+
+Large source downloads remain in local scratch and are recorded by checksum and
+query metadata rather than committed as release payloads.
+
+## Catalog
+
+- `catalog/fis_gaia_hip_supplemental_display_map.parquet` - the published
+  Found-In-Space supplemental mapping delta.
+
+The catalog schema is:
+
+```text
+gaia_source_id
+hip_source_id
+mapping_source
+number_of_neighbours
+angular_distance
+```
+
+Rows: `15,916`
+
+All rows have `mapping_source = fis_raw_sky_render_v1`.
 
 ## Current Evidence
 
+- `evidence/gaia_hip_display_match_evidence.parquet` - full local
+  sky/proximity/distance evidence table for the display matching scan.
+- `evidence/gaia_hip_display_match_report.json` - row counts, thresholds, and
+  paths from the matching scan.
+- `evidence/gaia_g15_parallax_download.adql` - exact Gaia query used for the
+  raw `G <= 15` parallax matching download.
+- `evidence/gaia_g15_parallax_download_state.json` - Gaia async job metadata
+  for that download.
+- `evidence/gaia_g15_parallax_conversion_summary.json` - VOTable-to-Parquet
+  conversion summary for the local working table.
 - `evidence/hip_gaia_magnitude_relationship.png` - plot of Hipparcos `Hpmag`
   against Gaia DR3 `phot_g_mean_mag` for official Gaia-HIP matches.
 - `evidence/hip_gaia_magnitude_relationship.parquet` - backing rows for the
@@ -36,8 +67,11 @@ preserved release evidence is under `evidence/`.
 - Official matches with finite Gaia `G`: `99,463`.
 - Official matches with Gaia `G > 14.5622`: `30`.
 - Pipeline-shaped Gaia `G <= 15` sizing count: `36,635,159` rows.
-- The next matching attempt should use a full-sky Gaia `G <= 15` download with
-  a limited matching field set rather than the full visual-build field set.
+- Raw Gaia `G <= 15` parallax matching download: `36,909,365` rows with
+  `source_id`, sky position, Gaia photometry, `parallax`, and
+  `parallax_error`.
+- Parallax display-matching scan: `126,220` Gaia-HIP evidence pairs within
+  `5 arcsec`, producing `15,916` one-to-one supplemental display matches.
 
 The `G > 14.5622` rows are retained as evidence because some official matches
 have extreme Gaia/HIP magnitude disagreement. They should inform the mapping
@@ -45,13 +79,15 @@ review, but they should not by themselves define the Gaia download cutoff.
 
 ## Current Decision
 
-For Gaia-HIP candidate matching, the crossmatch publication only needs to
-identify likely same-source ID pairs. Final winner selection remains a pipeline
-merge decision using the full processed Gaia and Hipparcos rows.
+This release publishes only Found-In-Space supplemental display matches not
+covered by the official Gaia best-neighbour map. A local combined map was
+created to validate one-to-one composition, but it is intentionally not part of
+the publication.
 
-The first full-sky candidate pass should therefore try Gaia `G <= 15` with
-`source_id`, `ra`, `dec`, and `phot_g_mean_mag` as required selected fields.
-Gaia BP/RP may be included as evidence-only diagnostics.
+The supplemental display policy uses one-to-one local sky proximity,
+official-table conflict checks, and parallax-derived rendered separation.
+Magnitude and colour remain evidence-only diagnostics rather than hard default
+gates.
 
 The targeted HEALPix/cone-fetch approach remains recorded as a fallback if the
 full-sky skinny download proves awkward operationally.

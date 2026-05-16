@@ -1,0 +1,20 @@
+{
+  "created_at": "2026-05-16T15:10:02+00:00",
+  "input_path": "local/runs/source-20260515.1/data/catalogs/gaia-g15-parallax-match/gaia_g15_parallax_full.vot.gz",
+  "output_path": "local/runs/source-20260515.1/data/processed/gaia-g15-parallax-match/gaia_g15_parallax.parquet",
+  "rows": 36909365,
+  "batches": 74,
+  "batch_size": 500000,
+  "elapsed_seconds": 163.61500493300264,
+  "parquet_bytes": 1772003171,
+  "schema": {
+    "source_id": "uint64",
+    "ra": "double",
+    "dec": "double",
+    "phot_g_mean_mag": "double",
+    "phot_bp_mean_mag": "double",
+    "phot_rp_mean_mag": "double",
+    "parallax": "double",
+    "parallax_error": "double"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "created_at": "2026-05-16T13:41:09+00:00",
+  "updated_at": "2026-05-16T14:08:04+00:00",
+  "query_path": "local/runs/source-20260515.1/data/catalogs/gaia-g15-parallax-match/gaia_g15_parallax_full.adql",
+  "output_path": "local/runs/source-20260515.1/data/catalogs/gaia-g15-parallax-match/gaia_g15_parallax_full.vot.gz",
+  "fields": [
+    "source_id",
+    "ra",
+    "dec",
+    "phot_g_mean_mag",
+    "phot_bp_mean_mag",
+    "phot_rp_mean_mag",
+    "parallax",
+    "parallax_error"
+  ],
+  "where": "phot_g_mean_mag <= 15",
+  "expected_rows_from_previous_count": 36909365,
+  "query_hash": "52b3939a5d3f00f88f38799446d83356ab9f69bf5bdaaf654c598337ee33f25c",
+  "job_name": "fis-gaia-g15-parallax-52b3939a",
+  "job_id": "e6117c1e-512c-11f1-8c53-bc97e148b76b-O",
+  "job_url": "https://gea.esac.esa.int/tap-server/tap/async/e6117c1e-512c-11f1-8c53-bc97e148b76b-O",
+  "phase": "COMPLETED",
+  "state": "deleted_remote",
+  "submitted_at": "2026-05-16T13:41:10+00:00",
+  "downloaded_at": "2026-05-16T14:07:55+00:00",
+  "downloaded_bytes": 1778025432,
+  "deleted_remote_at": "2026-05-16T14:08:04+00:00",
+  "error_message": null
+}
