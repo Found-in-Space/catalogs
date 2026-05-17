@@ -1,0 +1,16 @@
+{
+  "release": "20260517.1",
+  "generated_at": "2026-05-17T00:00:00Z",
+  "input_rows": 2552,
+  "scored_rows": 2552,
+  "score_components": {
+    "cohort_score": "Rank-weighted membership in the 500 brightest, nearest, and highest proper-motion cohorts, plus a multi-cohort bonus.",
+    "visibility_score": "Additional practical display impact from apparent magnitude, parallax distance, and total proper motion.",
+    "quality_score": "Weighted Gaia and Hipparcos warning flags, capped at 30 points.",
+    "crossmatch_gap_score": "Penalty for lacking official/FIS Gaia-HIP overlap, or for having only neighbourhood/local-supplemental context."
+  },
+  "notes": [
+    "Scores use only the systematic candidate cohorts and catalog quality/context signals.",
+    "Scores prioritize review effort, not astrophysical truth or override decisions."
+  ]
+}

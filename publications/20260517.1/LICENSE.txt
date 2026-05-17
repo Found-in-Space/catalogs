@@ -1,0 +1,43 @@
+# License for Publication 20260517.1
+
+Publication: Gaia-HIP review candidate evidence
+
+This publication is an academic public-interest data work.
+
+## Found in Space Original Material
+
+To the extent that Found in Space holds copyright, database rights, or related
+rights in the original material in this publication, that material is released
+under the Creative Commons Attribution 4.0 International License (CC BY 4.0).
+
+This includes:
+
+- publication text and documentation;
+- Found-In-Space-authored review evidence arrangement and explanatory notes;
+- selection, curation, and policy text authored for this release.
+
+License text: https://creativecommons.org/licenses/by/4.0/
+
+Suggested attribution:
+
+> Found in Space, "Gaia-HIP review candidate evidence",
+> publication 20260517.1, 2026.
+
+## Upstream Data and Literature
+
+This publication includes identifiers, measurements, and derived values based
+on upstream astronomical catalogues and scientific literature. Those upstream
+data and any rights in them remain subject to their source terms, citation
+requirements, and credit requirements.
+
+See `NOTICE.md` and `REFERENCES.md` for upstream acknowledgements.
+
+## No Warranty
+
+This publication is provided as-is, without warranty of any kind. It is a
+curated display-build input for Found in Space catalog builds, not a
+replacement for source catalogues or the cited scientific publications.
+
+Use of upstream catalog names, identifiers, or data does not imply endorsement
+by ESA, DPAC, CDS, VizieR, NASA, STScI, AAS, or the original catalogue
+and publication authors.

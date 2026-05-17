@@ -1,0 +1,74 @@
+format_version = 1
+release = "20260517.1"
+title = "Gaia-HIP review candidate evidence"
+status = "working"
+
+[summary]
+description = "Systematic Gaia DR3 and Hipparcos-2 candidate-discovery, crossmatch-context, and priority-ranking evidence for later source review."
+
+[inputs]
+pipeline_repository = "https://github.com/Found-in-Space/pipeline"
+pipeline_commit = "b2833cc04ca04bf02ef1831c3726acecb402b717"
+sun_policy = "The Sun remains a pipeline builtin override and is not included in this publication."
+gaia_hip_supplemental_context_release = "20260515.1"
+gaia_hip_supplemental_context = "publications/20260515.1/catalog/fis_gaia_hip_supplemental_display_map.parquet"
+
+[outputs]
+review_candidates = "evidence/review_candidates.parquet"
+review_candidates_csv = "evidence/review_candidates.csv"
+review_candidate_report = "evidence/review_candidate_report.json"
+gaia_review_candidates = "evidence/gaia_review_candidates.parquet"
+gaia_review_candidates_csv = "evidence/gaia_review_candidates.csv"
+hipparcos2_review_candidates = "evidence/hipparcos2_review_candidates.parquet"
+hipparcos2_review_candidates_csv = "evidence/hipparcos2_review_candidates.csv"
+fis_supplemental_crossmatch_context = "evidence/fis_20260515_1_review_supplemental_lookup.parquet"
+fis_supplemental_crossmatch_context_csv = "evidence/fis_20260515_1_review_supplemental_lookup.csv"
+review_priority_candidates = "evidence/review_priority_candidates.parquet"
+review_priority_candidates_csv = "evidence/review_priority_candidates.csv"
+review_priority_report = "evidence/review_priority_report.json"
+run_log = "run_log.md"
+checksums = "checksums.sha256"
+license = "LICENSE.txt"
+notice = "NOTICE.md"
+references = "REFERENCES.md"
+
+[counts]
+yaml_files = 0
+override_rows = 0
+sun_rows = 0
+gaia_brightest_rows = 500
+gaia_nearest_rows = 500
+gaia_high_pm_rows = 500
+hipparcos2_brightest_rows = 500
+hipparcos2_nearest_rows = 500
+hipparcos2_high_pm_rows = 500
+unique_gaia_review_candidates = 1315
+unique_hipparcos2_review_candidates = 1237
+combined_review_candidates = 2552
+best_neighbour_context_rows = 964
+fis_supplemental_context_rows = 213
+official_candidate_candidate_pairs = 474
+fis_supplemental_candidate_candidate_pairs = 131
+combined_candidate_candidate_pairs = 605
+neighbourhood_context_rows = 967
+review_priority_rows = 2552
+review_priority_p1_rows = 34
+review_priority_p2_rows = 351
+review_priority_p3_rows = 271
+review_priority_p4_rows = 1896
+
+[provenance]
+created_by = "Found in Space"
+created_at = "2026-05-17"
+notes = "Retains objective Gaia/Hipparcos review candidate evidence only. Earlier heuristic follow-up and override artifacts were removed because they did not record sufficient per-target secondary-source review to support replacement values."
+
+[license]
+found_in_space_original_material = "CC-BY-4.0"
+upstream_terms_apply = true
+summary = "Found in Space original publication material is released under CC BY 4.0. Upstream Gaia, Hipparcos/Tycho, VizieR/CDS, and related catalog terms and credit requirements apply."
+
+[references]
+gaia_mission = "Gaia Collaboration et al. 2016, A&A 595, A1, doi:10.1051/0004-6361/201629272"
+gaia_dr3 = "Gaia Collaboration et al. 2023, A&A 674, A1, doi:10.1051/0004-6361/202243940"
+hipparcos_tycho_catalogues = "ESA 1997, The Hipparcos and Tycho Catalogues, ESA SP-1200"
+vizier = "Ochsenbein et al. 2000, A&AS 143, 23-32, doi:10.1051/aas:2000169"

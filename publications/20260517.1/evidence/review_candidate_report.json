@@ -1,0 +1,57 @@
+{
+  "release": "20260517.1",
+  "generated_at": "2026-05-17T00:00:00Z",
+  "purpose": "Objective first-pass review candidates for future Gaia/Hipparcos astrometry and photometry inspection.",
+  "cohort_size": 500,
+  "cohorts": [
+    "brightest",
+    "nearest",
+    "high_pm"
+  ],
+  "gaia_rows_by_cohort": {
+    "brightest": 500,
+    "nearest": 500,
+    "high_pm": 500
+  },
+  "hipparcos2_rows_by_cohort": {
+    "brightest": 500,
+    "nearest": 500,
+    "high_pm": 500
+  },
+  "unique_gaia_candidates": 1315,
+  "unique_hipparcos2_candidates": 1237,
+  "hipparcos2_source_rows_fetched": 117955,
+  "combined_candidate_rows": 2552,
+  "best_neighbour_rows": 964,
+  "fis_supplemental_rows": 213,
+  "official_candidate_candidate_pairs": 474,
+  "fis_supplemental_candidate_candidate_pairs": 131,
+  "combined_candidate_candidate_pairs": 605,
+  "neighbourhood_rows": 967,
+  "quality_flag_counts": {
+    "astrometric_excess_noise_gt_1": 514,
+    "astrometric_params_not_31_or_95": 80,
+    "duplicated_source": 16,
+    "hip_component_flag": 175,
+    "hip_solution_type_not_5": 353,
+    "ipd_frac_multi_peak_gt_10": 103,
+    "missing_bp_or_rp": 12,
+    "non_positive_parallax": 1,
+    "non_single_star": 25,
+    "parallax_frac_error_gt_0p1": 168,
+    "phot_variable": 84,
+    "ruwe_gt_1p4": 570,
+    "visibility_periods_lt_8": 31
+  },
+  "local_working_outputs": {
+    "hipparcos2_review_source_rows": "/data/work/fis/catalogs/local/runs/20260517.1/review-candidates/working/hipparcos2_review_source_rows.parquet",
+    "hipparcos2_review_source_rows_count": 117955
+  },
+  "notes": [
+    "Rows are review candidates only; they are not override decisions.",
+    "Cohorts are selected from Gaia DR3 and Hipparcos-2 by apparent brightness, parallax, and total proper motion.",
+    "The 20260515.1 Found-In-Space supplemental Gaia-HIP display map is included as crossmatch context alongside the official Gaia best-neighbour table.",
+    "Quality flags are intentionally broad signals for later inspection against source catalogs and literature.",
+    "Full source working copies are written under local/ and are not publication artifacts."
+  ]
+}
