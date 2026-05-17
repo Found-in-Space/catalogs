@@ -15,6 +15,7 @@ local_scratch_root = "local/runs/source-20260515.1"
 
 [outputs]
 supplemental_display_map = "catalog/fis_gaia_hip_supplemental_display_map.parquet"
+paper = "PAPER.md"
 display_match_evidence = "evidence/gaia_hip_display_match_evidence.parquet"
 display_match_report = "evidence/gaia_hip_display_match_report.json"
 gaia_parallax_download_query = "evidence/gaia_g15_parallax_download.adql"
@@ -31,6 +32,7 @@ run_log = "run_log.md"
 checksums = "checksums.sha256"
 license = "LICENSE.txt"
 notice = "NOTICE.md"
+references = "REFERENCES.md"
 
 [provenance]
 created_by = "Found in Space"

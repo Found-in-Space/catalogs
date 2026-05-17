@@ -51,8 +51,10 @@ VizieR asks that users acknowledge catalogue access as follows:
 
 ## Publications and References
 
-This publication depends on, or should be read alongside, the following
-scientific publications and catalogue references:
+See `REFERENCES.md` for the publication's complete upstream catalogue, archive
+table, and scientific publication references.
+
+The core scientific references are:
 
 - Gaia Collaboration et al. (2016), "The Gaia mission", Astronomy &
   Astrophysics, 595, A1. DOI: 10.1051/0004-6361/201629272.

@@ -21,10 +21,16 @@ Source catalogue data and source-derived evidence remain subject to upstream
 terms and credit requirements. See `NOTICE.md` for Gaia, Hipparcos/Tycho,
 VizieR/CDS acknowledgements and publication references.
 
+See `REFERENCES.md` for the upstream catalogues, archive tables, and scientific
+publications this release depends on.
+
 ## Catalog
 
 - `catalog/fis_gaia_hip_supplemental_display_map.parquet` - the published
   Found-In-Space supplemental mapping delta.
+
+For a paper-style narrative summary of the release, including abstract,
+methodology, findings, output tables, and embedded figures, see `PAPER.md`.
 
 The catalog schema is:
 

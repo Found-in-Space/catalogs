@@ -1330,12 +1330,50 @@ evidence package.
     - upstream-derived evidence:
       upstream terms apply.
 
+25. Added a dedicated upstream reference record.
+
+    Added `REFERENCES.md` to make the upstream dependency chain explicit and
+    easy to cite. The file records:
+
+    - Gaia DR3 archive tables used by this publication:
+      `gaiadr3.gaia_source`, `gaiadr3.hipparcos2_best_neighbour`, and
+      `gaiadr3.hipparcos2_neighbourhood`;
+    - Hipparcos-2 / VizieR `I/311`;
+    - VizieR/CDS catalogue access;
+    - Gaia mission and Gaia DR3 papers;
+    - Marrese et al. Gaia external-catalogue crossmatch papers;
+    - ESA SP-1200 and van Leeuwen Hipparcos reduction references;
+    - the VizieR service paper.
+
+26. Added a publication-style narrative paper.
+
+    Added `PAPER.md`, a GitHub-flavoured Markdown paper intended to be more
+    readable than the execution log. It includes:
+
+    - abstract;
+    - introduction;
+    - inputs;
+    - magnitude-cutoff evidence;
+    - methodology;
+    - decision-policy table;
+    - findings and result tables;
+    - published output table;
+    - limitations;
+    - conclusion;
+    - references.
+
+    The paper embeds the Hipparcos `Hp` versus Gaia `G` plot from
+    `evidence/hip_gaia_magnitude_relationship.png` so the main supporting
+    figure is directly visible on GitHub.
+
 ## Release Artifacts Created So Far
 
 ```text
 publications/20260515.1/
   LICENSE.txt
   NOTICE.md
+  PAPER.md
+  REFERENCES.md
   README.md
   checksums.sha256
   manifest.toml
