@@ -7,9 +7,9 @@ status = "draft"
 description = "Metadata-only provenance publication for the Found in Space Gaia DR3 full scripted download. The raw Gaia VOTable payload is inventoried and checksummed but not included in the Zenodo upload."
 
 [zenodo]
-record_doi = ""
+record_doi = "10.5281/zenodo.21066981"
 concept_doi = ""
-record_url = ""
+record_url = "https://zenodo.org/records/21066981"
 community = "found-in-space"
 resource_type = "dataset"
 upload_policy = "metadata-control-files-only"

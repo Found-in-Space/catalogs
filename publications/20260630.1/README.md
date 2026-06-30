@@ -76,6 +76,10 @@ the raw payload from the upstream Gaia Archive and the checksums recorded here.
 
 ## DOI
 
-No Zenodo DOI has been reserved at the time this draft was created. If a DOI is
-reserved before publication, update `manifest.toml`, this README if needed, and
-regenerate `checksums.sha256`.
+Reserved Zenodo DOI: `10.5281/zenodo.21066981`
+
+Draft record URL: <https://zenodo.org/records/21066981>
+
+The Zenodo DOI is reserved in the draft record and will become registered when
+the record is published. The concept DOI is not recorded here yet; add it after
+Zenodo exposes it for the published/versioned record.
