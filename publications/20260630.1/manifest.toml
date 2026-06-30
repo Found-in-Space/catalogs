@@ -1,0 +1,121 @@
+format_version = 1
+release = "20260630.1"
+title = "Gaia DR3 full download provenance for Found in Space dr3_ap_bj_core"
+status = "draft"
+
+[summary]
+description = "Metadata-only provenance publication for the Found in Space Gaia DR3 full scripted download. The raw Gaia VOTable payload is inventoried and checksummed but not included in the Zenodo upload."
+
+[zenodo]
+record_doi = ""
+concept_doi = ""
+record_url = ""
+community = "found-in-space"
+resource_type = "dataset"
+upload_policy = "metadata-control-files-only"
+upload_file_count = 16
+upload_bytes_without_raw_payload = 260978
+
+[inputs]
+gaia_archive = "https://gea.esac.esa.int/archive/"
+gaia_tables = "gaiadr3.gaia_source, external.gaiaedr3_distance, gaiadr3.astrophysical_parameters"
+pipeline_repository = "https://github.com/Found-in-Space/pipeline"
+pipeline_commit = "3e64bfe97038b4f62395601a2ccc6bca7ad44556"
+pipeline_tracked_worktree_clean = true
+package_id = "fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038"
+gaia_calculation_engine = "dr3_ap_bj_core"
+project_config = "zenodo/fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038-metadata.tar.gz:config/project.toml"
+package_metadata_archive = "zenodo/fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038-metadata.tar.gz"
+
+[acquisition]
+acquisition_spec_hash = "b4db1f05d67e4deb38a91c9547ea7a38c33b93ad26c9d0cd326ad198efcebd47"
+count_query_hash = "dcda88ac871bcd121f915e77e8fa887def220fd7ed4c0e95708df61d6b6d57ee"
+download_query_hash = "74b3d22969b65fa910adc6ce628b08135fd41fd4d1b2383ded7facba639fbb40"
+count_job_id = "50cd7722-6ff2-11f1-ad14-bc97e148b76b-O"
+count_job_phase = "deleted_remote"
+count_job_url = "https://gea.esac.esa.int/tap-server/tap/async/50cd7722-6ff2-11f1-ad14-bc97e148b76b-O"
+downloaded_batches = 60
+healpix3_count_rows = 768
+source_rows = 1467744818
+downloaded_bytes = 146842060166
+first_downloaded_at = "2026-06-24T18:33:38+00:00"
+last_downloaded_at = "2026-06-27T04:35:45+00:00"
+remote_state = "deleted_remote"
+
+[outputs]
+readme = "README.md"
+manifest = "manifest.toml"
+run_log = "run_log.md"
+checksums = "checksums.sha256"
+license = "LICENSE.txt"
+notice = "NOTICE.md"
+references = "REFERENCES.md"
+metadata_archive = "zenodo/fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038-metadata.tar.gz"
+gaia_download_state_summary = "evidence/gaia-download-state-summary.json"
+gaia_download_batches = "evidence/gaia-download-batches.json"
+gaia_download_queries_manifest = "evidence/gaia-download-queries-manifest.tsv"
+gaia_votables_manifest = "evidence/gaia-votables-manifest.tsv"
+gaia_votables_checksums = "evidence/gaia-votables.sha256"
+package_control_checksums = "evidence/package-control.sha256"
+supporting_files_checksums = "evidence/supporting-files.sha256"
+checksum_status = "evidence/checksum-status.txt"
+
+[raw_payload]
+included_in_zenodo_upload = false
+file_count = 60
+bytes = 146842060166
+checksum_manifest = "evidence/gaia-votables.sha256"
+inventory_manifest = "evidence/gaia-votables-manifest.tsv"
+reason_omitted = "Raw Gaia VOTable gzip payload is too large for the normal Zenodo record path and remains available from Gaia Archive / controlled local storage."
+
+[[artifacts]]
+path = "zenodo/fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038-metadata.tar.gz"
+kind = "metadata_archive"
+bytes = 120274
+sha256 = "71b7e7fae684286646ac060b02edbe4ae082eb865efdc0182ee432657056ae02"
+
+[[artifacts]]
+path = "evidence/gaia-download-state-summary.json"
+kind = "evidence"
+bytes = 1104
+sha256 = "393cfd13c489d1508d74ac758f4fe0bdfeb6eee74c46e07bf4887e009ce829a2"
+
+[[artifacts]]
+path = "evidence/gaia-download-batches.json"
+kind = "evidence"
+bytes = 70283
+sha256 = "b516ac12dc18c5b91092a202c50cba6fb2821e7db5a49c48e010fff967798805"
+
+[[artifacts]]
+path = "evidence/gaia-download-queries-manifest.tsv"
+kind = "manifest"
+bytes = 13304
+sha256 = "bd96a5393d7739a12066cd6051460c713cf0fa794e74380e6a9863077554484c"
+
+[[artifacts]]
+path = "evidence/gaia-votables-manifest.tsv"
+kind = "manifest"
+bytes = 7492
+sha256 = "4ec94ee4fa8cb99a77b13d43f7145244a8df48902b1a16944c15aa07a5be5727"
+
+[[artifacts]]
+path = "evidence/gaia-votables.sha256"
+kind = "payload_checksum_manifest"
+bytes = 6660
+sha256 = "20429cbf7825d2fa7d4a4dbc91319b8782b6c065df31f2b4bc355890a1550dd0"
+
+[provenance]
+created_by = "Found in Space"
+created_at = "2026-06-30"
+notes = "This publication wraps an existing local pipeline download package and intentionally excludes the raw Gaia VOTable payload from the Zenodo upload."
+
+[license]
+found_in_space_original_material = "CC-BY-4.0"
+upstream_terms_apply = true
+summary = "Found in Space original publication material is released under CC BY 4.0. Upstream Gaia and ESA terms apply to Gaia source data, metadata, and archive-derived evidence."
+
+[references]
+gaia_mission = "Gaia Collaboration et al. 2016, A&A 595, A1, doi:10.1051/0004-6361/201629272"
+gaia_dr3 = "Gaia Collaboration et al. 2023, A&A 674, A1, doi:10.1051/0004-6361/202243940"
+gaia_archive = "Gaia Archive, European Space Agency, https://gea.esac.esa.int/archive/"
+gaia_edr3_distances = "Bailer-Jones et al. 2021, AJ 161, 147, doi:10.3847/1538-3881/abd806"

@@ -1,0 +1,9 @@
+Found in Space original material in this publication is released under the
+Creative Commons Attribution 4.0 International License (CC BY 4.0).
+
+This includes Found in Space authored README, manifest, run log, package
+metadata, and explanatory documentation.
+
+Gaia source data, Gaia Archive metadata, ADQL query results, and source-derived
+evidence remain subject to the upstream Gaia / ESA terms, acknowledgements, and
+credit requirements described in NOTICE.md and REFERENCES.md.

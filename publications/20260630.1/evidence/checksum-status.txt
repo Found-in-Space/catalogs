@@ -1,0 +1,4 @@
+Raw VOTable SHA256 checksums are complete in manifests/gaia-votables.sha256.
+The checksum manifest uses package-relative payload paths.
+It was copied from the completed checksum pass for the previous hardlinked package.
+Because payload files are hardlinks to the same source files, the hashes apply to this package payload.
