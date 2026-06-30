@@ -1,0 +1,51 @@
+# Post-publication Zenodo status for release 20260630.1.
+#
+# This file was created after the Zenodo record was published. It is local
+# repository tracking metadata, not part of the immutable Zenodo upload payload,
+# the publication ZIP, or checksums.sha256.
+
+release = "20260630.1"
+checked_at = "2026-06-30T12:47:06+01:00"
+source = "https://zenodo.org/api/records/21066981"
+
+[zenodo]
+status = "published"
+state = "done"
+submitted = true
+record_id = "21066981"
+concept_record_id = "21066980"
+record_doi = "10.5281/zenodo.21066981"
+concept_doi = "10.5281/zenodo.21066980"
+doi_url = "https://doi.org/10.5281/zenodo.21066981"
+concept_doi_url = "https://doi.org/10.5281/zenodo.21066980"
+record_url = "https://zenodo.org/records/21066981"
+concept_record_url = "https://zenodo.org/records/21066980"
+publication_date = "2026-06-30"
+created_at = "2026-06-30T11:44:02.846277+00:00"
+modified_at = "2026-06-30T11:44:03.408039+00:00"
+title = "Found in Space Gaia DR3 Download Provenance for the Controlled Core Dataset"
+resource_type = "dataset"
+access_right = "open"
+license = "cc-by-4.0"
+community = "found-in-space"
+
+[creator]
+name = "Siebert, Kaj Wik"
+affiliation = "University College London"
+orcid = "0009-0009-4500-4316"
+
+[related]
+website = "https://foundin.space/"
+repository = "https://github.com/Found-in-Space/catalogs"
+
+[[uploaded_files]]
+key = "README.md"
+size = 4162
+zenodo_checksum = "md5:bd3a7edee26e7d04988ce2f893b527fa"
+local_sha256 = "212e5900f874b8085dd2f6b7447f69e3d1d7ac29c5f91211758229de3132bf5c"
+
+[[uploaded_files]]
+key = "fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038-publication.zip"
+size = 153654
+zenodo_checksum = "md5:8cdbba228e0607c02ec365bad2e14dc3"
+local_sha256 = "f32c0cee98b00a537d4095608ef692cc9e00f058867dfab01aef8b8b3bb944da"
