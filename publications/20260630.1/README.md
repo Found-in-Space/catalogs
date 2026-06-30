@@ -21,15 +21,31 @@ download base. It pins:
 - source payload filenames, byte sizes, and checksums;
 - dependency and configuration context.
 
+The source publication files are maintained in the Found in Space catalogs
+repository: <https://github.com/Found-in-Space/catalogs>.
+
 ## Zenodo Upload Shape
 
-The intended Zenodo record should upload the small publication files plus:
+The intended Zenodo record should upload two files:
+
+- `README.md`
+- `zenodo/fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038-publication.zip`
+
+The ZIP preserves the publication paths shown in `checksums.sha256`, including
+the nested `evidence/` and `zenodo/` files. Uploading `README.md` separately
+allows Zenodo to preview the human-readable summary.
+
+The publication ZIP is a transport wrapper for Zenodo upload. It is not listed
+inside `checksums.sha256`, because that would make the checksum manifest
+self-referential.
+
+Inside the publication ZIP, the nested metadata archive:
 
 - `zenodo/fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038-metadata.tar.gz`
 
-That archive contains the package control tree, generated ADQL files, downloader
-SQLite state database, manifests, checksums, and git provenance. It excludes the
-raw `payload/gaia-votables/` files, so the upload remains comfortably below
+contains the package control tree, generated ADQL files, downloader SQLite state
+database, manifests, checksums, and git provenance. It excludes the raw
+`payload/gaia-votables/` files, so the upload remains comfortably below
 Zenodo's default file-count and size limits.
 
 ## Key Facts
@@ -65,7 +81,8 @@ Zenodo's default file-count and size limits.
   files.
 - `evidence/package-control.sha256` and `evidence/supporting-files.sha256` -
   local package checksum manifests.
-- `zenodo/*.tar.gz` - metadata-only archive for Zenodo upload.
+- `zenodo/*-metadata.tar.gz` - metadata-only archive included inside the
+  publication ZIP.
 
 ## Use
 

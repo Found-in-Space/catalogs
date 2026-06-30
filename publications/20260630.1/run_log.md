@@ -110,7 +110,33 @@ The package records:
 
 6. Generated final publication checksums.
 
-   `checksums.sha256` was generated from the final publication files.
+   `checksums.sha256` was generated from the final publication files, excluding
+   only the path-preserving Zenodo upload ZIP wrapper.
+
+7. Recorded the reserved Zenodo DOI.
+
+   Reserved version DOI:
+
+   ```text
+   10.5281/zenodo.21066981
+   ```
+
+   Draft record URL:
+
+   ```text
+   https://zenodo.org/records/21066981
+   ```
+
+8. Switched the Zenodo upload shape to a path-preserving ZIP plus loose README.
+
+   Zenodo upload files:
+
+   - `README.md`
+   - `zenodo/fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038-publication.zip`
+
+   The publication ZIP preserves the nested `evidence/` and `zenodo/` paths.
+   It is not included in `checksums.sha256`, because that would make the
+   checksum manifest self-referential.
 
 ## Zenodo Notes
 
@@ -118,6 +144,6 @@ The Zenodo upload should remain metadata/control-only. The raw Gaia VOTable
 gzip payload is inventoried and checksummed by this publication but intentionally
 omitted from the upload.
 
-No Zenodo DOI has been reserved yet. If a DOI is reserved before publication,
-update `manifest.toml` and any affected metadata, then regenerate
-`checksums.sha256`.
+The reserved Zenodo version DOI is `10.5281/zenodo.21066981`. The concept DOI is
+not recorded yet; add it after Zenodo exposes it for the published/versioned
+record.

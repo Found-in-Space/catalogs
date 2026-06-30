@@ -12,9 +12,12 @@ concept_doi = ""
 record_url = "https://zenodo.org/records/21066981"
 community = "found-in-space"
 resource_type = "dataset"
-upload_policy = "metadata-control-files-only"
-upload_file_count = 16
-upload_bytes_without_raw_payload = 260978
+upload_policy = "readme-plus-publication-zip"
+upload_file_count = 2
+upload_shape = "README.md plus path-preserving publication ZIP"
+upload_archive = "zenodo/fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038-publication.zip"
+publication_file_count = 16
+publication_bytes_without_raw_payload = 262727
 
 [inputs]
 gaia_archive = "https://gea.esac.esa.int/archive/"
@@ -50,6 +53,7 @@ checksums = "checksums.sha256"
 license = "LICENSE.txt"
 notice = "NOTICE.md"
 references = "REFERENCES.md"
+publication_repository = "https://github.com/Found-in-Space/catalogs"
 metadata_archive = "zenodo/fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038-metadata.tar.gz"
 gaia_download_state_summary = "evidence/gaia-download-state-summary.json"
 gaia_download_batches = "evidence/gaia-download-batches.json"
