@@ -378,7 +378,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "click", specifier = ">=8.3.1" },
-    { name = "found-in-space-pipeline", git = "https://github.com/Found-in-Space/pipeline.git?rev=b2833cc04ca04bf02ef1831c3726acecb402b717" },
+    { name = "found-in-space-pipeline", git = "https://github.com/Found-in-Space/pipeline.git?rev=3e64bfe97038b4f62395601a2ccc6bca7ad44556" },
 ]
 
 [package.metadata.requires-dev]
@@ -391,7 +391,7 @@ dev = [{ name = "pytest", specifier = ">=8" }]
 [[package]]
 name = "found-in-space-pipeline"
 version = "0.1.0"
-source = { git = "https://github.com/Found-in-Space/pipeline.git?rev=b2833cc04ca04bf02ef1831c3726acecb402b717#b2833cc04ca04bf02ef1831c3726acecb402b717" }
+source = { git = "https://github.com/Found-in-Space/pipeline.git?rev=3e64bfe97038b4f62395601a2ccc6bca7ad44556#3e64bfe97038b4f62395601a2ccc6bca7ad44556" }
 dependencies = [
     { name = "astropy" },
     { name = "astropy-healpix" },

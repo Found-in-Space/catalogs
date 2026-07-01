@@ -7,6 +7,7 @@ from foundinspace.catalogs.audit.pipeline import (
     run_audit_match,
     run_audit_report,
 )
+from foundinspace.catalogs.audit.gaia_match_table import build_gaia_raw_match_table
 from foundinspace.catalogs.audit.raw_match import run_raw_gaia_hip_match
 from foundinspace.pipeline.project import load_project
 
@@ -14,6 +15,110 @@ from foundinspace.pipeline.project import load_project
 @click.group(name="audit")
 def cli():
     """Build local crossmatch cleanup and review audit artifacts."""
+
+
+@cli.command(name="gaia-match-table")
+@click.option(
+    "--gaia-dir",
+    type=click.Path(exists=True, file_okay=False, path_type=Path),
+    default=None,
+    help="Directory containing Gaia VOTable files.",
+)
+@click.option(
+    "--pattern",
+    default="*.vot.gz",
+    show_default=True,
+    help="Glob used with --gaia-dir.",
+)
+@click.option(
+    "--gaia-votable",
+    "gaia_votables",
+    multiple=True,
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    help="Individual Gaia VOTable input. May be repeated.",
+)
+@click.option(
+    "--output-parquet",
+    required=True,
+    type=click.Path(dir_okay=False, path_type=Path),
+    help="Output compact Gaia Parquet table for raw-match.",
+)
+@click.option(
+    "--summary-json",
+    required=True,
+    type=click.Path(dir_okay=False, path_type=Path),
+    help="Output JSON summary for the conversion.",
+)
+@click.option(
+    "--source-manifest",
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    default=None,
+    help="Optional source Gaia VOTable manifest to record in the summary.",
+)
+@click.option(
+    "--source-checksums",
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    default=None,
+    help="Optional source Gaia VOTable checksum manifest to record in the summary.",
+)
+@click.option(
+    "--g-mag-limit",
+    type=float,
+    default=15.0,
+    show_default=True,
+    help="Maximum Gaia G magnitude retained in the compact match table.",
+)
+@click.option(
+    "--batch-rows",
+    type=int,
+    default=100_000,
+    show_default=True,
+    help="VOTable rows decoded per streaming batch.",
+)
+@click.option("--force", "-f", is_flag=True, default=False)
+def gaia_match_table_cmd(
+    gaia_dir: Path | None,
+    pattern: str,
+    gaia_votables: tuple[Path, ...],
+    output_parquet: Path,
+    summary_json: Path,
+    source_manifest: Path | None,
+    source_checksums: Path | None,
+    g_mag_limit: float,
+    batch_rows: int,
+    force: bool,
+) -> None:
+    """Build a compact Gaia Parquet table from controlled Gaia VOTables."""
+
+    paths = list(gaia_votables)
+    if gaia_dir is not None:
+        paths.extend(sorted(gaia_dir.glob(pattern)))
+    paths = sorted(set(paths))
+    if not paths:
+        raise click.ClickException(
+            "No Gaia VOTable inputs found; pass --gaia-votable or --gaia-dir"
+        )
+    try:
+        summary = build_gaia_raw_match_table(
+            gaia_votable_paths=paths,
+            output_path=output_parquet,
+            summary_path=summary_json,
+            source_manifest_path=source_manifest,
+            source_checksums_path=source_checksums,
+            g_mag_limit=g_mag_limit,
+            batch_rows=batch_rows,
+            overwrite=force,
+        )
+    except (FileExistsError, FileNotFoundError, ValueError, NotImplementedError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(f"Gaia match table: {Path(summary.output_path).resolve()}")
+    click.echo(f"Summary: {Path(summary.summary_path or summary_json).resolve()}")
+    click.echo(
+        "Rows: "
+        f"scanned={summary.rows_scanned:,}, "
+        f"written={summary.rows_written:,}, "
+        f"inputs={len(summary.input_files):,}"
+    )
 
 
 def _load_project_or_die(project_path: Path, *required: str):
@@ -142,16 +247,18 @@ def match_cmd(
     help="Skinny Gaia Parquet input with source_id, ra, dec, and phot_g_mean_mag.",
 )
 @click.option(
-    "--official-crossmatch",
+    "--h2bn-crossmatch",
+    "h2bn_crossmatch",
     required=True,
     type=click.Path(exists=True, dir_okay=False, path_type=Path),
-    help="Official Gaia-HIP crossmatch, as pipeline Parquet or Gaia ECSV.",
+    help="Gaia DR3 hipparcos2_best_neighbour input, as pipeline Parquet or Gaia ECSV.",
 )
 @click.option(
-    "--official-neighbourhood",
+    "--hipparcos2-neighbourhood",
+    "hipparcos2_neighbourhood",
     type=click.Path(exists=True, dir_okay=False, path_type=Path),
     default=None,
-    help="Optional Gaia hipparcos2_neighbourhood table for conflict checks.",
+    help="Optional Gaia DR3 hipparcos2_neighbourhood table for context checks.",
 )
 @click.option(
     "--output-dir",
@@ -178,14 +285,15 @@ def match_cmd(
     type=float,
     default=0.25,
     show_default=True,
-    help="Maximum sky separation for automatic tight display matches.",
+    help="Maximum sky separation for automatic tight crossmatches.",
 )
 @click.option(
-    "--max-rendered-separation-pc",
+    "--max-parallax-3d-separation-pc",
+    "max_parallax_3d_separation_pc",
     type=float,
     default=1.0,
     show_default=True,
-    help="Maximum parallax-derived 3D separation for non-tight display matches.",
+    help="Maximum parallax-derived 3D separation for non-tight crossmatches.",
 )
 @click.option(
     "--batch-size",
@@ -204,14 +312,14 @@ def match_cmd(
 def raw_match_cmd(
     hip_ecsv: Path,
     gaia_parquet: Path,
-    official_crossmatch: Path,
-    official_neighbourhood: Path | None,
+    h2bn_crossmatch: Path,
+    hipparcos2_neighbourhood: Path | None,
     output_dir: Path,
     force: bool,
     max_sep_arcsec: float,
     max_mag_delta: float | None,
     auto_sep_arcsec: float,
-    max_rendered_separation_pc: float,
+    max_parallax_3d_separation_pc: float,
     batch_size: int,
     workers: int,
 ) -> None:
@@ -220,13 +328,13 @@ def raw_match_cmd(
         report = run_raw_gaia_hip_match(
             hip_ecsv_path=hip_ecsv,
             gaia_parquet_path=gaia_parquet,
-            official_crossmatch_path=official_crossmatch,
-            official_neighbourhood_path=official_neighbourhood,
+            h2bn_crossmatch_path=h2bn_crossmatch,
+            hipparcos2_neighbourhood_path=hipparcos2_neighbourhood,
             output_dir=output_dir,
             max_sep_arcsec=max_sep_arcsec,
             max_mag_delta=max_mag_delta,
             auto_sep_arcsec=auto_sep_arcsec,
-            max_rendered_separation_pc=max_rendered_separation_pc,
+            max_parallax_3d_separation_pc=max_parallax_3d_separation_pc,
             batch_size=batch_size,
             workers=workers,
             force=force,
@@ -248,7 +356,7 @@ def raw_match_cmd(
         f"gaia_scanned={report.gaia_rows_scanned:,}, "
         f"evidence={report.evidence_rows:,}, "
         f"supplemental={report.supplemental_rows:,}, "
-        f"official_confirmed={report.official_pairs_confirmed:,}"
+        f"h2bn_recovered={report.h2bn_pairs_recovered:,}"
     )
 
 

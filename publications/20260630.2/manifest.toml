@@ -1,0 +1,79 @@
+format_version = 1
+release = "20260630.2"
+title = "Found in Space Gaia-HIP supplemental crossmatch catalog for the controlled core dataset"
+status = "draft"
+
+[summary]
+description = "Found in Space supplemental Gaia-Hipparcos2 crossmatch catalog regenerated from the controlled Gaia DR3 acquisition published as DOI 10.5281/zenodo.21066981."
+
+[zenodo]
+status = "not_reserved"
+resource_type = "dataset"
+upload_policy = "readme-plus-publication-zip"
+
+[inputs]
+gaia_acquisition_record_doi = "10.5281/zenodo.21066981"
+gaia_acquisition_record_url = "https://zenodo.org/records/21066981"
+gaia_acquisition_package_id = "fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038"
+hipparcos_catalog = "Vizier I/311/hip2"
+h2bn_catalog = "gaiadr3.hipparcos2_best_neighbour"
+hipparcos2_neighbourhood_catalog = "gaiadr3.hipparcos2_neighbourhood"
+pipeline_repository = "https://github.com/Found-in-Space/pipeline"
+pipeline_commit = "3e64bfe97038b4f62395601a2ccc6bca7ad44556"
+raw_gaia_payload_included = false
+
+[outputs]
+supplemental_crossmatch_map = "catalog/fis_gaia_hip_supplemental_crossmatch_map.parquet"
+paper = "PAPER.md"
+crossmatch_evidence = "evidence/gaia_hip_crossmatch_evidence.parquet"
+crossmatch_report = "evidence/gaia_hip_crossmatch_report.json"
+gaia_match_table_summary = "evidence/gaia_raw_match_g15_summary.json"
+support_input_provenance = "evidence/support_input_provenance.json"
+gaia_votables_manifest = "evidence/gaia-votables-manifest.tsv"
+gaia_votables_checksums = "evidence/gaia-votables.sha256"
+run_log = "run_log.md"
+checksums = "checksums.sha256"
+license = "LICENSE.txt"
+notice = "NOTICE.md"
+references = "REFERENCES.md"
+
+[counts]
+gaia_rows_scanned = 1467744818
+gaia_g15_rows = 36635159
+hip_rows_raw = 117955
+hip_rows_prepared_for_raw_match = 117955
+h2bn_rows = 99525
+hipparcos2_neighbourhood_rows = 100010
+evidence_rows = 122678
+supplemental_rows = 15679
+combined_validation_rows = 115204
+h2bn_pairs_recovered = 92436
+manual_review_rows = 13721
+separate_object_rows = 842
+
+[policy]
+max_sep_arcsec = 5.0
+auto_sep_arcsec = 0.25
+max_parallax_3d_separation_pc = 1.0
+max_mag_delta = "none"
+mapping_source = "fis_raw_crossmatch_v1"
+
+[provenance]
+created_by = "Found in Space"
+created_at = "2026-06-30"
+notes = "Found in Space supplemental Gaia-Hipparcos2 crossmatch rows derived from a local Gaia-HIP evidence scan and compared with h2bn and hipparcos2_neighbourhood context."
+
+[license]
+found_in_space_original_material = "CC-BY-4.0"
+upstream_terms_apply = true
+summary = "Found in Space original publication material is released under CC BY 4.0. Upstream Gaia, Hipparcos/Tycho, VizieR/CDS terms and credit requirements apply to source-derived evidence."
+
+[references]
+gaia_mission = "Gaia Collaboration et al. 2016, A&A 595, A1, doi:10.1051/0004-6361/201629272"
+gaia_dr3 = "Gaia Collaboration et al. 2023, A&A 674, A1, doi:10.1051/0004-6361/202243940"
+gaia_dr1_crossmatch = "Marrese et al. 2017, A&A 605, A105, doi:10.1051/0004-6361/201629920"
+gaia_dr2_crossmatch = "Marrese et al. 2019, A&A 621, A144, doi:10.1051/0004-6361/201834142"
+hipparcos_new_reduction_validation = "van Leeuwen 2007, A&A 474, 653-664, doi:10.1051/0004-6361:20078357"
+hipparcos_new_reduction_book = "van Leeuwen 2007, Hipparcos, the New Reduction of the Raw Data, Astrophysics and Space Science Library 350"
+hipparcos_tycho_catalogues = "ESA 1997, The Hipparcos and Tycho Catalogues, ESA SP-1200"
+vizier = "Ochsenbein et al. 2000, A&AS 143, 23-32, doi:10.1051/aas:2000169"

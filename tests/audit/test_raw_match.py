@@ -43,12 +43,12 @@ def _write_hip_ecsv(path: Path) -> None:
     table.write(path, format="ascii.ecsv", overwrite=True)
 
 
-def test_raw_match_writes_clean_supplemental_and_official_comparison(tmp_path: Path):
+def test_raw_match_writes_clean_supplemental_and_h2bn_comparison(tmp_path: Path):
     pytest.importorskip("scipy")
 
     hip_ecsv = tmp_path / "hip.ecsv"
     gaia_path = tmp_path / "gaia.parquet"
-    official_path = tmp_path / "official.parquet"
+    h2bn_path = tmp_path / "h2bn.parquet"
     output_dir = tmp_path / "raw"
     _write_hip_ecsv(hip_ecsv)
 
@@ -77,18 +77,18 @@ def test_raw_match_writes_clean_supplemental_and_official_comparison(tmp_path: P
             {
                 "gaia_source_id": [101, 999],
                 "hip_source_id": [11, 13],
-                "mapping_source": ["official", "official"],
+                "mapping_source": ["h2bn", "h2bn"],
                 "number_of_neighbours": [1, 1],
                 "angular_distance": [0.1, 0.1],
             }
         ),
-        official_path,
+        h2bn_path,
     )
 
     report = run_raw_gaia_hip_match(
         hip_ecsv_path=hip_ecsv,
         gaia_parquet_path=gaia_path,
-        official_crossmatch_path=official_path,
+        h2bn_crossmatch_path=h2bn_path,
         output_dir=output_dir,
         max_sep_arcsec=1.0,
         max_mag_delta=0.5,
@@ -103,7 +103,7 @@ def test_raw_match_writes_clean_supplemental_and_official_comparison(tmp_path: P
         for row in evidence.itertuples(index=False)
     }
     assert by_pair[("100", "10")] == "supplemental_match"
-    assert by_pair[("101", "11")] == "official_confirmed"
+    assert by_pair[("101", "11")] == "h2bn_recovered"
     assert by_pair[("102", "12")] == "manual_review"
     assert by_pair[("103", "12")] == "manual_review"
     assert by_pair[("104", "13")] == "manual_review"
@@ -121,7 +121,7 @@ def test_raw_match_writes_clean_supplemental_and_official_comparison(tmp_path: P
     ]
     assert report.evidence_rows == 5
     assert report.supplemental_rows == 1
-    assert report.official_pairs_confirmed == 1
+    assert report.h2bn_pairs_recovered == 1
 
 
 def test_raw_supplemental_crossmatch_is_empty_without_clean_matches():
@@ -142,7 +142,7 @@ def test_raw_match_uses_parallax_distance_for_non_tight_pairs(tmp_path: Path):
 
     hip_ecsv = tmp_path / "hip.ecsv"
     gaia_path = tmp_path / "gaia.parquet"
-    official_path = tmp_path / "official.parquet"
+    h2bn_path = tmp_path / "h2bn.parquet"
     output_dir = tmp_path / "raw"
     Table(
         {
@@ -182,13 +182,13 @@ def test_raw_match_uses_parallax_distance_for_non_tight_pairs(tmp_path: Path):
                 "angular_distance",
             ]
         ),
-        official_path,
+        h2bn_path,
     )
 
     run_raw_gaia_hip_match(
         hip_ecsv_path=hip_ecsv,
         gaia_parquet_path=gaia_path,
-        official_crossmatch_path=official_path,
+        h2bn_crossmatch_path=h2bn_path,
         output_dir=output_dir,
         max_sep_arcsec=5.0,
         batch_size=2,
@@ -202,12 +202,12 @@ def test_raw_match_uses_parallax_distance_for_non_tight_pairs(tmp_path: Path):
         for row in evidence.itertuples(index=False)
     }
     assert by_pair[("100", "10")].decision == "supplemental_match"
-    assert bool(by_pair[("100", "10")].within_rendered_distance_threshold) is True
-    assert by_pair[("100", "10")].rendered_3d_separation_pc < 1.0
+    assert bool(by_pair[("100", "10")].within_parallax_3d_threshold) is True
+    assert by_pair[("100", "10")].parallax_3d_separation_pc < 1.0
     assert by_pair[("100", "10")].apparent_mag_delta > 0.5
 
-    assert by_pair[("101", "11")].decision == "display_separate"
-    assert by_pair[("101", "11")].rendered_3d_separation_pc > 1.0
+    assert by_pair[("101", "11")].decision == "separate_object"
+    assert by_pair[("101", "11")].parallax_3d_separation_pc > 1.0
 
     supplemental = pd.read_parquet(output_dir / RAW_SUPPLEMENTAL_MAP_FILENAME)
     assert supplemental[["gaia_source_id", "hip_source_id"]].values.tolist() == [
@@ -215,12 +215,12 @@ def test_raw_match_uses_parallax_distance_for_non_tight_pairs(tmp_path: Path):
     ]
 
 
-def test_raw_match_respects_official_neighbourhood_conflicts(tmp_path: Path):
+def test_raw_match_respects_hipparcos2_neighbourhood_conflicts(tmp_path: Path):
     pytest.importorskip("scipy")
 
     hip_ecsv = tmp_path / "hip.ecsv"
     gaia_path = tmp_path / "gaia.parquet"
-    official_path = tmp_path / "official.parquet"
+    h2bn_path = tmp_path / "h2bn.parquet"
     neighbourhood_path = tmp_path / "neighbourhood.parquet"
     output_dir = tmp_path / "raw"
     Table(
@@ -258,7 +258,7 @@ def test_raw_match_respects_official_neighbourhood_conflicts(tmp_path: Path):
         "number_of_neighbours",
         "angular_distance",
     ]
-    _write_parquet(pd.DataFrame(columns=columns), official_path)
+    _write_parquet(pd.DataFrame(columns=columns), h2bn_path)
     _write_parquet(
         pd.DataFrame(
             {
@@ -275,8 +275,8 @@ def test_raw_match_respects_official_neighbourhood_conflicts(tmp_path: Path):
     run_raw_gaia_hip_match(
         hip_ecsv_path=hip_ecsv,
         gaia_parquet_path=gaia_path,
-        official_crossmatch_path=official_path,
-        official_neighbourhood_path=neighbourhood_path,
+        h2bn_crossmatch_path=h2bn_path,
+        hipparcos2_neighbourhood_path=neighbourhood_path,
         output_dir=output_dir,
         max_sep_arcsec=1.0,
         batch_size=1,
@@ -286,8 +286,8 @@ def test_raw_match_respects_official_neighbourhood_conflicts(tmp_path: Path):
 
     evidence = pd.read_parquet(output_dir / RAW_MATCH_EVIDENCE_FILENAME)
     assert evidence.loc[0, "decision"] == "manual_review"
-    assert bool(evidence.loc[0, "official_neighbourhood_conflict"]) is True
-    assert "official_neighbourhood_conflict" in evidence.loc[0, "reasons"]
+    assert bool(evidence.loc[0, "hipparcos2_neighbourhood_conflict"]) is True
+    assert "hipparcos2_neighbourhood_conflict" in evidence.loc[0, "reasons"]
 
 
 def test_raw_match_preserves_large_gaia_source_ids(tmp_path: Path):
@@ -295,7 +295,7 @@ def test_raw_match_preserves_large_gaia_source_ids(tmp_path: Path):
 
     hip_ecsv = tmp_path / "hip.ecsv"
     gaia_path = tmp_path / "gaia.parquet"
-    official_path = tmp_path / "official.parquet"
+    h2bn_path = tmp_path / "h2bn.parquet"
     output_dir = tmp_path / "raw"
     Table(
         {
@@ -332,13 +332,13 @@ def test_raw_match_preserves_large_gaia_source_ids(tmp_path: Path):
                 "angular_distance",
             ]
         ),
-        official_path,
+        h2bn_path,
     )
 
     run_raw_gaia_hip_match(
         hip_ecsv_path=hip_ecsv,
         gaia_parquet_path=gaia_path,
-        official_crossmatch_path=official_path,
+        h2bn_crossmatch_path=h2bn_path,
         output_dir=output_dir,
         max_sep_arcsec=1.0,
         max_mag_delta=0.5,

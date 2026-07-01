@@ -35,7 +35,7 @@ RAW_SUPPLEMENTAL_MAP_FILENAME = "raw_supplemental_gaia_hip_map.parquet"
 RAW_COMBINED_MAP_FILENAME = "raw_combined_gaia_hip_map.parquet"
 RAW_MATCH_REPORT_FILENAME = "raw_match_report.json"
 
-RAW_SKY_RENDER_MAPPING_SOURCE = "fis_raw_sky_render_v1"
+RAW_SKY_CROSSMATCH_MAPPING_SOURCE = "fis_raw_crossmatch_v1"
 
 RAW_MATCH_EVIDENCE_COLS = [
     "gaia_source_id",
@@ -65,7 +65,7 @@ RAW_MATCH_EVIDENCE_COLS = [
     "hip_r_pc",
     "gaia_parallax_frac_error",
     "hip_parallax_frac_error",
-    "rendered_3d_separation_pc",
+    "parallax_3d_separation_pc",
     "hip_pmra_masyr",
     "hip_pmdec_masyr",
     "hip_solution_type",
@@ -75,16 +75,16 @@ RAW_MATCH_EVIDENCE_COLS = [
     "hip_candidate_count",
     "one_to_one_candidate",
     "isolated_sky_pair",
-    "official_pair",
-    "gaia_has_official_map",
-    "hip_has_official_map",
-    "official_conflict",
-    "in_official_neighbourhood",
-    "official_neighbourhood_conflict",
+    "h2bn_pair",
+    "gaia_has_h2bn_map",
+    "hip_has_h2bn_map",
+    "h2bn_conflict",
+    "in_hipparcos2_neighbourhood",
+    "hipparcos2_neighbourhood_conflict",
     "within_tight_sky_threshold",
-    "within_rendered_distance_threshold",
-    "gaia_official_hip_source_id",
-    "hip_official_gaia_source_id",
+    "within_parallax_3d_threshold",
+    "gaia_h2bn_hip_source_id",
+    "hip_h2bn_gaia_source_id",
 ]
 
 
@@ -94,8 +94,8 @@ class RawMatchReport:
 
     hip_ecsv_path: str
     gaia_parquet_path: str
-    official_crossmatch_path: str
-    official_neighbourhood_path: str | None
+    h2bn_crossmatch_path: str
+    hipparcos2_neighbourhood_path: str | None
     output_dir: str
     hip_match_sources_path: str
     match_evidence_path: str
@@ -105,7 +105,7 @@ class RawMatchReport:
     max_sep_arcsec: float
     max_mag_delta: float | None
     auto_sep_arcsec: float
-    max_rendered_separation_pc: float
+    max_parallax_3d_separation_pc: float
     gaia_rows_scanned: int
     gaia_rows_skipped: int
     hip_rows_raw: int
@@ -114,23 +114,23 @@ class RawMatchReport:
     supplemental_rows: int
     combined_rows: int
     decision_counts: dict[str, int]
-    official_rows: int
-    official_neighbourhood_rows: int
-    official_pairs_in_evidence: int
-    official_pairs_confirmed: int
+    h2bn_rows: int
+    hipparcos2_neighbourhood_rows: int
+    h2bn_pairs_in_evidence: int
+    h2bn_pairs_recovered: int
 
 
 def run_raw_gaia_hip_match(
     *,
     hip_ecsv_path: Path,
     gaia_parquet_path: Path,
-    official_crossmatch_path: Path,
+    h2bn_crossmatch_path: Path,
     output_dir: Path,
-    official_neighbourhood_path: Path | None = None,
+    hipparcos2_neighbourhood_path: Path | None = None,
     max_sep_arcsec: float = 5.0,
     max_mag_delta: float | None = None,
     auto_sep_arcsec: float = 0.25,
-    max_rendered_separation_pc: float = 1.0,
+    max_parallax_3d_separation_pc: float = 1.0,
     batch_size: int = 500_000,
     workers: int = -1,
     force: bool = False,
@@ -139,20 +139,20 @@ def run_raw_gaia_hip_match(
 
     hip_ecsv_path = Path(hip_ecsv_path).expanduser()
     gaia_parquet_path = Path(gaia_parquet_path).expanduser()
-    official_crossmatch_path = Path(official_crossmatch_path).expanduser()
-    if official_neighbourhood_path is not None:
-        official_neighbourhood_path = Path(official_neighbourhood_path).expanduser()
+    h2bn_crossmatch_path = Path(h2bn_crossmatch_path).expanduser()
+    if hipparcos2_neighbourhood_path is not None:
+        hipparcos2_neighbourhood_path = Path(hipparcos2_neighbourhood_path).expanduser()
     output_dir = Path(output_dir).expanduser()
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    for path in (hip_ecsv_path, gaia_parquet_path, official_crossmatch_path):
+    for path in (hip_ecsv_path, gaia_parquet_path, h2bn_crossmatch_path):
         if not path.is_file():
             raise FileNotFoundError(str(path))
     if (
-        official_neighbourhood_path is not None
-        and not official_neighbourhood_path.is_file()
+        hipparcos2_neighbourhood_path is not None
+        and not hipparcos2_neighbourhood_path.is_file()
     ):
-        raise FileNotFoundError(str(official_neighbourhood_path))
+        raise FileNotFoundError(str(hipparcos2_neighbourhood_path))
 
     hip_sources_path = output_dir / RAW_HIP_MATCH_SOURCES_FILENAME
     evidence_path = output_dir / RAW_MATCH_EVIDENCE_FILENAME
@@ -177,21 +177,21 @@ def run_raw_gaia_hip_match(
         output_path=hip_sources_path,
         overwrite=True,
     )
-    official = read_official_crossmatch(official_crossmatch_path)
-    official_neighbourhood = (
-        read_official_crossmatch(official_neighbourhood_path)
-        if official_neighbourhood_path is not None
+    h2bn = read_h2bn_crossmatch(h2bn_crossmatch_path)
+    hipparcos2_neighbourhood = (
+        read_h2bn_crossmatch(hipparcos2_neighbourhood_path)
+        if hipparcos2_neighbourhood_path is not None
         else empty_gaia_hip_mapping()
     )
     evidence, scan_counts = build_raw_match_evidence(
         gaia_parquet_path=gaia_parquet_path,
         hip_sources_path=hip_sources_path,
-        official_crossmatch=official,
-        official_neighbourhood=official_neighbourhood,
+        h2bn_crossmatch=h2bn,
+        hipparcos2_neighbourhood=hipparcos2_neighbourhood,
         max_sep_arcsec=max_sep_arcsec,
         max_mag_delta=max_mag_delta,
         auto_sep_arcsec=auto_sep_arcsec,
-        max_rendered_separation_pc=max_rendered_separation_pc,
+        max_parallax_3d_separation_pc=max_parallax_3d_separation_pc,
         batch_size=batch_size,
         workers=workers,
     )
@@ -201,7 +201,7 @@ def run_raw_gaia_hip_match(
     validate_one_to_one_crossmatch(supplemental, label="raw supplemental")
     write_gaia_hip_mapping(supplemental, supplemental_path)
 
-    combined = combine_crossmatches(official, supplemental)
+    combined = combine_crossmatches(h2bn, supplemental)
     validate_one_to_one_crossmatch(combined, label="raw combined")
     write_gaia_hip_mapping(combined, combined_path)
 
@@ -209,14 +209,14 @@ def run_raw_gaia_hip_match(
         str(key): int(value)
         for key, value in evidence["decision"].value_counts(dropna=False).items()
     }
-    official_pair_mask = evidence["official_pair"].fillna(False).astype(bool)
+    h2bn_pair_mask = evidence["h2bn_pair"].fillna(False).astype(bool)
     report = RawMatchReport(
         hip_ecsv_path=str(hip_ecsv_path),
         gaia_parquet_path=str(gaia_parquet_path),
-        official_crossmatch_path=str(official_crossmatch_path),
-        official_neighbourhood_path=(
-            str(official_neighbourhood_path)
-            if official_neighbourhood_path is not None
+        h2bn_crossmatch_path=str(h2bn_crossmatch_path),
+        hipparcos2_neighbourhood_path=(
+            str(hipparcos2_neighbourhood_path)
+            if hipparcos2_neighbourhood_path is not None
             else None
         ),
         output_dir=str(output_dir),
@@ -228,7 +228,7 @@ def run_raw_gaia_hip_match(
         max_sep_arcsec=max_sep_arcsec,
         max_mag_delta=max_mag_delta,
         auto_sep_arcsec=auto_sep_arcsec,
-        max_rendered_separation_pc=max_rendered_separation_pc,
+        max_parallax_3d_separation_pc=max_parallax_3d_separation_pc,
         gaia_rows_scanned=int(scan_counts["gaia_rows_scanned"]),
         gaia_rows_skipped=int(scan_counts["gaia_rows_skipped"]),
         hip_rows_raw=int(hip_raw_rows),
@@ -237,11 +237,11 @@ def run_raw_gaia_hip_match(
         supplemental_rows=int(len(supplemental)),
         combined_rows=int(len(combined)),
         decision_counts=decision_counts,
-        official_rows=int(len(official)),
-        official_neighbourhood_rows=int(len(official_neighbourhood)),
-        official_pairs_in_evidence=int(official_pair_mask.sum()),
-        official_pairs_confirmed=int(
-            evidence["decision"].astype(str).eq("official_confirmed").sum()
+        h2bn_rows=int(len(h2bn)),
+        hipparcos2_neighbourhood_rows=int(len(hipparcos2_neighbourhood)),
+        h2bn_pairs_in_evidence=int(h2bn_pair_mask.sum()),
+        h2bn_pairs_recovered=int(
+            evidence["decision"].astype(str).eq("h2bn_recovered").sum()
         ),
     )
     report_path.write_text(json.dumps(asdict(report), indent=2) + "\n")
@@ -339,12 +339,12 @@ def build_raw_match_evidence(
     *,
     gaia_parquet_path: Path,
     hip_sources_path: Path,
-    official_crossmatch: pd.DataFrame,
-    official_neighbourhood: pd.DataFrame,
+    h2bn_crossmatch: pd.DataFrame,
+    hipparcos2_neighbourhood: pd.DataFrame,
     max_sep_arcsec: float,
     max_mag_delta: float | None,
     auto_sep_arcsec: float,
-    max_rendered_separation_pc: float,
+    max_parallax_3d_separation_pc: float,
     batch_size: int = 500_000,
     workers: int = -1,
 ) -> tuple[pd.DataFrame, dict[str, int]]:
@@ -362,13 +362,13 @@ def build_raw_match_evidence(
     hip_xyz = _unit_vectors(hip["ra_deg"].to_numpy(), hip["dec_deg"].to_numpy())
     hip_tree = ckdtree(hip_xyz)
     chord_radius = 2.0 * math.sin(math.radians(max_sep_arcsec / 3600.0) / 2.0)
-    official_gaia_to_hip = _mapping_dict(official_crossmatch, "gaia_source_id")
-    official_hip_to_gaia = _mapping_dict(official_crossmatch, "hip_source_id")
+    h2bn_gaia_to_hip = _mapping_dict(h2bn_crossmatch, "gaia_source_id")
+    h2bn_hip_to_gaia = _mapping_dict(h2bn_crossmatch, "hip_source_id")
     neighbourhood_gaia_to_hips = _mapping_sets(
-        official_neighbourhood, "gaia_source_id"
+        hipparcos2_neighbourhood, "gaia_source_id"
     )
     neighbourhood_hip_to_gaias = _mapping_sets(
-        official_neighbourhood, "hip_source_id"
+        hipparcos2_neighbourhood, "hip_source_id"
     )
 
     rows: list[dict[str, Any]] = []
@@ -449,8 +449,8 @@ def build_raw_match_evidence(
                         sep_arcsec=float(sep_arcsec[seq]),
                         mag_delta=float(mag_delta[local_i]),
                         gaia_sky_count=len(hip_indices),
-                        official_gaia_to_hip=official_gaia_to_hip,
-                        official_hip_to_gaia=official_hip_to_gaia,
+                        h2bn_gaia_to_hip=h2bn_gaia_to_hip,
+                        h2bn_hip_to_gaia=h2bn_hip_to_gaia,
                         neighbourhood_gaia_to_hips=neighbourhood_gaia_to_hips,
                         neighbourhood_hip_to_gaias=neighbourhood_hip_to_gaias,
                     )
@@ -486,9 +486,9 @@ def build_raw_match_evidence(
     evidence["within_tight_sky_threshold"] = pd.to_numeric(
         evidence["separation_arcsec"], errors="coerce"
     ).le(auto_sep_arcsec)
-    evidence["within_rendered_distance_threshold"] = pd.to_numeric(
-        evidence["rendered_3d_separation_pc"], errors="coerce"
-    ).le(max_rendered_separation_pc)
+    evidence["within_parallax_3d_threshold"] = pd.to_numeric(
+        evidence["parallax_3d_separation_pc"], errors="coerce"
+    ).le(max_parallax_3d_separation_pc)
     for idx, rec in evidence.iterrows():
         decision, action, severity, reasons = _classify_raw_evidence_row(rec)
         evidence.loc[idx, "decision"] = decision
@@ -522,7 +522,7 @@ def build_raw_supplemental_crossmatch(evidence: pd.DataFrame) -> pd.DataFrame:
             "hip_source_id": pd.to_numeric(
                 matched["hip_source_id"], errors="raise"
             ).astype("uint64"),
-            "mapping_source": RAW_SKY_RENDER_MAPPING_SOURCE,
+            "mapping_source": RAW_SKY_CROSSMATCH_MAPPING_SOURCE,
             "number_of_neighbours": np.int16(1),
             "angular_distance": pd.to_numeric(
                 matched["separation_arcsec"], errors="raise"
@@ -536,8 +536,8 @@ def build_raw_supplemental_crossmatch(evidence: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-def read_official_crossmatch(path: Path) -> pd.DataFrame:
-    """Read an official Gaia-HIP map from pipeline Parquet or Gaia/Vizier ECSV."""
+def read_h2bn_crossmatch(path: Path) -> pd.DataFrame:
+    """Read a Gaia-HIP crossmatch table from pipeline Parquet or Gaia/Vizier ECSV."""
 
     path = Path(path).expanduser()
     if path.suffix.lower() == ".parquet":
@@ -566,7 +566,7 @@ def read_official_crossmatch(path: Path) -> pd.DataFrame:
         )
     else:
         raise ValueError(
-            "Official crossmatch must contain gaia_source_id/hip_source_id or "
+            "Input crossmatch must contain gaia_source_id/hip_source_id or "
             "source_id/original_ext_source_id"
         )
     valid = (
@@ -650,21 +650,21 @@ def _raw_candidate_record(
     sep_arcsec: float,
     mag_delta: float,
     gaia_sky_count: int,
-    official_gaia_to_hip: dict[str, str],
-    official_hip_to_gaia: dict[str, str],
+    h2bn_gaia_to_hip: dict[str, str],
+    h2bn_hip_to_gaia: dict[str, str],
     neighbourhood_gaia_to_hips: dict[str, set[str]],
     neighbourhood_hip_to_gaias: dict[str, set[str]],
 ) -> dict[str, Any]:
     gaia_id = str(gaia_rec["source_id_str"])
     hip_id = str(hip_rec["source_id_str"])
-    gaia_official_hip = official_gaia_to_hip.get(gaia_id)
-    hip_official_gaia = official_hip_to_gaia.get(hip_id)
-    gaia_has_map = gaia_official_hip is not None
-    hip_has_map = hip_official_gaia is not None
-    official_pair = gaia_official_hip == hip_id and hip_official_gaia == gaia_id
-    official_conflict = (
-        (gaia_has_map and gaia_official_hip != hip_id)
-        or (hip_has_map and hip_official_gaia != gaia_id)
+    gaia_h2bn_hip = h2bn_gaia_to_hip.get(gaia_id)
+    hip_h2bn_gaia = h2bn_hip_to_gaia.get(hip_id)
+    gaia_has_map = gaia_h2bn_hip is not None
+    hip_has_map = hip_h2bn_gaia is not None
+    h2bn_pair = gaia_h2bn_hip == hip_id and hip_h2bn_gaia == gaia_id
+    h2bn_conflict = (
+        (gaia_has_map and gaia_h2bn_hip != hip_id)
+        or (hip_has_map and hip_h2bn_gaia != gaia_id)
     )
     neighbourhood_hips = neighbourhood_gaia_to_hips.get(gaia_id, set())
     neighbourhood_gaias = neighbourhood_hip_to_gaias.get(hip_id, set())
@@ -682,7 +682,7 @@ def _raw_candidate_record(
     hip_e_plx = _safe_float(hip_rec.get("e_plx_mas"))
     gaia_r_pc = _distance_pc_from_parallax_mas(gaia_plx)
     hip_r_pc = _distance_pc_from_parallax_mas(hip_plx)
-    rendered_sep_pc = _rendered_separation_pc(
+    parallax_3d_sep_pc = _parallax_3d_separation_pc(
         gaia_r_pc,
         hip_r_pc,
         sep_arcsec,
@@ -715,7 +715,7 @@ def _raw_candidate_record(
         "hip_r_pc": hip_r_pc,
         "gaia_parallax_frac_error": _parallax_frac_error(gaia_plx, gaia_e_plx),
         "hip_parallax_frac_error": _parallax_frac_error(hip_plx, hip_e_plx),
-        "rendered_3d_separation_pc": rendered_sep_pc,
+        "parallax_3d_separation_pc": parallax_3d_sep_pc,
         "hip_pmra_masyr": _safe_float(hip_rec.get("pmra_masyr")),
         "hip_pmdec_masyr": _safe_float(hip_rec.get("pmdec_masyr")),
         "hip_solution_type": _safe_float(hip_rec.get("solution_type")),
@@ -725,16 +725,16 @@ def _raw_candidate_record(
         "hip_candidate_count": 1,
         "one_to_one_candidate": True,
         "isolated_sky_pair": False,
-        "official_pair": bool(official_pair),
-        "gaia_has_official_map": bool(gaia_has_map),
-        "hip_has_official_map": bool(hip_has_map),
-        "official_conflict": bool(official_conflict),
-        "in_official_neighbourhood": bool(in_neighbourhood),
-        "official_neighbourhood_conflict": bool(neighbourhood_conflict),
+        "h2bn_pair": bool(h2bn_pair),
+        "gaia_has_h2bn_map": bool(gaia_has_map),
+        "hip_has_h2bn_map": bool(hip_has_map),
+        "h2bn_conflict": bool(h2bn_conflict),
+        "in_hipparcos2_neighbourhood": bool(in_neighbourhood),
+        "hipparcos2_neighbourhood_conflict": bool(neighbourhood_conflict),
         "within_tight_sky_threshold": False,
-        "within_rendered_distance_threshold": False,
-        "gaia_official_hip_source_id": gaia_official_hip or pd.NA,
-        "hip_official_gaia_source_id": hip_official_gaia or pd.NA,
+        "within_parallax_3d_threshold": False,
+        "gaia_h2bn_hip_source_id": gaia_h2bn_hip or pd.NA,
+        "hip_h2bn_gaia_source_id": hip_h2bn_gaia or pd.NA,
     }
 
 
@@ -747,27 +747,27 @@ def _classify_raw_evidence_row(rec: pd.Series) -> tuple[str, str, str, list[str]
     elif bool(rec["one_to_one_candidate"]):
         reasons.append("one_to_one_candidate_but_not_sky_isolated")
 
-    if bool(rec["official_pair"]):
-        reasons.append("official_crossmatch_pair")
+    if bool(rec["h2bn_pair"]):
+        reasons.append("h2bn_crossmatch_pair")
         if bool(rec["one_to_one_candidate"]):
             return (
-                "official_confirmed",
-                "already_in_official_crossmatch",
+                "h2bn_recovered",
+                "already_in_h2bn_crossmatch",
                 "info",
                 reasons,
             )
-        reasons.append("official_pair_has_local_ambiguity")
-        return "manual_review", "inspect_ambiguous_official_pair", "medium", reasons
+        reasons.append("h2bn_pair_has_local_ambiguity")
+        return "manual_review", "inspect_ambiguous_h2bn_pair", "medium", reasons
 
-    if bool(rec["official_conflict"]):
-        reasons.append("official_best_conflict")
-        return "manual_review", "inspect_official_best_conflict", "high", reasons
+    if bool(rec["h2bn_conflict"]):
+        reasons.append("h2bn_conflict")
+        return "manual_review", "inspect_h2bn_conflict", "high", reasons
 
-    if bool(rec["official_neighbourhood_conflict"]):
-        reasons.append("official_neighbourhood_conflict")
+    if bool(rec["hipparcos2_neighbourhood_conflict"]):
+        reasons.append("hipparcos2_neighbourhood_conflict")
         return (
             "manual_review",
-            "inspect_official_neighbourhood_conflict",
+            "inspect_hipparcos2_neighbourhood_conflict",
             "medium",
             reasons,
         )
@@ -780,17 +780,17 @@ def _classify_raw_evidence_row(rec: pd.Series) -> tuple[str, str, str, list[str]
         reasons.append("clean_one_to_one_tight_sky_candidate")
         return "supplemental_match", "add_supplemental_crossmatch", "medium", reasons
 
-    rendered_sep = _safe_float(rec.get("rendered_3d_separation_pc"))
-    if bool(rec["within_rendered_distance_threshold"]):
-        reasons.append("clean_one_to_one_rendered_distance_candidate")
+    parallax_3d_sep = _safe_float(rec.get("parallax_3d_separation_pc"))
+    if bool(rec["within_parallax_3d_threshold"]):
+        reasons.append("clean_one_to_one_parallax_3d_candidate")
         return "supplemental_match", "add_supplemental_crossmatch", "medium", reasons
 
-    if math.isfinite(rendered_sep):
-        reasons.append("rendered_3d_separation_gt_threshold")
-        return "display_separate", "keep_both_visible", "info", reasons
+    if math.isfinite(parallax_3d_sep):
+        reasons.append("parallax_3d_separation_gt_threshold")
+        return "separate_object", "keep_separate", "info", reasons
 
-    reasons.append("missing_rendered_distance")
-    return "display_separate", "keep_both_visible", "info", reasons
+    reasons.append("missing_parallax_3d_separation")
+    return "separate_object", "keep_separate", "info", reasons
 
 
 def _mapping_sets(mapping: pd.DataFrame, key_col: str) -> dict[str, set[str]]:
@@ -819,7 +819,7 @@ def _parallax_frac_error(parallax_mas: float, parallax_error_mas: float) -> floa
     return abs(parallax_error_mas / parallax_mas)
 
 
-def _rendered_separation_pc(
+def _parallax_3d_separation_pc(
     gaia_r_pc: float,
     hip_r_pc: float,
     sep_arcsec: float,
