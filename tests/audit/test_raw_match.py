@@ -99,14 +99,19 @@ def test_raw_match_writes_clean_supplemental_and_h2bn_comparison(tmp_path: Path)
 
     evidence = pd.read_parquet(output_dir / RAW_MATCH_EVIDENCE_FILENAME)
     by_pair = {
-        (row.gaia_source_id, row.hip_source_id): row.decision
+        (row.gaia_source_id, row.hip_source_id): row
         for row in evidence.itertuples(index=False)
     }
-    assert by_pair[("100", "10")] == "supplemental_match"
-    assert by_pair[("101", "11")] == "h2bn_recovered"
-    assert by_pair[("102", "12")] == "manual_review"
-    assert by_pair[("103", "12")] == "manual_review"
-    assert by_pair[("104", "13")] == "manual_review"
+    assert by_pair[("100", "10")].decision == "supplemental_match"
+    assert by_pair[("100", "10")].evidence_category == "supplemental_match"
+    assert by_pair[("101", "11")].decision == "h2bn_recovered"
+    assert by_pair[("101", "11")].evidence_category == "h2bn_recovered"
+    assert by_pair[("102", "12")].decision == "manual_review"
+    assert by_pair[("102", "12")].evidence_category == "local_ambiguity"
+    assert by_pair[("103", "12")].decision == "manual_review"
+    assert by_pair[("103", "12")].evidence_category == "local_ambiguity"
+    assert by_pair[("104", "13")].decision == "manual_review"
+    assert by_pair[("104", "13")].evidence_category == "h2bn_disagreement"
 
     supplemental = pd.read_parquet(output_dir / RAW_SUPPLEMENTAL_MAP_FILENAME)
     assert supplemental[["gaia_source_id", "hip_source_id"]].values.tolist() == [
@@ -122,6 +127,14 @@ def test_raw_match_writes_clean_supplemental_and_h2bn_comparison(tmp_path: Path)
     assert report.evidence_rows == 5
     assert report.supplemental_rows == 1
     assert report.h2bn_pairs_recovered == 1
+    assert report.evidence_category_counts == {
+        "h2bn_recovered": 1,
+        "supplemental_match": 1,
+        "local_ambiguity": 2,
+        "h2bn_disagreement": 1,
+        "hipparcos2_neighbourhood_disagreement": 0,
+        "nearby_nonmatch": 0,
+    }
 
 
 def test_raw_supplemental_crossmatch_is_empty_without_clean_matches():
@@ -202,12 +215,21 @@ def test_raw_match_uses_parallax_distance_for_non_tight_pairs(tmp_path: Path):
         for row in evidence.itertuples(index=False)
     }
     assert by_pair[("100", "10")].decision == "supplemental_match"
+    assert by_pair[("100", "10")].evidence_category == "supplemental_match"
     assert bool(by_pair[("100", "10")].within_parallax_3d_threshold) is True
     assert by_pair[("100", "10")].parallax_3d_separation_pc < 1.0
+    assert by_pair[("100", "10")].delta_d_pc == pytest.approx(0.4975, rel=1e-3)
+    assert by_pair[("100", "10")].combined_distance_sigma_pc == pytest.approx(
+        1.4072, rel=1e-3
+    )
+    assert by_pair[("100", "10")].delta_d_sigma == pytest.approx(0.3536, rel=1e-3)
     assert by_pair[("100", "10")].apparent_mag_delta > 0.5
 
     assert by_pair[("101", "11")].decision == "separate_object"
+    assert by_pair[("101", "11")].evidence_category == "nearby_nonmatch"
     assert by_pair[("101", "11")].parallax_3d_separation_pc > 1.0
+    assert by_pair[("101", "11")].delta_d_pc == pytest.approx(100.0)
+    assert by_pair[("101", "11")].delta_d_sigma > 20.0
 
     supplemental = pd.read_parquet(output_dir / RAW_SUPPLEMENTAL_MAP_FILENAME)
     assert supplemental[["gaia_source_id", "hip_source_id"]].values.tolist() == [
@@ -286,6 +308,10 @@ def test_raw_match_respects_hipparcos2_neighbourhood_conflicts(tmp_path: Path):
 
     evidence = pd.read_parquet(output_dir / RAW_MATCH_EVIDENCE_FILENAME)
     assert evidence.loc[0, "decision"] == "manual_review"
+    assert (
+        evidence.loc[0, "evidence_category"]
+        == "hipparcos2_neighbourhood_disagreement"
+    )
     assert bool(evidence.loc[0, "hipparcos2_neighbourhood_conflict"]) is True
     assert "hipparcos2_neighbourhood_conflict" in evidence.loc[0, "reasons"]
 
@@ -349,6 +375,7 @@ def test_raw_match_preserves_large_gaia_source_ids(tmp_path: Path):
     evidence = pd.read_parquet(output_dir / RAW_MATCH_EVIDENCE_FILENAME)
     assert sorted(evidence["gaia_source_id"].tolist()) == [str(v) for v in large_ids]
     assert set(evidence["decision"]) == {"manual_review"}
+    assert set(evidence["evidence_category"]) == {"local_ambiguity"}
 
 
 def test_hip_propagation_uses_proper_motion():

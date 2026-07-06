@@ -37,10 +37,20 @@ RAW_MATCH_REPORT_FILENAME = "raw_match_report.json"
 
 RAW_SKY_CROSSMATCH_MAPPING_SOURCE = "fis_raw_crossmatch_v1"
 
+EVIDENCE_CATEGORIES = (
+    "h2bn_recovered",
+    "supplemental_match",
+    "local_ambiguity",
+    "h2bn_disagreement",
+    "hipparcos2_neighbourhood_disagreement",
+    "nearby_nonmatch",
+)
+
 RAW_MATCH_EVIDENCE_COLS = [
     "gaia_source_id",
     "hip_source_id",
     "decision",
+    "evidence_category",
     "recommended_action",
     "severity",
     "reasons",
@@ -66,6 +76,9 @@ RAW_MATCH_EVIDENCE_COLS = [
     "gaia_parallax_frac_error",
     "hip_parallax_frac_error",
     "parallax_3d_separation_pc",
+    "delta_d_pc",
+    "combined_distance_sigma_pc",
+    "delta_d_sigma",
     "hip_pmra_masyr",
     "hip_pmdec_masyr",
     "hip_solution_type",
@@ -114,6 +127,7 @@ class RawMatchReport:
     supplemental_rows: int
     combined_rows: int
     decision_counts: dict[str, int]
+    evidence_category_counts: dict[str, int]
     h2bn_rows: int
     hipparcos2_neighbourhood_rows: int
     h2bn_pairs_in_evidence: int
@@ -209,6 +223,7 @@ def run_raw_gaia_hip_match(
         str(key): int(value)
         for key, value in evidence["decision"].value_counts(dropna=False).items()
     }
+    evidence_category_counts = _evidence_category_counts(evidence)
     h2bn_pair_mask = evidence["h2bn_pair"].fillna(False).astype(bool)
     report = RawMatchReport(
         hip_ecsv_path=str(hip_ecsv_path),
@@ -237,11 +252,12 @@ def run_raw_gaia_hip_match(
         supplemental_rows=int(len(supplemental)),
         combined_rows=int(len(combined)),
         decision_counts=decision_counts,
+        evidence_category_counts=evidence_category_counts,
         h2bn_rows=int(len(h2bn)),
         hipparcos2_neighbourhood_rows=int(len(hipparcos2_neighbourhood)),
         h2bn_pairs_in_evidence=int(h2bn_pair_mask.sum()),
         h2bn_pairs_recovered=int(
-            evidence["decision"].astype(str).eq("h2bn_recovered").sum()
+            evidence["evidence_category"].astype(str).eq("h2bn_recovered").sum()
         ),
     )
     report_path.write_text(json.dumps(asdict(report), indent=2) + "\n")
@@ -490,8 +506,9 @@ def build_raw_match_evidence(
         evidence["parallax_3d_separation_pc"], errors="coerce"
     ).le(max_parallax_3d_separation_pc)
     for idx, rec in evidence.iterrows():
-        decision, action, severity, reasons = _classify_raw_evidence_row(rec)
+        decision, category, action, severity, reasons = _classify_raw_evidence_row(rec)
         evidence.loc[idx, "decision"] = decision
+        evidence.loc[idx, "evidence_category"] = category
         evidence.loc[idx, "recommended_action"] = action
         evidence.loc[idx, "severity"] = severity
         evidence.loc[idx, "reasons"] = ";".join(reasons)
@@ -511,7 +528,10 @@ def build_raw_supplemental_crossmatch(evidence: pd.DataFrame) -> pd.DataFrame:
 
     if evidence.empty:
         return empty_gaia_hip_mapping()
-    matched = evidence.loc[evidence["decision"].eq("supplemental_match")].copy()
+    match_column = (
+        "evidence_category" if "evidence_category" in evidence else "decision"
+    )
+    matched = evidence.loc[evidence[match_column].eq("supplemental_match")].copy()
     if matched.empty:
         return empty_gaia_hip_mapping()
     out = pd.DataFrame(
@@ -682,15 +702,26 @@ def _raw_candidate_record(
     hip_e_plx = _safe_float(hip_rec.get("e_plx_mas"))
     gaia_r_pc = _distance_pc_from_parallax_mas(gaia_plx)
     hip_r_pc = _distance_pc_from_parallax_mas(hip_plx)
+    gaia_frac_error = _parallax_frac_error(gaia_plx, gaia_e_plx)
+    hip_frac_error = _parallax_frac_error(hip_plx, hip_e_plx)
     parallax_3d_sep_pc = _parallax_3d_separation_pc(
         gaia_r_pc,
         hip_r_pc,
         sep_arcsec,
     )
+    delta_d_pc = _delta_d_pc(gaia_r_pc, hip_r_pc)
+    combined_distance_sigma_pc = _combined_distance_sigma_pc(
+        gaia_r_pc,
+        hip_r_pc,
+        gaia_frac_error,
+        hip_frac_error,
+    )
+    delta_d_sigma = _delta_d_sigma(delta_d_pc, combined_distance_sigma_pc)
     return {
         "gaia_source_id": gaia_id,
         "hip_source_id": hip_id,
         "decision": "",
+        "evidence_category": "",
         "recommended_action": "",
         "severity": "",
         "reasons": "",
@@ -713,9 +744,12 @@ def _raw_candidate_record(
         "hip_plx_mas": hip_plx,
         "hip_e_plx_mas": hip_e_plx,
         "hip_r_pc": hip_r_pc,
-        "gaia_parallax_frac_error": _parallax_frac_error(gaia_plx, gaia_e_plx),
-        "hip_parallax_frac_error": _parallax_frac_error(hip_plx, hip_e_plx),
+        "gaia_parallax_frac_error": gaia_frac_error,
+        "hip_parallax_frac_error": hip_frac_error,
         "parallax_3d_separation_pc": parallax_3d_sep_pc,
+        "delta_d_pc": delta_d_pc,
+        "combined_distance_sigma_pc": combined_distance_sigma_pc,
+        "delta_d_sigma": delta_d_sigma,
         "hip_pmra_masyr": _safe_float(hip_rec.get("pmra_masyr")),
         "hip_pmdec_masyr": _safe_float(hip_rec.get("pmdec_masyr")),
         "hip_solution_type": _safe_float(hip_rec.get("solution_type")),
@@ -738,7 +772,9 @@ def _raw_candidate_record(
     }
 
 
-def _classify_raw_evidence_row(rec: pd.Series) -> tuple[str, str, str, list[str]]:
+def _classify_raw_evidence_row(
+    rec: pd.Series,
+) -> tuple[str, str, str, str, list[str]]:
     reasons = ["close_sky_position"]
     if math.isfinite(_safe_float(rec.get("apparent_mag_delta"))):
         reasons.append("apparent_magnitude_recorded")
@@ -752,21 +788,35 @@ def _classify_raw_evidence_row(rec: pd.Series) -> tuple[str, str, str, list[str]
         if bool(rec["one_to_one_candidate"]):
             return (
                 "h2bn_recovered",
+                "h2bn_recovered",
                 "already_in_h2bn_crossmatch",
                 "info",
                 reasons,
             )
         reasons.append("h2bn_pair_has_local_ambiguity")
-        return "manual_review", "inspect_ambiguous_h2bn_pair", "medium", reasons
+        return (
+            "manual_review",
+            "local_ambiguity",
+            "inspect_ambiguous_h2bn_pair",
+            "medium",
+            reasons,
+        )
 
     if bool(rec["h2bn_conflict"]):
         reasons.append("h2bn_conflict")
-        return "manual_review", "inspect_h2bn_conflict", "high", reasons
+        return (
+            "manual_review",
+            "h2bn_disagreement",
+            "inspect_h2bn_conflict",
+            "high",
+            reasons,
+        )
 
     if bool(rec["hipparcos2_neighbourhood_conflict"]):
         reasons.append("hipparcos2_neighbourhood_conflict")
         return (
             "manual_review",
+            "hipparcos2_neighbourhood_disagreement",
             "inspect_hipparcos2_neighbourhood_conflict",
             "medium",
             reasons,
@@ -774,23 +824,41 @@ def _classify_raw_evidence_row(rec: pd.Series) -> tuple[str, str, str, list[str]
 
     if not bool(rec["one_to_one_candidate"]):
         reasons.append("ambiguous_candidate_field")
-        return "manual_review", "inspect_ambiguous_raw_match", "medium", reasons
+        return (
+            "manual_review",
+            "local_ambiguity",
+            "inspect_ambiguous_raw_match",
+            "medium",
+            reasons,
+        )
 
     if bool(rec["within_tight_sky_threshold"]):
         reasons.append("clean_one_to_one_tight_sky_candidate")
-        return "supplemental_match", "add_supplemental_crossmatch", "medium", reasons
+        return (
+            "supplemental_match",
+            "supplemental_match",
+            "add_supplemental_crossmatch",
+            "medium",
+            reasons,
+        )
 
     parallax_3d_sep = _safe_float(rec.get("parallax_3d_separation_pc"))
     if bool(rec["within_parallax_3d_threshold"]):
         reasons.append("clean_one_to_one_parallax_3d_candidate")
-        return "supplemental_match", "add_supplemental_crossmatch", "medium", reasons
+        return (
+            "supplemental_match",
+            "supplemental_match",
+            "add_supplemental_crossmatch",
+            "medium",
+            reasons,
+        )
 
     if math.isfinite(parallax_3d_sep):
         reasons.append("parallax_3d_separation_gt_threshold")
-        return "separate_object", "keep_separate", "info", reasons
+        return "separate_object", "nearby_nonmatch", "keep_separate", "info", reasons
 
     reasons.append("missing_parallax_3d_separation")
-    return "separate_object", "keep_separate", "info", reasons
+    return "separate_object", "nearby_nonmatch", "keep_separate", "info", reasons
 
 
 def _mapping_sets(mapping: pd.DataFrame, key_col: str) -> dict[str, set[str]]:
@@ -819,6 +887,42 @@ def _parallax_frac_error(parallax_mas: float, parallax_error_mas: float) -> floa
     return abs(parallax_error_mas / parallax_mas)
 
 
+def _delta_d_pc(gaia_r_pc: float, hip_r_pc: float) -> float:
+    if not math.isfinite(gaia_r_pc) or not math.isfinite(hip_r_pc):
+        return float("nan")
+    return abs(gaia_r_pc - hip_r_pc)
+
+
+def _combined_distance_sigma_pc(
+    gaia_r_pc: float,
+    hip_r_pc: float,
+    gaia_parallax_frac_error: float,
+    hip_parallax_frac_error: float,
+) -> float:
+    values = (
+        gaia_r_pc,
+        hip_r_pc,
+        gaia_parallax_frac_error,
+        hip_parallax_frac_error,
+    )
+    if not all(math.isfinite(value) for value in values):
+        return float("nan")
+    return math.sqrt(
+        (gaia_r_pc * gaia_parallax_frac_error) ** 2
+        + (hip_r_pc * hip_parallax_frac_error) ** 2
+    )
+
+
+def _delta_d_sigma(delta_d_pc: float, combined_distance_sigma_pc: float) -> float:
+    if (
+        not math.isfinite(delta_d_pc)
+        or not math.isfinite(combined_distance_sigma_pc)
+        or combined_distance_sigma_pc <= 0
+    ):
+        return float("nan")
+    return delta_d_pc / combined_distance_sigma_pc
+
+
 def _parallax_3d_separation_pc(
     gaia_r_pc: float,
     hip_r_pc: float,
@@ -837,6 +941,18 @@ def _parallax_3d_separation_pc(
         - 2.0 * gaia_r_pc * hip_r_pc * math.cos(sep_rad)
     )
     return math.sqrt(max(separation_sq, 0.0))
+
+
+def _evidence_category_counts(evidence: pd.DataFrame) -> dict[str, int]:
+    counts = {category: 0 for category in EVIDENCE_CATEGORIES}
+    if evidence.empty or "evidence_category" not in evidence:
+        return counts
+    values = evidence["evidence_category"].value_counts(dropna=False)
+    for key, value in values.items():
+        key_str = str(key)
+        if key_str:
+            counts[key_str] = int(value)
+    return counts
 
 
 def _mapping_dict(mapping: pd.DataFrame, key_col: str) -> dict[str, str]:
