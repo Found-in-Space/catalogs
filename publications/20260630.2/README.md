@@ -65,7 +65,7 @@ Evidence:
 - `evidence/gaia_raw_match_g15_summary.json` - controlled Gaia VOTable to
   compact `G <= 15` Parquet conversion summary.
 - `evidence/support_input_provenance.json` - row counts and checksums for
-  local source inputs and publication outputs.
+  source inputs and generated run outputs.
 - `evidence/gaia-votables-manifest.tsv` and `evidence/gaia-votables.sha256` -
   copied source-file manifest/checksum evidence from the controlled Gaia
   acquisition package.

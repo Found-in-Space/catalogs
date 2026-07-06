@@ -1,0 +1,41 @@
+{
+  "hip_ecsv_path": "../pipeline/data/catalogs/hipparcos2.ecsv",
+  "gaia_parquet_path": "../pipeline/data/processed/gaia_raw_match_g15.parquet",
+  "h2bn_crossmatch_path": "../pipeline/data/processed/gaia_hip_map.parquet",
+  "hipparcos2_neighbourhood_path": "../pipeline/data/catalogs/gaia_hipparcos2_neighbourhood.ecsv",
+  "output_dir": "../pipeline/data/processed/raw-gaia-hip-match",
+  "hip_match_sources_path": "../pipeline/data/processed/raw-gaia-hip-match/raw_hip_match_sources.parquet",
+  "match_evidence_path": "../pipeline/data/processed/raw-gaia-hip-match/raw_match_evidence.parquet",
+  "supplemental_crossmatch_path": "../pipeline/data/processed/raw-gaia-hip-match/raw_supplemental_gaia_hip_map.parquet",
+  "combined_crossmatch_path": "../pipeline/data/processed/raw-gaia-hip-match/raw_combined_gaia_hip_map.parquet",
+  "report_path": "../pipeline/data/processed/raw-gaia-hip-match/raw_match_report.json",
+  "max_sep_arcsec": 5.0,
+  "max_mag_delta": null,
+  "auto_sep_arcsec": 0.25,
+  "max_parallax_3d_separation_pc": 1.0,
+  "gaia_rows_scanned": 36635159,
+  "gaia_rows_skipped": 0,
+  "hip_rows_raw": 117955,
+  "hip_rows_prepared": 117955,
+  "evidence_rows": 122678,
+  "supplemental_rows": 15679,
+  "combined_rows": 115204,
+  "decision_counts": {
+    "h2bn_recovered": 92436,
+    "supplemental_match": 15679,
+    "manual_review": 13721,
+    "separate_object": 842
+  },
+  "evidence_category_counts": {
+    "h2bn_recovered": 92436,
+    "supplemental_match": 15679,
+    "local_ambiguity": 7803,
+    "h2bn_disagreement": 5918,
+    "hipparcos2_neighbourhood_disagreement": 0,
+    "nearby_nonmatch": 842
+  },
+  "h2bn_rows": 99525,
+  "hipparcos2_neighbourhood_rows": 100010,
+  "h2bn_pairs_in_evidence": 97996,
+  "h2bn_pairs_recovered": 92436
+}

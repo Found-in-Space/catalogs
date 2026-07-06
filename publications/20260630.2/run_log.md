@@ -7,13 +7,15 @@ deduplication pairing evidence catalog.
 
 ## Environment
 
-- Meta-repo working directory: `/home/kws/work/fis`
-- Catalogs repository: `/home/kws/work/fis/catalogs`
-- Pipeline repository: `/home/kws/work/fis/pipeline`
+- Commands are shown relative to the local Found in Space meta-repo root.
+- Catalogs repository: `catalogs/`
+- Catalogs commit used for the raw pairing rerun:
+  `18ca668756c0cec3b52bcd123fdb762988349399`
+- Pipeline repository: `pipeline/`
 - Pipeline commit used for the controlled Gaia acquisition:
   `3e64bfe97038b4f62395601a2ccc6bca7ad44556`
 - Gaia acquisition DOI: `10.5281/zenodo.21066981`
-- Local pipeline project: `/home/kws/work/fis/pipeline/project.toml`
+- Local pipeline project: `pipeline/project.toml`
 
 ## Steps Executed
 
@@ -32,7 +34,7 @@ deduplication pairing evidence catalog.
 2. Built the Hipparcos-2 support input.
 
    ```bash
-   cd /home/kws/work/fis/pipeline
+   cd pipeline
    uv run fis-pipeline hip build --project project.toml --force
    ```
 
@@ -44,7 +46,7 @@ deduplication pairing evidence catalog.
 3. Built the Gaia DR3 `h2bn` mapping sidecar.
 
    ```bash
-   cd /home/kws/work/fis/pipeline
+   cd pipeline
    uv run fis-pipeline gaia-to-hip build --project project.toml --force
    ```
 
@@ -75,7 +77,7 @@ deduplication pairing evidence catalog.
 5. Converted the controlled Gaia acquisition into a compact pairing table.
 
    ```bash
-   cd /home/kws/work/fis/catalogs
+   cd catalogs
    uv run --group audit fis-catalogs audit gaia-match-table \
      --gaia-dir ../pipeline/data/catalogs/gaia \
      --pattern 'gaia_full_*.vot.gz' \
@@ -100,7 +102,7 @@ deduplication pairing evidence catalog.
 6. Ran the raw Gaia-Hipparcos2 pairing scan.
 
    ```bash
-   cd /home/kws/work/fis/catalogs
+   cd catalogs
    uv run --group audit fis-catalogs audit raw-match \
      --hip-ecsv ../pipeline/data/catalogs/hipparcos2.ecsv \
      --gaia-parquet ../pipeline/data/processed/gaia_raw_match_g15.parquet \
@@ -117,6 +119,8 @@ deduplication pairing evidence catalog.
 
    Result:
 
+   - Runtime on the local small-machine run: `12m4s` wall, `11m49s` user,
+     `0m7s` system.
    - Gaia rows scanned: `36,635,159`
    - Evidence rows: `122,678`
    - Clean supplemental crossmatch rows: `15,679`

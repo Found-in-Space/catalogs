@@ -124,3 +124,6 @@ Primary evidence:
 The Gaia `G <= 15` preparation step streamed a 137G local Gaia VOTable payload
 into a compact local intermediate. The final compact intermediate is about 2.0
 GB and is recorded by checksum rather than included in this publication.
+
+The final raw Gaia-Hipparcos2 pairing scan over the 36.6M-row compact Gaia
+table completed in `12m4s` wall time on the local small-machine run.

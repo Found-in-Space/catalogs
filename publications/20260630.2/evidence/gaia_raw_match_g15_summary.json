@@ -1,0 +1,446 @@
+{
+  "input_paths": [
+    "../pipeline/data/catalogs/gaia/gaia_full_b0003.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0004.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0109.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0119.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0134.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0153.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0154.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0155.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0156.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0157.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0161.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0165.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0166.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0167.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0168.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0169.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0170.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0171.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0172.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0173.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0174.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0175.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0176.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0177.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0178.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0179.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0180.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0181.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0182.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0183.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0184.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0185.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0186.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0187.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0188.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0189.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0190.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0202.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0203.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0204.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0205.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0206.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0207.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0208.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0209.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0210.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0211.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0212.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0213.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0214.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0215.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0216.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0217.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0218.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0219.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0220.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0221.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0222.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0223.vot.gz",
+    "../pipeline/data/catalogs/gaia/gaia_full_b0224.vot.gz"
+  ],
+  "output_path": "../pipeline/data/processed/gaia_raw_match_g15.parquet",
+  "summary_path": "../pipeline/data/processed/gaia_raw_match_g15_summary.json",
+  "source_manifest_path": "../pipeline/data/packages/fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038/manifests/gaia-votables-manifest.tsv",
+  "source_checksums_path": "../pipeline/data/packages/fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038/manifests/gaia-votables.sha256",
+  "g_mag_limit": 15.0,
+  "columns": [
+    "source_id",
+    "ra",
+    "dec",
+    "phot_g_mean_mag",
+    "phot_bp_mean_mag",
+    "phot_rp_mean_mag",
+    "parallax",
+    "parallax_error"
+  ],
+  "rows_scanned": 1467744818,
+  "rows_written": 36635159,
+  "input_files": [
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0003.vot.gz",
+      "bytes": 2446605950,
+      "rows_scanned": 25800387,
+      "rows_written": 220057
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0004.vot.gz",
+      "bytes": 2158242486,
+      "rows_scanned": 22613709,
+      "rows_written": 363574
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0109.vot.gz",
+      "bytes": 2726217360,
+      "rows_scanned": 27777776,
+      "rows_written": 484944
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0119.vot.gz",
+      "bytes": 2695132963,
+      "rows_scanned": 27776297,
+      "rows_written": 305956
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0134.vot.gz",
+      "bytes": 2803119011,
+      "rows_scanned": 27775931,
+      "rows_written": 624647
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0153.vot.gz",
+      "bytes": 713144340,
+      "rows_scanned": 6811410,
+      "rows_written": 518239
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0154.vot.gz",
+      "bytes": 3274889325,
+      "rows_scanned": 34755049,
+      "rows_written": 484561
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0155.vot.gz",
+      "bytes": 2947898851,
+      "rows_scanned": 31153765,
+      "rows_written": 517431
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0156.vot.gz",
+      "bytes": 2707529382,
+      "rows_scanned": 27771177,
+      "rows_written": 487289
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0157.vot.gz",
+      "bytes": 2675674443,
+      "rows_scanned": 27745315,
+      "rows_written": 310060
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0161.vot.gz",
+      "bytes": 2691337791,
+      "rows_scanned": 27776417,
+      "rows_written": 323609
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0165.vot.gz",
+      "bytes": 2728105569,
+      "rows_scanned": 27777732,
+      "rows_written": 467146
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0166.vot.gz",
+      "bytes": 2716436178,
+      "rows_scanned": 27770958,
+      "rows_written": 438439
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0167.vot.gz",
+      "bytes": 2731545604,
+      "rows_scanned": 27775430,
+      "rows_written": 486353
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0168.vot.gz",
+      "bytes": 2716106395,
+      "rows_scanned": 27769522,
+      "rows_written": 392131
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0169.vot.gz",
+      "bytes": 2720948140,
+      "rows_scanned": 27774465,
+      "rows_written": 400468
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0170.vot.gz",
+      "bytes": 2700823459,
+      "rows_scanned": 27759044,
+      "rows_written": 329758
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0171.vot.gz",
+      "bytes": 2699924115,
+      "rows_scanned": 27717177,
+      "rows_written": 412965
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0172.vot.gz",
+      "bytes": 2717982016,
+      "rows_scanned": 27777122,
+      "rows_written": 431020
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0173.vot.gz",
+      "bytes": 2733446834,
+      "rows_scanned": 27697731,
+      "rows_written": 435199
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0174.vot.gz",
+      "bytes": 2767175690,
+      "rows_scanned": 27777112,
+      "rows_written": 494302
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0175.vot.gz",
+      "bytes": 2757757749,
+      "rows_scanned": 27774119,
+      "rows_written": 495722
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0176.vot.gz",
+      "bytes": 2774483997,
+      "rows_scanned": 27756691,
+      "rows_written": 508917
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0177.vot.gz",
+      "bytes": 2784207502,
+      "rows_scanned": 27777078,
+      "rows_written": 612097
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0178.vot.gz",
+      "bytes": 2788920259,
+      "rows_scanned": 27761820,
+      "rows_written": 571221
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0179.vot.gz",
+      "bytes": 2790916130,
+      "rows_scanned": 27772989,
+      "rows_written": 544161
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0180.vot.gz",
+      "bytes": 2793339215,
+      "rows_scanned": 27775916,
+      "rows_written": 542656
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0181.vot.gz",
+      "bytes": 2820684928,
+      "rows_scanned": 27764197,
+      "rows_written": 677935
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0182.vot.gz",
+      "bytes": 2787458953,
+      "rows_scanned": 27767039,
+      "rows_written": 521744
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0183.vot.gz",
+      "bytes": 2829426925,
+      "rows_scanned": 27768727,
+      "rows_written": 758262
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0184.vot.gz",
+      "bytes": 2830086121,
+      "rows_scanned": 27757068,
+      "rows_written": 721222
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0185.vot.gz",
+      "bytes": 2822145649,
+      "rows_scanned": 27707625,
+      "rows_written": 734665
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0186.vot.gz",
+      "bytes": 2850424479,
+      "rows_scanned": 27773412,
+      "rows_written": 898512
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0187.vot.gz",
+      "bytes": 2859913097,
+      "rows_scanned": 27777262,
+      "rows_written": 913044
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0188.vot.gz",
+      "bytes": 2848231917,
+      "rows_scanned": 27776972,
+      "rows_written": 862184
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0189.vot.gz",
+      "bytes": 2851336983,
+      "rows_scanned": 27749673,
+      "rows_written": 861452
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0190.vot.gz",
+      "bytes": 2879403411,
+      "rows_scanned": 27761363,
+      "rows_written": 1054817
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0202.vot.gz",
+      "bytes": 1943370072,
+      "rows_scanned": 19993956,
+      "rows_written": 302339
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0203.vot.gz",
+      "bytes": 1951561646,
+      "rows_scanned": 19996421,
+      "rows_written": 322747
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0204.vot.gz",
+      "bytes": 1926474977,
+      "rows_scanned": 19999815,
+      "rows_written": 218076
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0205.vot.gz",
+      "bytes": 1957477895,
+      "rows_scanned": 19998140,
+      "rows_written": 324390
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0206.vot.gz",
+      "bytes": 1959827298,
+      "rows_scanned": 19997489,
+      "rows_written": 341661
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0207.vot.gz",
+      "bytes": 1974126617,
+      "rows_scanned": 19997722,
+      "rows_written": 386569
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0208.vot.gz",
+      "bytes": 1999492351,
+      "rows_scanned": 19997466,
+      "rows_written": 439103
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0209.vot.gz",
+      "bytes": 2004311175,
+      "rows_scanned": 19995088,
+      "rows_written": 426317
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0210.vot.gz",
+      "bytes": 1990618654,
+      "rows_scanned": 19982892,
+      "rows_written": 340610
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0211.vot.gz",
+      "bytes": 2072388447,
+      "rows_scanned": 19993533,
+      "rows_written": 725052
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0212.vot.gz",
+      "bytes": 2068067656,
+      "rows_scanned": 19996793,
+      "rows_written": 702342
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0213.vot.gz",
+      "bytes": 2070853863,
+      "rows_scanned": 19997257,
+      "rows_written": 737455
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0214.vot.gz",
+      "bytes": 2067504671,
+      "rows_scanned": 19958390,
+      "rows_written": 694091
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0215.vot.gz",
+      "bytes": 2074057392,
+      "rows_scanned": 19996551,
+      "rows_written": 764523
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0216.vot.gz",
+      "bytes": 2081170173,
+      "rows_scanned": 19999887,
+      "rows_written": 815572
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0217.vot.gz",
+      "bytes": 2086819114,
+      "rows_scanned": 19996633,
+      "rows_written": 888589
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0218.vot.gz",
+      "bytes": 2085293032,
+      "rows_scanned": 19997226,
+      "rows_written": 903267
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0219.vot.gz",
+      "bytes": 2089916263,
+      "rows_scanned": 19999293,
+      "rows_written": 992205
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0220.vot.gz",
+      "bytes": 2087028241,
+      "rows_scanned": 19948794,
+      "rows_written": 1061103
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0221.vot.gz",
+      "bytes": 2094600013,
+      "rows_scanned": 19998414,
+      "rows_written": 1140249
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0222.vot.gz",
+      "bytes": 2087396451,
+      "rows_scanned": 19926030,
+      "rows_written": 1220157
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0223.vot.gz",
+      "bytes": 2093377775,
+      "rows_scanned": 19952190,
+      "rows_written": 1338067
+    },
+    {
+      "path": "../pipeline/data/catalogs/gaia/gaia_full_b0224.vot.gz",
+      "bytes": 1935303173,
+      "rows_scanned": 18449361,
+      "rows_written": 1343916
+    }
+  ],
+  "output_bytes": 2038921186,
+  "output_sha256": "cb8dbc1e5db4e65584e36126b4423ed55d1c3df9f3b334f50711122411221b69",
+  "created_at": "2026-06-30T15:19:43.380721+00:00"
+}

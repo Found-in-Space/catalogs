@@ -27,6 +27,8 @@ gaia_acquisition_package_id = "fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038"
 hipparcos_catalog = "Vizier I/311/hip2"
 h2bn_catalog = "gaiadr3.hipparcos2_best_neighbour"
 hipparcos2_neighbourhood_catalog = "gaiadr3.hipparcos2_neighbourhood"
+catalogs_repository = "https://github.com/Found-in-Space/catalogs"
+catalogs_commit = "18ca668756c0cec3b52bcd123fdb762988349399"
 pipeline_repository = "https://github.com/Found-in-Space/pipeline"
 pipeline_commit = "3e64bfe97038b4f62395601a2ccc6bca7ad44556"
 raw_gaia_payload_included = false
@@ -114,7 +116,7 @@ nearby_nonmatch = "The local scan found a nearby candidate within the broad scan
 
 [provenance]
 created_by = "Found in Space"
-created_at = "2026-06-30"
+created_at = "2026-07-06"
 notes = "Found in Space Gaia-Hipparcos2 visual deduplication pairing evidence derived from a local Gaia-HIP evidence scan and compared with h2bn and hipparcos2_neighbourhood context."
 
 [license]
