@@ -1,7 +1,7 @@
 # License for Publication 20260630.2
 
-Publication: Found in Space Gaia-HIP supplemental crossmatch catalog for the
-controlled core dataset
+Publication: Found in Space Gaia-Hipparcos2 visual deduplication pairing
+evidence catalog for the controlled core dataset
 
 This publication is an academic public-interest data work.
 
@@ -17,14 +17,16 @@ This includes:
 - Found-in-Space-authored generated summary files;
 - the Found-in-Space supplemental crossmatch rows in
   `catalog/fis_gaia_hip_supplemental_crossmatch_map.parquet`;
+- Found-in-Space-authored visual deduplication pairing evidence summaries;
 - selection, arrangement, and explanatory material authored for this release.
 
 License text: https://creativecommons.org/licenses/by/4.0/
 
 Suggested attribution:
 
-> Found in Space, "Found in Space Gaia-HIP supplemental crossmatch catalog for
-> the controlled core dataset", publication 20260630.2, 2026.
+> Found in Space, "Found in Space Gaia-Hipparcos2 visual deduplication pairing
+> evidence catalog for the controlled core dataset", publication 20260630.2,
+> 2026.
 
 ## Upstream Data and Derived Evidence
 
@@ -49,7 +51,8 @@ listed in `NOTICE.md`.
 ## No Warranty
 
 This publication is provided as-is, without warranty of any kind. It contains
-Found in Space supplemental Gaia-Hipparcos2 crossmatch rows.
+Found in Space Gaia-Hipparcos2 pairing evidence and supplemental crossmatch
+rows.
 
 Use of upstream catalog names, identifiers, or data does not imply endorsement
 by ESA, DPAC, CDS, VizieR, or the original catalogue authors.

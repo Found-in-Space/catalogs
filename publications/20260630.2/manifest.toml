@@ -1,10 +1,19 @@
 format_version = 1
 release = "20260630.2"
-title = "Found in Space Gaia-HIP supplemental crossmatch catalog for the controlled core dataset"
+title = "Found in Space Gaia-Hipparcos2 visual deduplication pairing evidence catalog for the controlled core dataset"
 status = "draft"
 
 [summary]
-description = "Found in Space supplemental Gaia-Hipparcos2 crossmatch catalog regenerated from the controlled Gaia DR3 acquisition published as DOI 10.5281/zenodo.21066981."
+description = "Found in Space Gaia-Hipparcos2 pairing evidence for visual deduplication work, regenerated from the controlled Gaia DR3 acquisition published as DOI 10.5281/zenodo.21066981."
+
+[scope]
+goal = "Provide reproducible Gaia-Hipparcos2 aligned-pair evidence for downstream visual deduplication sidecar building."
+includes_clean_supplemental_crossmatch_map = true
+decides_final_source_winners = false
+binary_star_catalog = false
+astrophysical_truth_table = false
+broad_gaia_over_hipparcos_preference = false
+consumer_contract = "Downstream pipeline policy must join this evidence with staged Gaia rows, staged Hipparcos rows, the final h2bn plus supplemental map, and manual overrides before deciding row retention, row replacement, or review status."
 
 [zenodo]
 status = "not_reserved"
@@ -48,8 +57,7 @@ evidence_rows = 122678
 supplemental_rows = 15679
 combined_validation_rows = 115204
 h2bn_pairs_recovered = 92436
-manual_review_rows = 13721
-separate_object_rows = 842
+non_accepted_evidence_rows = 14563
 
 [policy]
 max_sep_arcsec = 5.0
@@ -57,11 +65,57 @@ auto_sep_arcsec = 0.25
 max_parallax_3d_separation_pc = 1.0
 max_mag_delta = "none"
 mapping_source = "fis_raw_crossmatch_v1"
+evidence_category_field = "evidence_category"
+publication_policy_boundary = "This publication records pairing evidence and clean supplemental mappings; final visual-deduplication decisions belong to downstream pipeline policy."
+
+[sidecar_requirements]
+pairing_metrics = [
+  "gaia_source_id",
+  "hip_source_id",
+  "separation_arcsec",
+  "gaia_r_pc",
+  "hip_r_pc",
+  "gaia_parallax_frac_error",
+  "hip_parallax_frac_error",
+  "parallax_3d_separation_pc",
+  "delta_d_pc",
+  "combined_distance_sigma_pc",
+  "delta_d_sigma",
+  "gaia_candidate_count",
+  "hip_candidate_count",
+  "gaia_sky_neighbour_count",
+  "hip_sky_neighbour_count",
+  "one_to_one_candidate",
+  "isolated_sky_pair",
+  "h2bn_pair",
+  "h2bn_conflict",
+  "in_hipparcos2_neighbourhood",
+  "hipparcos2_neighbourhood_conflict",
+  "gaia_apparent_mag",
+  "hip_apparent_mag",
+  "apparent_mag_delta",
+]
+downstream_join_requirements = [
+  "staged_gaia_astrometry_quality",
+  "staged_hip_astrometry_quality",
+  "gaia_ruwe",
+  "hip_solution_type",
+  "final_crossmatch_presence",
+  "manual_override_coverage",
+]
+
+[evidence_categories]
+h2bn_recovered = "The local scan recovers the same one-to-one Gaia-HIP pair as gaiadr3.hipparcos2_best_neighbour."
+supplemental_match = "The local scan finds a clean one-to-one pair not already present as an h2bn pair."
+local_ambiguity = "The local scan finds more than one plausible Gaia or HIP candidate in the neighbourhood."
+h2bn_disagreement = "The local pair conflicts with the Gaia DR3 hipparcos2_best_neighbour mapping for either source."
+hipparcos2_neighbourhood_disagreement = "The local pair conflicts with the Gaia DR3 hipparcos2_neighbourhood context for either source."
+nearby_nonmatch = "The local scan found a nearby candidate within the broad scan radius, but it did not satisfy the clean one-to-one tight-sky or parallax-3D acceptance criteria."
 
 [provenance]
 created_by = "Found in Space"
 created_at = "2026-06-30"
-notes = "Found in Space supplemental Gaia-Hipparcos2 crossmatch rows derived from a local Gaia-HIP evidence scan and compared with h2bn and hipparcos2_neighbourhood context."
+notes = "Found in Space Gaia-Hipparcos2 visual deduplication pairing evidence derived from a local Gaia-HIP evidence scan and compared with h2bn and hipparcos2_neighbourhood context."
 
 [license]
 found_in_space_original_material = "CC-BY-4.0"

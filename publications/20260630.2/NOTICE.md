@@ -1,13 +1,14 @@
 # Notice for Publication 20260630.2
 
-Publication: Found in Space Gaia-HIP supplemental crossmatch catalog for the
-controlled core dataset
+Publication: Found in Space Gaia-Hipparcos2 visual deduplication pairing
+evidence catalog for the controlled core dataset
 
 Release: `20260630.2`
 
-This publication contains Found in Space supplemental Gaia-Hipparcos2
-crossmatch rows derived from a controlled Gaia DR3 acquisition and Hipparcos-2
-source catalogue evidence.
+This publication contains Found in Space Gaia-Hipparcos2 pairing evidence for
+visual deduplication work, including clean supplemental crossmatch rows derived
+from a controlled Gaia DR3 acquisition and Hipparcos-2 source catalogue
+evidence.
 
 ## Upstream Data Sources
 

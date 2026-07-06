@@ -1,7 +1,7 @@
 # References for Publication 20260630.2
 
-Publication: Found in Space Gaia-HIP supplemental crossmatch catalog for the
-controlled core dataset
+Publication: Found in Space Gaia-Hipparcos2 visual deduplication pairing
+evidence catalog for the controlled core dataset
 
 Release: `20260630.2`
 
@@ -30,8 +30,8 @@ notes.
 
 - ESA Gaia Archive, Gaia Data Release 3,
   `gaiadr3.hipparcos2_neighbourhood`.
-  Used as published good-neighbour context for local supplemental crossmatch
-  candidates.
+  Used as good-neighbour context for local visual-deduplication pairing
+  evidence and supplemental crossmatch candidates.
   Table DOI: https://doi.org/10.17876/gaia/dr.3/15
   Documentation: https://gea.esac.esa.int/archive/documentation/GDR3/
 
@@ -95,6 +95,7 @@ https://gea.esac.esa.int/archive/documentation/GDR3/Miscellaneous/sec_credit_and
 
 ## Found in Space Release Context
 
-This Found in Space publication is a supplemental Gaia-Hipparcos2 crossmatch
-catalogue containing Gaia `source_id` to Hipparcos2 source identifier mappings
-derived from a controlled local evidence scan.
+This Found in Space publication is a Gaia-Hipparcos2 visual deduplication
+pairing evidence catalogue. It includes a clean supplemental crossmatch map
+containing Gaia `source_id` to Hipparcos2 source identifier mappings derived
+from a controlled local evidence scan.

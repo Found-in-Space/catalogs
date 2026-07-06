@@ -2,8 +2,8 @@
 
 Release: `20260630.2`
 
-This log records the local controlled remake of the Gaia-HIP supplemental
-crossmatch catalog.
+This log records the local controlled remake of the Gaia-Hipparcos2 visual
+deduplication pairing evidence catalog.
 
 ## Environment
 
@@ -41,7 +41,7 @@ crossmatch catalog.
    - Raw Hipparcos rows: `117,955`
    - Processed finite-distance rows: `113,942`
 
-3. Built the Gaia DR3 `h2bn` sidecar.
+3. Built the Gaia DR3 `h2bn` mapping sidecar.
 
    ```bash
    cd /home/kws/work/fis/pipeline
@@ -72,7 +72,7 @@ crossmatch catalog.
    - `hipparcos2_neighbourhood` rows: `100,010`
    - Output: `data/catalogs/gaia_hipparcos2_neighbourhood.ecsv`
 
-5. Converted the controlled Gaia acquisition into a compact raw-match table.
+5. Converted the controlled Gaia acquisition into a compact pairing table.
 
    ```bash
    cd /home/kws/work/fis/catalogs
@@ -97,7 +97,7 @@ crossmatch catalog.
    - Output SHA256:
      `cb8dbc1e5db4e65584e36126b4423ed55d1c3df9f3b334f50711122411221b69`
 
-6. Ran raw Gaia-HIP crossmatching.
+6. Ran the raw Gaia-Hipparcos2 pairing scan.
 
    ```bash
    cd /home/kws/work/fis/catalogs
@@ -119,18 +119,20 @@ crossmatch catalog.
 
    - Gaia rows scanned: `36,635,159`
    - Evidence rows: `122,678`
-   - Supplemental crossmatch rows: `15,679`
+   - Clean supplemental crossmatch rows: `15,679`
    - Combined validation rows: `115,204`
    - `h2bn` pairs recovered in the local evidence field: `92,436`
-   - Decision counts:
+   - Evidence category interpretation:
      - `h2bn_recovered`: `92,436`
      - `supplemental_match`: `15,679`
-     - `manual_review`: `13,721`
-     - `separate_object`: `842`
+     - `local_ambiguity`: `7,803`
+     - `h2bn_disagreement`: `5,918`
+     - `hipparcos2_neighbourhood_disagreement`: `0`
+     - `nearby_nonmatch`: `842`
 
 7. Copied publishable artifacts into this publication directory.
 
-   Published catalog:
+   Clean supplemental map:
 
    - `catalog/fis_gaia_hip_supplemental_crossmatch_map.parquet`
 
