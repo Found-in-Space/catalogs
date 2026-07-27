@@ -1,0 +1,47 @@
+{
+  "max_sep_arcsec": 5.0,
+  "gaia_rows_scanned": 36635159,
+  "gaia_rows_skipped": 0,
+  "hip_rows_raw": 117955,
+  "hip_rows_prepared": 117955,
+  "pairing_rows": 124207,
+  "local_scan_rows": 122678,
+  "h2bn_rows": 99525,
+  "hipparcos2_neighbourhood_rows": 100010,
+  "h2bn_local_overlap_rows": 97996,
+  "h2bn_only_rows": 1529,
+  "local_only_rows": 24682,
+  "rows_missing_gaia_measurements": 1525,
+  "rows_missing_hip_measurements": 0,
+  "rows_missing_gaia_distance": 1634,
+  "rows_missing_hip_distance": 4244,
+  "rows_missing_distance_pair": 5793,
+  "context_counts": {
+    "one_to_one_candidate": 109258,
+    "isolated_sky_pair": 109258,
+    "gaia_has_h2bn_map": 99525,
+    "hip_has_h2bn_map": 105443,
+    "h2bn_conflict": 5918,
+    "in_hipparcos2_neighbourhood": 99531,
+    "hipparcos2_neighbourhood_conflict": 5912,
+    "ambiguous_local_pair": 13420,
+    "ambiguous_h2bn_local_pair": 5560
+  },
+  "radial_gap_bins": {
+    "le_1_pc": 7478,
+    "1_to_3_pc": 9397,
+    "3_to_5_pc": 6848,
+    "5_to_10_pc": 11906,
+    "gt_10_pc": 82785,
+    "missing": 5793
+  },
+  "abs_apparent_mag_difference_bins": {
+    "le_0_5_mag": 92308,
+    "0_5_to_1_mag": 22068,
+    "1_to_2_mag": 3833,
+    "gt_2_mag": 4473,
+    "missing": 1525
+  },
+  "pairing_evidence_path": "evidence/gaia_hip_pairing_evidence.parquet",
+  "report_path": "evidence/gaia_hip_pairing_report.json"
+}

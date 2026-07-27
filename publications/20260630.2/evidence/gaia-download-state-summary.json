@@ -1,0 +1,28 @@
+{
+  "counts_summary": {
+    "downloaded_hp3": 768,
+    "hp3_rows": 768,
+    "source_rows": 1467744818
+  },
+  "metadata": {
+    "acquisition_spec_hash": "b4db1f05d67e4deb38a91c9547ea7a38c33b93ad26c9d0cd326ad198efcebd47",
+    "count_job_id": "50cd7722-6ff2-11f1-ad14-bc97e148b76b-O",
+    "count_job_phase": "deleted_remote",
+    "count_job_url": "https://gea.esac.esa.int/tap-server/tap/async/50cd7722-6ff2-11f1-ad14-bc97e148b76b-O",
+    "count_query_hash": "dcda88ac871bcd121f915e77e8fa887def220fd7ed4c0e95708df61d6b6d57ee",
+    "count_query_path": "count.adql",
+    "download_query_hash": "74b3d22969b65fa910adc6ce628b08135fd41fd4d1b2383ded7facba639fbb40"
+  },
+  "states": [
+    {
+      "batches": 60,
+      "bytes": 146842060166,
+      "first_downloaded_at": "2026-06-24T18:33:38+00:00",
+      "first_remote_deleted_at": "2026-06-24T18:33:42+00:00",
+      "last_downloaded_at": "2026-06-27T04:35:45+00:00",
+      "last_remote_deleted_at": "2026-06-27T04:35:46+00:00",
+      "rows": 1467744818,
+      "state": "deleted_remote"
+    }
+  ]
+}

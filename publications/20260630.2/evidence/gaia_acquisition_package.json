@@ -1,0 +1,52 @@
+{
+  "acquisition_metadata": {
+    "acquisition_spec_hash": "b4db1f05d67e4deb38a91c9547ea7a38c33b93ad26c9d0cd326ad198efcebd47",
+    "count_job_id": "50cd7722-6ff2-11f1-ad14-bc97e148b76b-O",
+    "count_job_phase": "deleted_remote",
+    "count_job_url": "https://gea.esac.esa.int/tap-server/tap/async/50cd7722-6ff2-11f1-ad14-bc97e148b76b-O",
+    "count_query_hash": "dcda88ac871bcd121f915e77e8fa887def220fd7ed4c0e95708df61d6b6d57ee",
+    "count_query_path": "count.adql",
+    "download_query_hash": "74b3d22969b65fa910adc6ce628b08135fd41fd4d1b2383ded7facba639fbb40"
+  },
+  "counts_summary": {
+    "downloaded_hp3": 768,
+    "hp3_rows": 768,
+    "source_rows": 1467744818
+  },
+  "created_at": "2026-06-28T10:16:45+00:00",
+  "dataset": "Gaia DR3 full scripted download for Found in Space pipeline",
+  "download_state_summary": [
+    {
+      "batches": 60,
+      "bytes": 146842060166,
+      "first_downloaded_at": "2026-06-24T18:33:38+00:00",
+      "first_remote_deleted_at": "2026-06-24T18:33:42+00:00",
+      "last_downloaded_at": "2026-06-27T04:35:45+00:00",
+      "last_remote_deleted_at": "2026-06-27T04:35:46+00:00",
+      "rows": 1467744818,
+      "state": "deleted_remote"
+    }
+  ],
+  "local_project_toml_packaged": true,
+  "notes": [
+    "Raw payload files are hardlinks to data/catalogs/gaia at package creation time.",
+    "Do not edit package payload files in place; hardlinks share the same inode as the source files.",
+    "This package intentionally excludes credentials and .envrc.",
+    "The tracked source worktree was clean at packaging time; local project.toml is archived under config/project.toml."
+  ],
+  "package_path": "fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038",
+  "pipeline_git_head": "3e64bfe97038b4f62395601a2ccc6bca7ad44556",
+  "pipeline_git_status_short": [],
+  "pipeline_git_status_short_all": [
+    "?? project.toml"
+  ],
+  "query_file_count": 225,
+  "raw_payload_file_count": 60,
+  "raw_payload_sha256_file": "manifests/gaia-votables.sha256",
+  "raw_payload_sha256_status": "complete",
+  "raw_payload_total_bytes": 146842060166,
+  "run_id": "fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038",
+  "scope": "raw Gaia VOTable gzip payload plus acquisition and clean committed-code provenance",
+  "supersedes_local_package": "fis-gaia-dr3-full-20260627-b4db1f05-0a2780b72e96",
+  "tracked_worktree_clean": true
+}

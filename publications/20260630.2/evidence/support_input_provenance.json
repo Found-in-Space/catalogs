@@ -1,141 +1,144 @@
 {
+  "acquisition": {
+    "gaia_scope": "phot_g_mean_mag <= 15 in the compact Gaia table",
+    "max_sep_arcsec": 5.0
+  },
+  "acquisition_evidence": {
+    "gaia-acquisition-git-head.txt": {
+      "published": {
+        "bytes": 41,
+        "name": "gaia-acquisition-git-head.txt",
+        "sha256": "2481dde66ceb3ec8875935405205590a93a9479f567985ea90130d27b6a4832e"
+      },
+      "source": {
+        "bytes": 41,
+        "name": "git-head.txt",
+        "sha256": "2481dde66ceb3ec8875935405205590a93a9479f567985ea90130d27b6a4832e"
+      }
+    },
+    "gaia-download-queries-manifest.tsv": {
+      "published": {
+        "bytes": 13304,
+        "name": "gaia-download-queries-manifest.tsv",
+        "sha256": "bd96a5393d7739a12066cd6051460c713cf0fa794e74380e6a9863077554484c"
+      },
+      "source": {
+        "bytes": 13304,
+        "name": "gaia-download-queries-manifest.tsv",
+        "sha256": "bd96a5393d7739a12066cd6051460c713cf0fa794e74380e6a9863077554484c"
+      }
+    },
+    "gaia-download-state-summary.json": {
+      "published": {
+        "bytes": 1039,
+        "name": "gaia-download-state-summary.json",
+        "sha256": "6643f43c4f9451d92e2c453195423119da07b28ad16c57b8e51571fbc0ba3ee7"
+      },
+      "source": {
+        "bytes": 1104,
+        "name": "gaia-download-state-summary.json",
+        "sha256": "393cfd13c489d1508d74ac758f4fe0bdfeb6eee74c46e07bf4887e009ce829a2"
+      }
+    },
+    "gaia-votables-manifest.tsv": {
+      "published": {
+        "bytes": 7492,
+        "name": "gaia-votables-manifest.tsv",
+        "sha256": "4ec94ee4fa8cb99a77b13d43f7145244a8df48902b1a16944c15aa07a5be5727"
+      },
+      "source": {
+        "bytes": 7492,
+        "name": "gaia-votables-manifest.tsv",
+        "sha256": "4ec94ee4fa8cb99a77b13d43f7145244a8df48902b1a16944c15aa07a5be5727"
+      }
+    },
+    "gaia-votables.sha256": {
+      "published": {
+        "bytes": 6660,
+        "name": "gaia-votables.sha256",
+        "sha256": "20429cbf7825d2fa7d4a4dbc91319b8782b6c065df31f2b4bc355890a1550dd0"
+      },
+      "source": {
+        "bytes": 6660,
+        "name": "gaia-votables.sha256",
+        "sha256": "20429cbf7825d2fa7d4a4dbc91319b8782b6c065df31f2b4bc355890a1550dd0"
+      }
+    },
+    "gaia_acquisition_package.json": {
+      "published": {
+        "bytes": 2344,
+        "name": "gaia_acquisition_package.json",
+        "sha256": "cf453504c2e30ea208a8e5475e360119d3cddbdf9312eb7947a0b1ee9ea0645d"
+      },
+      "source": {
+        "bytes": 2451,
+        "name": "package.json",
+        "sha256": "0cd510f8a59686c661d092a3e06aef13c689b751f0ff8141fba8573d7562910c"
+      }
+    }
+  },
+  "assembly_commit_time": "2026-07-27T09:53:40+01:00",
+  "catalogs_commit": "089a427399ed0dab73092db84e9816f9c89a81ff",
+  "catalogs_repository": "https://github.com/Found-in-Space/catalogs",
   "format_version": 1,
-  "gaia_acquisition": {
-    "package_id": "fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038",
-    "raw_checksums": {
-      "bytes": 6660,
-      "path": "../pipeline/data/packages/fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038/manifests/gaia-votables.sha256",
-      "sha256": "20429cbf7825d2fa7d4a4dbc91319b8782b6c065df31f2b4bc355890a1550dd0"
-    },
-    "raw_manifest": {
-      "bytes": 7492,
-      "path": "../pipeline/data/packages/fis-gaia-dr3-full-20260627-b4db1f05-3e64bfe97038/manifests/gaia-votables-manifest.tsv",
-      "sha256": "4ec94ee4fa8cb99a77b13d43f7145244a8df48902b1a16944c15aa07a5be5727"
-    },
-    "raw_payload_included": false,
-    "record_doi": "10.5281/zenodo.21066981"
+  "observed_counts": {
+    "h2bn_local_overlap_rows": 97996,
+    "h2bn_only_rows": 1529,
+    "h2bn_rows": 99525,
+    "local_only_rows": 24682,
+    "local_scan_rows": 122678,
+    "pairing_rows": 124207
   },
-  "gaia_match_table_summary": {
-    "g_mag_limit": 15.0,
-    "output_sha256": "cb8dbc1e5db4e65584e36126b4423ed55d1c3df9f3b334f50711122411221b69",
-    "rows_scanned": 1467744818,
-    "rows_written": 36635159
+  "policy_boundary": "Pairing evidence only; no duplicate identity, winner, removal, or merged-record decision is made.",
+  "publication_artifacts": {
+    "gaia_hip_pairing_evidence.parquet": {
+      "bytes": 26481168,
+      "name": "gaia_hip_pairing_evidence.parquet",
+      "rows": 124207,
+      "sha256": "02a33cfc3af55eacc4c9c5f036c70a1bed419a5381a528de74eff624a5294c84"
+    },
+    "gaia_hip_pairing_report.json": {
+      "bytes": 1353,
+      "name": "gaia_hip_pairing_report.json",
+      "sha256": "10cc2304cb47e8481bd43255e579ff8976f8e1145028fee6abc89e05fc36501e"
+    }
   },
-  "generated_at_utc": "2026-07-06T14:39:30+00:00",
-  "inputs": {
-    "gaia_match_table": {
+  "release": "20260630.2",
+  "support_inputs": {
+    "gaia_compact_parquet": {
       "bytes": 2038921186,
-      "path": "../pipeline/data/processed/gaia_raw_match_g15.parquet",
-      "row_groups": 2954,
+      "name": "gaia_raw_match_g15.parquet",
       "rows": 36635159,
       "sha256": "cb8dbc1e5db4e65584e36126b4423ed55d1c3df9f3b334f50711122411221b69"
     },
-    "gaia_match_table_summary": {
+    "gaia_summary": {
       "bytes": 14880,
-      "path": "../pipeline/data/processed/gaia_raw_match_g15_summary.json",
+      "name": "gaia_raw_match_g15_summary.json",
       "sha256": "e48b4e5d144ecd4e7362cbcd4f16e20e26f5ab8cba1b8c619455b2523cd40fb2"
     },
-    "h2bn_crossmatch": {
+    "h2bn_crossmatch_parquet": {
       "bytes": 1826430,
-      "path": "../pipeline/data/processed/gaia_hip_map.parquet",
-      "row_groups": 1,
+      "name": "gaia_hip_map.parquet",
       "rows": 99525,
       "sha256": "6c81f00ca81a9c0124a95b01702e5712f63575320916b479aab1fb9841c70561"
     },
+    "h2bn_raw_ecsv": {
+      "bytes": 4042699,
+      "name": "gaia_hipparcos2_best_neighbour.ecsv",
+      "rows": 99525,
+      "sha256": "2590acdbfd6016527dcb028a76a4ee9ea7775e6c3161924f2a9844b1ce221159"
+    },
     "hipparcos2_ecsv": {
       "bytes": 9222359,
-      "path": "../pipeline/data/catalogs/hipparcos2.ecsv",
+      "name": "hipparcos2.ecsv",
       "rows": 117955,
       "sha256": "29b85853356336828ead5cabd2ce75b8d4323750c780d7f652608956a5c5aac8"
     },
     "hipparcos2_neighbourhood_ecsv": {
       "bytes": 5935097,
-      "path": "../pipeline/data/catalogs/gaia_hipparcos2_neighbourhood.ecsv",
+      "name": "gaia_hipparcos2_neighbourhood.ecsv",
       "rows": 100010,
       "sha256": "b70c5647466d9c2fadd3a89875d2cf3dd2ce24b285485a67f990c601bb946c8e"
     }
-  },
-  "publication_outputs": {
-    "crossmatch_evidence": {
-      "bytes": 25110726,
-      "path": "publications/20260630.2/evidence/gaia_hip_crossmatch_evidence.parquet",
-      "row_groups": 1,
-      "rows": 122678,
-      "sha256": "f3b4f26068f62bb6f50acf07158dd2f7955b531348e72858eadac21f0f06042d"
-    },
-    "crossmatch_report": {
-      "bytes": 1747,
-      "path": "publications/20260630.2/evidence/gaia_hip_crossmatch_report.json",
-      "sha256": "7639df36eb490ed9d7ccf84cfe728c230f9a9b6a90784bdb0226beb7e2a08e35"
-    },
-    "gaia_match_table_summary": {
-      "bytes": 14880,
-      "path": "publications/20260630.2/evidence/gaia_raw_match_g15_summary.json",
-      "sha256": "e48b4e5d144ecd4e7362cbcd4f16e20e26f5ab8cba1b8c619455b2523cd40fb2"
-    },
-    "gaia_votables_checksums": {
-      "bytes": 6660,
-      "path": "publications/20260630.2/evidence/gaia-votables.sha256",
-      "sha256": "20429cbf7825d2fa7d4a4dbc91319b8782b6c065df31f2b4bc355890a1550dd0"
-    },
-    "gaia_votables_manifest": {
-      "bytes": 7492,
-      "path": "publications/20260630.2/evidence/gaia-votables-manifest.tsv",
-      "sha256": "4ec94ee4fa8cb99a77b13d43f7145244a8df48902b1a16944c15aa07a5be5727"
-    },
-    "supplemental_crossmatch_map": {
-      "bytes": 237627,
-      "path": "publications/20260630.2/catalog/fis_gaia_hip_supplemental_crossmatch_map.parquet",
-      "row_groups": 1,
-      "rows": 15679,
-      "sha256": "4ac0c2522ca2c5dc6a47d22a80817ea0f9f921e258b53877a37b662b1ba82472"
-    }
-  },
-  "raw_match_report": {
-    "auto_sep_arcsec": 0.25,
-    "combined_crossmatch_path": "../pipeline/data/processed/raw-gaia-hip-match/raw_combined_gaia_hip_map.parquet",
-    "combined_rows": 115204,
-    "decision_counts": {
-      "h2bn_recovered": 92436,
-      "manual_review": 13721,
-      "separate_object": 842,
-      "supplemental_match": 15679
-    },
-    "evidence_category_counts": {
-      "h2bn_disagreement": 5918,
-      "h2bn_recovered": 92436,
-      "hipparcos2_neighbourhood_disagreement": 0,
-      "local_ambiguity": 7803,
-      "nearby_nonmatch": 842,
-      "supplemental_match": 15679
-    },
-    "evidence_rows": 122678,
-    "gaia_parquet_path": "../pipeline/data/processed/gaia_raw_match_g15.parquet",
-    "gaia_rows_scanned": 36635159,
-    "gaia_rows_skipped": 0,
-    "h2bn_crossmatch_path": "../pipeline/data/processed/gaia_hip_map.parquet",
-    "h2bn_pairs_in_evidence": 97996,
-    "h2bn_pairs_recovered": 92436,
-    "h2bn_rows": 99525,
-    "hip_ecsv_path": "../pipeline/data/catalogs/hipparcos2.ecsv",
-    "hip_match_sources_path": "../pipeline/data/processed/raw-gaia-hip-match/raw_hip_match_sources.parquet",
-    "hip_rows_prepared": 117955,
-    "hip_rows_raw": 117955,
-    "hipparcos2_neighbourhood_path": "../pipeline/data/catalogs/gaia_hipparcos2_neighbourhood.ecsv",
-    "hipparcos2_neighbourhood_rows": 100010,
-    "match_evidence_path": "../pipeline/data/processed/raw-gaia-hip-match/raw_match_evidence.parquet",
-    "max_mag_delta": null,
-    "max_parallax_3d_separation_pc": 1.0,
-    "max_sep_arcsec": 5.0,
-    "output_dir": "../pipeline/data/processed/raw-gaia-hip-match",
-    "report_path": "../pipeline/data/processed/raw-gaia-hip-match/raw_match_report.json",
-    "supplemental_crossmatch_path": "../pipeline/data/processed/raw-gaia-hip-match/raw_supplemental_gaia_hip_map.parquet",
-    "supplemental_rows": 15679
-  },
-  "release": "20260630.2",
-  "tooling": {
-    "catalogs_commit": "18ca668756c0cec3b52bcd123fdb762988349399",
-    "command": "uv run --group audit fis-catalogs audit raw-match",
-    "pipeline_commit": "3e64bfe97038b4f62395601a2ccc6bca7ad44556"
   }
 }
