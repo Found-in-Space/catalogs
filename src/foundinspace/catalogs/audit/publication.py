@@ -144,9 +144,14 @@ def assemble_pairing_publication(
     publication_report.write_text(
         json.dumps(_publication_report(source_report), indent=2) + "\n"
     )
-    shutil.copy2(gaia_summary, evidence_dir / "gaia_raw_match_g15_summary.json")
+    _copy_publication_evidence(
+        gaia_summary, evidence_dir / "gaia_raw_match_g15_summary.json"
+    )
+    published_acquisition_evidence: dict[str, Path] = {}
     for destination, source in acquisition_sources.items():
-        shutil.copy2(source, evidence_dir / destination)
+        published_path = evidence_dir / destination
+        _copy_publication_evidence(source, published_path)
+        published_acquisition_evidence[destination] = published_path
 
     obsolete_files = (
         release_dir / "catalog" / "fis_gaia_hip_supplemental_crossmatch_map.parquet",
@@ -181,7 +186,12 @@ def assemble_pairing_publication(
             name: _file_record(path) for name, path in support_inputs.items()
         },
         "acquisition_evidence": {
-            destination: _file_record(source)
+            destination: {
+                "source": _file_record(source),
+                "published": _file_record(
+                    published_acquisition_evidence[destination]
+                ),
+            }
             for destination, source in acquisition_sources.items()
         },
         "publication_artifacts": {
@@ -384,6 +394,33 @@ def _file_record(path: Path) -> dict[str, Any]:
     elif path.suffix.lower() == ".ecsv":
         record["rows"] = len(Table.read(path, format="ascii.ecsv"))
     return record
+
+
+def _copy_publication_evidence(source: Path, destination: Path) -> None:
+    """Copy evidence while removing source-machine absolute paths from JSON."""
+
+    if source.suffix.lower() != ".json":
+        shutil.copy2(source, destination)
+        return
+    original = json.loads(source.read_text())
+    sanitized = _sanitize_local_absolute_paths(original)
+    if sanitized == original:
+        shutil.copy2(source, destination)
+        return
+    destination.write_text(json.dumps(sanitized, indent=2, sort_keys=True) + "\n")
+
+
+def _sanitize_local_absolute_paths(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {
+            key: _sanitize_local_absolute_paths(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [_sanitize_local_absolute_paths(item) for item in value]
+    if isinstance(value, str) and Path(value).is_absolute():
+        return Path(value).name
+    return value
 
 
 def _sha256(path: Path) -> str:

@@ -108,8 +108,12 @@ def test_assemble_pairing_publication_hashes_inputs_and_checksums(tmp_path: Path
 
     package = inputs / "package"
     package_files = {
-        "package.json": "{}\n",
-        "evidence/gaia-download-state-summary.json": "{}\n",
+        "package.json": (
+            '{"package_path": "/private/work/fis/pipeline/data/packages/test"}\n'
+        ),
+        "evidence/gaia-download-state-summary.json": (
+            '{"count_query_path": "/private/work/fis/pipeline/count.adql"}\n'
+        ),
         "manifests/gaia-download-queries-manifest.tsv": "query\n",
         "manifests/gaia-votables-manifest.tsv": "file\n",
         "manifests/gaia-votables.sha256": "abc  file\n",
@@ -159,6 +163,14 @@ def test_assemble_pairing_publication_hashes_inputs_and_checksums(tmp_path: Path
         h2bn_ecsv
     )
     assert provenance["observed_counts"]["pairing_rows"] == 2
+    assert provenance["acquisition_evidence"][
+        "gaia_acquisition_package.json"
+    ]["source"]["sha256"] == _sha256(package / "package.json")
+    published_acquisition = (
+        evidence_dir / "gaia_acquisition_package.json"
+    ).read_text()
+    assert "/private/work" not in published_acquisition
+    assert json.loads(published_acquisition)["package_path"] == "test"
     checksum_lines = (release / "checksums.sha256").read_text().splitlines()
     checksummed_paths = {line.split("  ", 1)[1] for line in checksum_lines}
     expected_paths = {
