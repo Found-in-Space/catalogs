@@ -1,129 +1,117 @@
-# Gaia-Hipparcos2 Visual Deduplication Pairing Evidence Catalog
-
-Release: `20260630.2`
+# A Policy-Neutral Gaia DR3–Hipparcos Pairing-Evidence Catalogue
 
 ## Abstract
 
-This release provides reproducible Gaia-Hipparcos2 pairing evidence for Found
-in Space visual deduplication work. The immediate use case is reducing visually
-aligned Gaia/Hipparcos pairs that appear as suspicious duplicate or multiple
-stars in VR and 3D rendering workflows.
+This release publishes a reproducible evidence table of possible Gaia DR3 and
+Hipparcos pairings for later 3D star-field processing. The table is the
+deduplicated union of all Gaia DR3 `hipparcos2_best_neighbour` mappings and a
+local `5 arcsec` scan over a controlled `G <= 15` Gaia table. It records
+crossmatch membership, local topology, apparent magnitudes, distances,
+uncertainties, and derived radial and three-dimensional separations. It makes
+no duplicate-identity, preferred-source, removal, or merged-record decision.
 
-The release includes a clean one-to-one supplemental Gaia-Hipparcos2 crossmatch
-map, but it is not a final merge-decision table. Downstream pipeline policy must
-join this evidence with staged Gaia rows, staged Hipparcos rows, the final
-crossmatch map, and manual overrides before deciding row retention, row
-replacement, or review status.
+## Motivation
 
-The controlled Gaia DR3 acquisition used here is published as DOI
-`10.5281/zenodo.21066981`. The source table
-`gaiadr3.hipparcos2_best_neighbour` is abbreviated as `h2bn`.
+Two catalog rows that are nearly coincident on the sky can be placed several
+parsecs apart in a three-dimensional rendering when their inferred distances
+disagree. At roughly one rendered metre per parsec, this may create an obvious
+radial “finger” rather than a single rendered object. Whether such a pairing
+should be accepted and how its output fields should be chosen are pipeline
+policy questions. A citable catalog should first preserve the candidate
+population and its measurements without embedding that policy.
 
-## Method
+## Pair acquisition
 
-The controlled Gaia VOTable payload was streamed into a compact local Parquet
-table containing only rows with `phot_g_mean_mag <= 15` and the fields needed
-for raw pairing:
+The evidence population is the set union of:
+
+1. all `99,525` Gaia DR3 H2BN mappings; and
+2. all `122,678` pairs found within `5 arcsec` while scanning the existing
+   `36,635,159`-row compact Gaia `G <= 15` table against Hipparcos.
+
+Pairs are deduplicated by `(gaia_source_id, hip_source_id)`. Independent
+`h2bn_pair` and `local_scan_pair` flags preserve provenance. H2BN-only rows are
+retained even when their Gaia source lies outside the compact-table scope; in
+that case Gaia measurements are null.
+
+The controlled inputs are expected to yield `97,996` overlapping pairs and a
+`124,207`-row union. Publication assembly rejects any other result.
+
+## Measurements
+
+The table records Gaia G and Hipparcos Hp as explicit apparent magnitudes. The
+signed comparison is:
 
 ```text
-source_id, ra, dec, phot_g_mean_mag, phot_bp_mean_mag, phot_rp_mean_mag,
-parallax, parallax_error
+gaia_g_minus_hip_hp_mag = gaia_g_mag - hip_hp_mag
 ```
 
-Hipparcos-2 positions were propagated from epoch J1991.25 to Gaia epoch J2016.0
-using proper motion. Gaia sources were scanned against the propagated HIP sky
-positions within `5 arcsec`.
+Its absolute value is also recorded for descriptive summaries. Because G and
+Hp are not identical passbands, neither value is used as an automatic pairing
+gate. Absolute magnitudes are excluded because their derivation already
+depends on distance.
 
-The evidence table records:
-
-- Gaia and Hipparcos source identifiers;
-- sky separation;
-- apparent-magnitude difference;
-- Gaia/Hipparcos parallax distances;
-- Gaia/Hipparcos parallax fractional errors;
-- parallax-derived 3D separation;
-- local candidate counts and ambiguity indicators;
-- `h2bn` context;
-- `gaiadr3.hipparcos2_neighbourhood` context;
-- a publication-facing `evidence_category`.
-
-Clean supplemental crossmatch rows require one-to-one local evidence and
-agreement with the `h2bn` and `hipparcos2_neighbourhood` context. Tight sky
-pairs are accepted at `<= 0.25 arcsec`. Wider pairs are accepted when the
-parallax-derived 3D separation is `<= 1 pc`.
-
-Photometric and astrometric columns are recorded as diagnostics for downstream
-sidecar building, especially in crowded-field and multiple-star contexts. This
-publication does not classify binary systems and does not decide which physical
-row should survive the final core merge.
-
-## Evidence Categories
-
-- `h2bn_recovered` - the local scan recovers the same one-to-one Gaia-HIP pair
-  as `gaiadr3.hipparcos2_best_neighbour`.
-- `supplemental_match` - the local scan finds a clean one-to-one pair not
-  already present as an `h2bn` pair.
-- `local_ambiguity` - the local scan finds more than one plausible Gaia or HIP
-  candidate in the neighbourhood.
-- `h2bn_disagreement` - the local pair conflicts with the Gaia DR3
-  `hipparcos2_best_neighbour` mapping for either source.
-- `hipparcos2_neighbourhood_disagreement` - the local pair conflicts with the
-  Gaia DR3 `hipparcos2_neighbourhood` context for either source.
-- `nearby_nonmatch` - the local scan found a nearby candidate within the broad
-  scan radius, but it did not satisfy the clean one-to-one tight-sky or
-  parallax-3D acceptance criteria.
-
-## Sidecar Use
-
-The evidence table is intended to support downstream visual-deduplication
-sidecars. It supplies enough distance and uncertainty information to compute:
+For finite positive parallaxes, reciprocal-parallax distances are recorded in
+parsecs. The radial comparison is:
 
 ```text
-delta_d_pc = abs(gaia_r_pc - hip_r_pc)
-
+radial_gap_pc = abs(gaia_r_pc - hip_r_pc)
 combined_distance_sigma_pc =
-  sqrt((gaia_r_pc * gaia_parallax_frac_error)^2
-     + (hip_r_pc  * hip_parallax_frac_error)^2)
-
-delta_d_sigma = delta_d_pc / combined_distance_sigma_pc
+    sqrt((gaia_r_pc * gaia_parallax_frac_error)^2
+       + (hip_r_pc * hip_parallax_frac_error)^2)
+radial_gap_sigma = radial_gap_pc / combined_distance_sigma_pc
 ```
 
-The final sidecar policy must also use staged pipeline fields outside this
-publication, including Gaia and Hipparcos astrometry quality, Gaia RUWE where
-available, Hipparcos solution type, final crossmatch presence, and manual
-override coverage.
+The parallax-derived 3D separation combines the two radial distances with the
+measured angular separation using the law of cosines. Invalid or unavailable
+measurements remain null.
 
-Bright and naked-eye candidates require an explicit completeness gate. They
-should not be silently removed by this evidence publication alone.
+Local candidate counts, sky-neighbour counts, one-to-one topology, H2BN
+membership/conflicts, Hipparcos2 neighbourhood context, BP/RP values,
+parallaxes, uncertainties, Hipparcos proper motion, and Hipparcos solution type
+are retained where available.
 
-## Results
+## Descriptive summaries
 
-- Gaia rows scanned for compact match table: `1,467,744,818`.
-- Gaia `G <= 15` rows used for raw pairing: `36,635,159`.
-- HIP rows prepared: `117,955`.
-- Evidence pairs within `5 arcsec`: `122,678`.
-- `h2bn` pairs recovered in the local evidence field: `92,436`.
-- Clean supplemental crossmatch rows published: `15,679`.
-- Non-accepted evidence rows retained for diagnostics: `14,563`.
+The generated report provides source, union, overlap, missing-measurement,
+ambiguity, and context counts. It also reports fixed descriptive bins:
 
-## Outputs
+- radial gap: `<=1`, `1–3`, `3–5`, `5–10`, `>10 pc`;
+- absolute G–Hp difference: `<=0.5`, `0.5–1`, `1–2`, `>2 mag`.
 
-Catalog:
+These bins do not imply acceptance, rejection, visual significance, or source
+preference.
 
-- `catalog/fis_gaia_hip_supplemental_crossmatch_map.parquet`
+## Policy boundary
 
-Primary evidence:
+H2BN is authoritative evidence that Gaia publishes a best-neighbour mapping;
+it is not asserted here to prove duplicate identity. The local scan similarly
+records proximity rather than identity. Downstream pipeline work must decide:
 
-- `evidence/gaia_hip_crossmatch_evidence.parquet`
-- `evidence/gaia_hip_crossmatch_report.json`
-- `evidence/gaia_raw_match_g15_summary.json`
-- `evidence/support_input_provenance.json`
+- whether a pairing is accepted;
+- whether one row is retained or both are retained;
+- whether one source wins or fields are fused;
+- how apparent-magnitude differences protect important bright stars;
+- how radial gaps interact with rendering scale and uncertainty;
+- how named objects, pathological distances, and overrides are handled.
 
-## Runtime Note
+No supplemental map is published, and there are no decision, action,
+recommendation, or severity columns.
 
-The Gaia `G <= 15` preparation step streamed a 137G local Gaia VOTable payload
-into a compact local intermediate. The final compact intermediate is about 2.0
-GB and is recorded by checksum rather than included in this publication.
+## Reproducibility
 
-The final raw Gaia-Hipparcos2 pairing scan over the 36.6M-row compact Gaia
-table completed in `12m4s` wall time on the local small-machine run.
+The release reuses the existing 2 GB compact Gaia table produced from the
+controlled Gaia acquisition. It does not repeat conversion of the 137 GB raw
+VOTable payload. The publication assembler requires a clean committed catalogs
+worktree whose HEAD is present on its configured upstream, validates the exact
+pair counts and schema, hashes every support input including the raw H2BN ECSV,
+copies selected Gaia acquisition evidence, and regenerates the complete
+publication checksum manifest.
+
+## Data product
+
+The only pairing data product is:
+
+`evidence/gaia_hip_pairing_evidence.parquet`
+
+The accompanying JSON report and provenance describe its generation and
+validation. No DOI is reserved or published by this change.

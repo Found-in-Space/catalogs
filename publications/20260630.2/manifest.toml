@@ -1,24 +1,25 @@
 format_version = 1
 release = "20260630.2"
-title = "Found in Space Gaia-Hipparcos2 visual deduplication pairing evidence catalog for the controlled core dataset"
+title = "Policy-neutral Gaia DR3-Hipparcos pairing evidence"
 status = "draft"
 
 [summary]
-description = "Found in Space Gaia-Hipparcos2 pairing evidence for visual deduplication work, regenerated from the controlled Gaia DR3 acquisition published as DOI 10.5281/zenodo.21066981."
+description = "Possible Gaia DR3-Hipparcos pairings and factual apparent-magnitude, radial-distance, astrometric, and neighbourhood evidence for later pipeline policy."
 
 [scope]
-goal = "Provide reproducible Gaia-Hipparcos2 aligned-pair evidence for downstream visual deduplication sidecar building."
-includes_clean_supplemental_crossmatch_map = true
-decides_final_source_winners = false
-binary_star_catalog = false
-astrophysical_truth_table = false
-broad_gaia_over_hipparcos_preference = false
-consumer_contract = "Downstream pipeline policy must join this evidence with staged Gaia rows, staged Hipparcos rows, the final h2bn plus supplemental map, and manual overrides before deciding row retention, row replacement, or review status."
+records_possible_pairings_only = true
+h2bn_is_authoritative_pairing_context = true
+decides_duplicate_identity = false
+decides_source_winner = false
+decides_removal = false
+constructs_merged_record = false
+publishes_supplemental_map = false
+consumer_contract = "Pipeline policy must separately decide pairing acceptance, row retention, source preference, field fusion, and overrides."
 
 [zenodo]
 status = "not_reserved"
 resource_type = "dataset"
-upload_policy = "readme-plus-publication-zip"
+upload_policy = "readme-plus-path-preserving-publication-archive"
 
 [inputs]
 gaia_acquisition_record_doi = "10.5281/zenodo.21066981"
@@ -28,108 +29,93 @@ hipparcos_catalog = "Vizier I/311/hip2"
 h2bn_catalog = "gaiadr3.hipparcos2_best_neighbour"
 hipparcos2_neighbourhood_catalog = "gaiadr3.hipparcos2_neighbourhood"
 catalogs_repository = "https://github.com/Found-in-Space/catalogs"
-catalogs_commit = "18ca668756c0cec3b52bcd123fdb762988349399"
 pipeline_repository = "https://github.com/Found-in-Space/pipeline"
 pipeline_commit = "3e64bfe97038b4f62395601a2ccc6bca7ad44556"
-raw_gaia_payload_included = false
+raw_gaia_votable_payload_included = false
+compact_gaia_parquet_included = false
+
+[acquisition]
+gaia_scope = "phot_g_mean_mag <= 15 in the controlled compact Gaia table"
+local_scan_radius_arcsec = 5.0
+automatic_magnitude_threshold = false
+automatic_distance_threshold = false
+absolute_magnitude_used = false
+union_key = ["gaia_source_id", "hip_source_id"]
+membership_flags = ["h2bn_pair", "local_scan_pair"]
+
+[expected_counts]
+pairing_rows = 124207
+h2bn_rows = 99525
+local_scan_rows = 122678
+h2bn_local_overlap_rows = 97996
+h2bn_only_rows = 1529
+local_only_rows = 24682
 
 [outputs]
-supplemental_crossmatch_map = "catalog/fis_gaia_hip_supplemental_crossmatch_map.parquet"
-paper = "PAPER.md"
-crossmatch_evidence = "evidence/gaia_hip_crossmatch_evidence.parquet"
-crossmatch_report = "evidence/gaia_hip_crossmatch_report.json"
-gaia_match_table_summary = "evidence/gaia_raw_match_g15_summary.json"
+pairing_evidence = "evidence/gaia_hip_pairing_evidence.parquet"
+pairing_report = "evidence/gaia_hip_pairing_report.json"
 support_input_provenance = "evidence/support_input_provenance.json"
+gaia_match_table_summary = "evidence/gaia_raw_match_g15_summary.json"
+gaia_acquisition_package = "evidence/gaia_acquisition_package.json"
+gaia_download_state_summary = "evidence/gaia-download-state-summary.json"
+gaia_download_queries_manifest = "evidence/gaia-download-queries-manifest.tsv"
 gaia_votables_manifest = "evidence/gaia-votables-manifest.tsv"
 gaia_votables_checksums = "evidence/gaia-votables.sha256"
+gaia_acquisition_git_head = "evidence/gaia-acquisition-git-head.txt"
+paper = "PAPER.md"
 run_log = "run_log.md"
 checksums = "checksums.sha256"
 license = "LICENSE.txt"
 notice = "NOTICE.md"
 references = "REFERENCES.md"
 
-[counts]
-gaia_rows_scanned = 1467744818
-gaia_g15_rows = 36635159
-hip_rows_raw = 117955
-hip_rows_prepared_for_raw_match = 117955
-h2bn_rows = 99525
-hipparcos2_neighbourhood_rows = 100010
-evidence_rows = 122678
-supplemental_rows = 15679
-combined_validation_rows = 115204
-h2bn_pairs_recovered = 92436
-non_accepted_evidence_rows = 14563
-
-[policy]
-max_sep_arcsec = 5.0
-auto_sep_arcsec = 0.25
-max_parallax_3d_separation_pc = 1.0
-max_mag_delta = "none"
-mapping_source = "fis_raw_crossmatch_v1"
-evidence_category_field = "evidence_category"
-publication_policy_boundary = "This publication records pairing evidence and clean supplemental mappings; final visual-deduplication decisions belong to downstream pipeline policy."
-
-[sidecar_requirements]
-pairing_metrics = [
-  "gaia_source_id",
-  "hip_source_id",
-  "separation_arcsec",
+[measurements]
+apparent_magnitude_fields = [
+  "gaia_g_mag",
+  "hip_hp_mag",
+  "gaia_g_minus_hip_hp_mag",
+  "abs_gaia_g_minus_hip_hp_mag",
+]
+radial_fields = [
   "gaia_r_pc",
   "hip_r_pc",
-  "gaia_parallax_frac_error",
-  "hip_parallax_frac_error",
-  "parallax_3d_separation_pc",
-  "delta_d_pc",
+  "radial_gap_pc",
   "combined_distance_sigma_pc",
-  "delta_d_sigma",
+  "radial_gap_sigma",
+  "parallax_3d_separation_pc",
+]
+context_fields = [
+  "h2bn_pair",
+  "local_scan_pair",
   "gaia_candidate_count",
   "hip_candidate_count",
   "gaia_sky_neighbour_count",
   "hip_sky_neighbour_count",
   "one_to_one_candidate",
   "isolated_sky_pair",
-  "h2bn_pair",
   "h2bn_conflict",
   "in_hipparcos2_neighbourhood",
   "hipparcos2_neighbourhood_conflict",
-  "gaia_apparent_mag",
-  "hip_apparent_mag",
-  "apparent_mag_delta",
-]
-downstream_join_requirements = [
-  "staged_gaia_astrometry_quality",
-  "staged_hip_astrometry_quality",
-  "gaia_ruwe",
-  "hip_solution_type",
-  "final_crossmatch_presence",
-  "manual_override_coverage",
 ]
 
-[evidence_categories]
-h2bn_recovered = "The local scan recovers the same one-to-one Gaia-HIP pair as gaiadr3.hipparcos2_best_neighbour."
-supplemental_match = "The local scan finds a clean one-to-one pair not already present as an h2bn pair."
-local_ambiguity = "The local scan finds more than one plausible Gaia or HIP candidate in the neighbourhood."
-h2bn_disagreement = "The local pair conflicts with the Gaia DR3 hipparcos2_best_neighbour mapping for either source."
-hipparcos2_neighbourhood_disagreement = "The local pair conflicts with the Gaia DR3 hipparcos2_neighbourhood context for either source."
-nearby_nonmatch = "The local scan found a nearby candidate within the broad scan radius, but it did not satisfy the clean one-to-one tight-sky or parallax-3D acceptance criteria."
+[descriptive_bins]
+radial_gap_pc = ["<=1", "1-3", "3-5", "5-10", ">10"]
+absolute_apparent_magnitude_difference = ["<=0.5", "0.5-1", "1-2", ">2"]
+policy_effect = "none"
 
 [provenance]
 created_by = "Found in Space"
-created_at = "2026-07-06"
-notes = "Found in Space Gaia-Hipparcos2 visual deduplication pairing evidence derived from a local Gaia-HIP evidence scan and compared with h2bn and hipparcos2_neighbourhood context."
+updated_at = "2026-07-27"
+exact_catalogs_commit = "Recorded by evidence/support_input_provenance.json during clean-worktree assembly."
 
 [license]
 found_in_space_original_material = "CC-BY-4.0"
 upstream_terms_apply = true
-summary = "Found in Space original publication material is released under CC BY 4.0. Upstream Gaia, Hipparcos/Tycho, VizieR/CDS terms and credit requirements apply to source-derived evidence."
+summary = "Found in Space original publication material is CC BY 4.0; upstream Gaia, ESA, Hipparcos/Tycho, CDS/VizieR, and cited-source terms continue to apply."
 
 [references]
 gaia_mission = "Gaia Collaboration et al. 2016, A&A 595, A1, doi:10.1051/0004-6361/201629272"
 gaia_dr3 = "Gaia Collaboration et al. 2023, A&A 674, A1, doi:10.1051/0004-6361/202243940"
-gaia_dr1_crossmatch = "Marrese et al. 2017, A&A 605, A105, doi:10.1051/0004-6361/201629920"
-gaia_dr2_crossmatch = "Marrese et al. 2019, A&A 621, A144, doi:10.1051/0004-6361/201834142"
-hipparcos_new_reduction_validation = "van Leeuwen 2007, A&A 474, 653-664, doi:10.1051/0004-6361:20078357"
-hipparcos_new_reduction_book = "van Leeuwen 2007, Hipparcos, the New Reduction of the Raw Data, Astrophysics and Space Science Library 350"
-hipparcos_tycho_catalogues = "ESA 1997, The Hipparcos and Tycho Catalogues, ESA SP-1200"
+gaia_crossmatch = "Marrese et al. 2019, A&A 621, A144, doi:10.1051/0004-6361/201834142"
+hipparcos_new_reduction = "van Leeuwen 2007, A&A 474, 653-664, doi:10.1051/0004-6361:20078357"
 vizier = "Ochsenbein et al. 2000, A&AS 143, 23-32, doi:10.1051/aas:2000169"

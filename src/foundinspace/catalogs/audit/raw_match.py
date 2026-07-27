@@ -14,56 +14,42 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 from astropy.table import Table
 
-from foundinspace.catalogs.audit.pipeline import (
-    combine_crossmatches,
-    validate_one_to_one_crossmatch,
-)
 from foundinspace.pipeline.gaia_to_hip.pipeline import (
     GAIA_HIP_MAP_COLS,
     MAPPING_SOURCE_HIPPARCOS2_BEST_NEIGHBOUR,
     empty_gaia_hip_mapping,
-    write_gaia_hip_mapping,
 )
 
 HIPPARCOS_EPOCH_JYEAR = 1991.25
 GAIA_EPOCH_JYEAR = 2016.0
 MAS_TO_RAD = np.pi / (180.0 * 3_600_000.0)
 
-RAW_HIP_MATCH_SOURCES_FILENAME = "raw_hip_match_sources.parquet"
-RAW_MATCH_EVIDENCE_FILENAME = "raw_match_evidence.parquet"
-RAW_SUPPLEMENTAL_MAP_FILENAME = "raw_supplemental_gaia_hip_map.parquet"
-RAW_COMBINED_MAP_FILENAME = "raw_combined_gaia_hip_map.parquet"
-RAW_MATCH_REPORT_FILENAME = "raw_match_report.json"
-
-RAW_SKY_CROSSMATCH_MAPPING_SOURCE = "fis_raw_crossmatch_v1"
-
-EVIDENCE_CATEGORIES = (
-    "h2bn_recovered",
-    "supplemental_match",
-    "local_ambiguity",
-    "h2bn_disagreement",
-    "hipparcos2_neighbourhood_disagreement",
-    "nearby_nonmatch",
+RAW_PAIRING_EVIDENCE_FILENAME = "raw_pairing_evidence.parquet"
+RAW_PAIRING_REPORT_FILENAME = "raw_pairing_report.json"
+LEGACY_RAW_OUTPUT_FILENAMES = (
+    "raw_hip_match_sources.parquet",
+    "raw_match_evidence.parquet",
+    "raw_supplemental_gaia_hip_map.parquet",
+    "raw_combined_gaia_hip_map.parquet",
+    "raw_match_report.json",
 )
 
-RAW_MATCH_EVIDENCE_COLS = [
+RAW_PAIRING_EVIDENCE_COLS = [
     "gaia_source_id",
     "hip_source_id",
-    "decision",
-    "evidence_category",
-    "recommended_action",
-    "severity",
-    "reasons",
+    "h2bn_pair",
+    "local_scan_pair",
     "separation_arcsec",
-    "apparent_mag_delta",
     "gaia_ra_deg",
     "gaia_dec_deg",
     "hip_ra_deg",
     "hip_dec_deg",
     "hip_ra_deg_epoch1991",
     "hip_dec_deg_epoch1991",
-    "gaia_apparent_mag",
-    "hip_apparent_mag",
+    "gaia_g_mag",
+    "hip_hp_mag",
+    "gaia_g_minus_hip_hp_mag",
+    "abs_gaia_g_minus_hip_hp_mag",
     "gaia_phot_bp_mean_mag",
     "gaia_phot_rp_mean_mag",
     "gaia_bp_rp",
@@ -76,9 +62,9 @@ RAW_MATCH_EVIDENCE_COLS = [
     "gaia_parallax_frac_error",
     "hip_parallax_frac_error",
     "parallax_3d_separation_pc",
-    "delta_d_pc",
+    "radial_gap_pc",
     "combined_distance_sigma_pc",
-    "delta_d_sigma",
+    "radial_gap_sigma",
     "hip_pmra_masyr",
     "hip_pmdec_masyr",
     "hip_solution_type",
@@ -88,50 +74,49 @@ RAW_MATCH_EVIDENCE_COLS = [
     "hip_candidate_count",
     "one_to_one_candidate",
     "isolated_sky_pair",
-    "h2bn_pair",
     "gaia_has_h2bn_map",
     "hip_has_h2bn_map",
     "h2bn_conflict",
     "in_hipparcos2_neighbourhood",
     "hipparcos2_neighbourhood_conflict",
-    "within_tight_sky_threshold",
-    "within_parallax_3d_threshold",
     "gaia_h2bn_hip_source_id",
     "hip_h2bn_gaia_source_id",
+    "h2bn_number_of_neighbours",
+    "h2bn_angular_distance",
 ]
 
 
 @dataclass(frozen=True)
-class RawMatchReport:
-    """JSON summary for a raw sky-and-magnitude Gaia/HIP match scan."""
+class RawPairingReport:
+    """JSON summary for policy-neutral raw Gaia/HIP pairing evidence."""
 
     hip_ecsv_path: str
     gaia_parquet_path: str
     h2bn_crossmatch_path: str
     hipparcos2_neighbourhood_path: str | None
     output_dir: str
-    hip_match_sources_path: str
-    match_evidence_path: str
-    supplemental_crossmatch_path: str
-    combined_crossmatch_path: str
+    pairing_evidence_path: str
     report_path: str
     max_sep_arcsec: float
-    max_mag_delta: float | None
-    auto_sep_arcsec: float
-    max_parallax_3d_separation_pc: float
     gaia_rows_scanned: int
     gaia_rows_skipped: int
     hip_rows_raw: int
     hip_rows_prepared: int
-    evidence_rows: int
-    supplemental_rows: int
-    combined_rows: int
-    decision_counts: dict[str, int]
-    evidence_category_counts: dict[str, int]
+    pairing_rows: int
+    local_scan_rows: int
     h2bn_rows: int
     hipparcos2_neighbourhood_rows: int
-    h2bn_pairs_in_evidence: int
-    h2bn_pairs_recovered: int
+    h2bn_local_overlap_rows: int
+    h2bn_only_rows: int
+    local_only_rows: int
+    rows_missing_gaia_measurements: int
+    rows_missing_hip_measurements: int
+    rows_missing_gaia_distance: int
+    rows_missing_hip_distance: int
+    rows_missing_distance_pair: int
+    context_counts: dict[str, int]
+    radial_gap_bins: dict[str, int]
+    abs_apparent_mag_difference_bins: dict[str, int]
 
 
 def run_raw_gaia_hip_match(
@@ -142,14 +127,11 @@ def run_raw_gaia_hip_match(
     output_dir: Path,
     hipparcos2_neighbourhood_path: Path | None = None,
     max_sep_arcsec: float = 5.0,
-    max_mag_delta: float | None = None,
-    auto_sep_arcsec: float = 0.25,
-    max_parallax_3d_separation_pc: float = 1.0,
     batch_size: int = 500_000,
     workers: int = -1,
     force: bool = False,
-) -> RawMatchReport:
-    """Prepare raw HIP match sources, scan skinny Gaia, and write match artifacts."""
+) -> RawPairingReport:
+    """Prepare policy-neutral Gaia/HIP pairing evidence."""
 
     hip_ecsv_path = Path(hip_ecsv_path).expanduser()
     gaia_parquet_path = Path(gaia_parquet_path).expanduser()
@@ -168,29 +150,24 @@ def run_raw_gaia_hip_match(
     ):
         raise FileNotFoundError(str(hipparcos2_neighbourhood_path))
 
-    hip_sources_path = output_dir / RAW_HIP_MATCH_SOURCES_FILENAME
-    evidence_path = output_dir / RAW_MATCH_EVIDENCE_FILENAME
-    supplemental_path = output_dir / RAW_SUPPLEMENTAL_MAP_FILENAME
-    combined_path = output_dir / RAW_COMBINED_MAP_FILENAME
-    report_path = output_dir / RAW_MATCH_REPORT_FILENAME
+    evidence_path = output_dir / RAW_PAIRING_EVIDENCE_FILENAME
+    report_path = output_dir / RAW_PAIRING_REPORT_FILENAME
     outputs = [
-        hip_sources_path,
         evidence_path,
-        supplemental_path,
-        combined_path,
         report_path,
     ]
     if not force:
         existing = [str(path) for path in outputs if path.exists()]
         if existing:
             joined = ", ".join(existing)
-            raise FileExistsError(f"Raw match outputs already exist: {joined}")
+            raise FileExistsError(f"Raw pairing outputs already exist: {joined}")
+    else:
+        for filename in LEGACY_RAW_OUTPUT_FILENAMES:
+            legacy_path = output_dir / filename
+            if legacy_path.exists():
+                legacy_path.unlink()
 
-    hip_raw_rows = prepare_raw_hip_match_sources(
-        hip_ecsv_path=hip_ecsv_path,
-        output_path=hip_sources_path,
-        overwrite=True,
-    )
+    hip_raw_rows, hip_sources = _load_raw_hip_match_sources(hip_ecsv_path)
     h2bn = read_h2bn_crossmatch(h2bn_crossmatch_path)
     hipparcos2_neighbourhood = (
         read_h2bn_crossmatch(hipparcos2_neighbourhood_path)
@@ -199,33 +176,18 @@ def run_raw_gaia_hip_match(
     )
     evidence, scan_counts = build_raw_match_evidence(
         gaia_parquet_path=gaia_parquet_path,
-        hip_sources_path=hip_sources_path,
+        hip_sources=hip_sources,
         h2bn_crossmatch=h2bn,
         hipparcos2_neighbourhood=hipparcos2_neighbourhood,
         max_sep_arcsec=max_sep_arcsec,
-        max_mag_delta=max_mag_delta,
-        auto_sep_arcsec=auto_sep_arcsec,
-        max_parallax_3d_separation_pc=max_parallax_3d_separation_pc,
         batch_size=batch_size,
         workers=workers,
     )
 
     _write_dataframe(evidence, evidence_path)
-    supplemental = build_raw_supplemental_crossmatch(evidence)
-    validate_one_to_one_crossmatch(supplemental, label="raw supplemental")
-    write_gaia_hip_mapping(supplemental, supplemental_path)
-
-    combined = combine_crossmatches(h2bn, supplemental)
-    validate_one_to_one_crossmatch(combined, label="raw combined")
-    write_gaia_hip_mapping(combined, combined_path)
-
-    decision_counts = {
-        str(key): int(value)
-        for key, value in evidence["decision"].value_counts(dropna=False).items()
-    }
-    evidence_category_counts = _evidence_category_counts(evidence)
     h2bn_pair_mask = evidence["h2bn_pair"].fillna(False).astype(bool)
-    report = RawMatchReport(
+    local_pair_mask = evidence["local_scan_pair"].fillna(False).astype(bool)
+    report = RawPairingReport(
         hip_ecsv_path=str(hip_ecsv_path),
         gaia_parquet_path=str(gaia_parquet_path),
         h2bn_crossmatch_path=str(h2bn_crossmatch_path),
@@ -235,29 +197,37 @@ def run_raw_gaia_hip_match(
             else None
         ),
         output_dir=str(output_dir),
-        hip_match_sources_path=str(hip_sources_path),
-        match_evidence_path=str(evidence_path),
-        supplemental_crossmatch_path=str(supplemental_path),
-        combined_crossmatch_path=str(combined_path),
+        pairing_evidence_path=str(evidence_path),
         report_path=str(report_path),
         max_sep_arcsec=max_sep_arcsec,
-        max_mag_delta=max_mag_delta,
-        auto_sep_arcsec=auto_sep_arcsec,
-        max_parallax_3d_separation_pc=max_parallax_3d_separation_pc,
         gaia_rows_scanned=int(scan_counts["gaia_rows_scanned"]),
         gaia_rows_skipped=int(scan_counts["gaia_rows_skipped"]),
         hip_rows_raw=int(hip_raw_rows),
-        hip_rows_prepared=int(pq.ParquetFile(hip_sources_path).metadata.num_rows),
-        evidence_rows=int(len(evidence)),
-        supplemental_rows=int(len(supplemental)),
-        combined_rows=int(len(combined)),
-        decision_counts=decision_counts,
-        evidence_category_counts=evidence_category_counts,
+        hip_rows_prepared=int(len(hip_sources)),
+        pairing_rows=int(len(evidence)),
+        local_scan_rows=int(local_pair_mask.sum()),
         h2bn_rows=int(len(h2bn)),
         hipparcos2_neighbourhood_rows=int(len(hipparcos2_neighbourhood)),
-        h2bn_pairs_in_evidence=int(h2bn_pair_mask.sum()),
-        h2bn_pairs_recovered=int(
-            evidence["evidence_category"].astype(str).eq("h2bn_recovered").sum()
+        h2bn_local_overlap_rows=int((h2bn_pair_mask & local_pair_mask).sum()),
+        h2bn_only_rows=int((h2bn_pair_mask & ~local_pair_mask).sum()),
+        local_only_rows=int((~h2bn_pair_mask & local_pair_mask).sum()),
+        rows_missing_gaia_measurements=int(evidence["gaia_g_mag"].isna().sum()),
+        rows_missing_hip_measurements=int(evidence["hip_hp_mag"].isna().sum()),
+        rows_missing_gaia_distance=int(evidence["gaia_r_pc"].isna().sum()),
+        rows_missing_hip_distance=int(evidence["hip_r_pc"].isna().sum()),
+        rows_missing_distance_pair=int(
+            (evidence["gaia_r_pc"].isna() | evidence["hip_r_pc"].isna()).sum()
+        ),
+        context_counts=_pairing_context_counts(evidence),
+        radial_gap_bins=_descriptive_bins(
+            evidence["radial_gap_pc"],
+            edges=(1.0, 3.0, 5.0, 10.0),
+            labels=("le_1_pc", "1_to_3_pc", "3_to_5_pc", "5_to_10_pc", "gt_10_pc"),
+        ),
+        abs_apparent_mag_difference_bins=_descriptive_bins(
+            evidence["abs_gaia_g_minus_hip_hp_mag"],
+            edges=(0.5, 1.0, 2.0),
+            labels=("le_0_5_mag", "0_5_to_1_mag", "1_to_2_mag", "gt_2_mag"),
         ),
     )
     report_path.write_text(json.dumps(asdict(report), indent=2) + "\n")
@@ -277,6 +247,15 @@ def prepare_raw_hip_match_sources(
     if output_path.exists() and not overwrite:
         raise FileExistsError(str(output_path))
 
+    raw_rows, out = _load_raw_hip_match_sources(hip_ecsv_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    _write_dataframe(out, output_path)
+    return raw_rows
+
+
+def _load_raw_hip_match_sources(
+    hip_ecsv_path: Path,
+) -> tuple[int, pd.DataFrame]:
     table = Table.read(hip_ecsv_path, format="ascii.ecsv")
     raw = table.to_pandas()
     required = {"HIP", "RArad", "DErad", "pmRA", "pmDE", "Hpmag"}
@@ -305,22 +284,25 @@ def prepare_raw_hip_match_sources(
     for col, default in optional_defaults.items():
         work[col] = pd.to_numeric(raw[col], errors="coerce") if col in raw else default
 
-    finite = (
-        np.isfinite(work["source_id"])
-        & np.isfinite(work["ra_deg_epoch1991"])
-        & np.isfinite(work["dec_deg_epoch1991"])
-        & np.isfinite(work["pmra_masyr"])
-        & np.isfinite(work["pmdec_masyr"])
-        & np.isfinite(work["apparent_mag"])
-    )
-    out = work.loc[finite].copy()
+    out = work.loc[np.isfinite(work["source_id"])].copy()
     out["source_id"] = out["source_id"].astype("uint64")
-    out["ra_deg"], out["dec_deg"] = propagate_hip_sky_to_gaia_epoch(
-        out["ra_deg_epoch1991"].to_numpy(dtype=float),
-        out["dec_deg_epoch1991"].to_numpy(dtype=float),
-        out["pmra_masyr"].to_numpy(dtype=float),
-        out["pmdec_masyr"].to_numpy(dtype=float),
+    out["ra_deg"] = np.nan
+    out["dec_deg"] = np.nan
+    propagatable = (
+        np.isfinite(out["ra_deg_epoch1991"])
+        & np.isfinite(out["dec_deg_epoch1991"])
+        & np.isfinite(out["pmra_masyr"])
+        & np.isfinite(out["pmdec_masyr"])
     )
+    if propagatable.any():
+        propagated_ra, propagated_dec = propagate_hip_sky_to_gaia_epoch(
+            out.loc[propagatable, "ra_deg_epoch1991"].to_numpy(dtype=float),
+            out.loc[propagatable, "dec_deg_epoch1991"].to_numpy(dtype=float),
+            out.loc[propagatable, "pmra_masyr"].to_numpy(dtype=float),
+            out.loc[propagatable, "pmdec_masyr"].to_numpy(dtype=float),
+        )
+        out.loc[propagatable, "ra_deg"] = propagated_ra
+        out.loc[propagatable, "dec_deg"] = propagated_dec
     out = out.rename(
         columns={
             "Plx": "plx_mas",
@@ -346,40 +328,51 @@ def prepare_raw_hip_match_sources(
         ]
     ].sort_values("source_id", kind="mergesort", ignore_index=True)
 
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    _write_dataframe(out, output_path)
-    return len(raw)
+    return len(raw), out
 
 
 def build_raw_match_evidence(
     *,
     gaia_parquet_path: Path,
-    hip_sources_path: Path,
+    hip_sources: pd.DataFrame,
     h2bn_crossmatch: pd.DataFrame,
     hipparcos2_neighbourhood: pd.DataFrame,
     max_sep_arcsec: float,
-    max_mag_delta: float | None,
-    auto_sep_arcsec: float,
-    max_parallax_3d_separation_pc: float,
     batch_size: int = 500_000,
     workers: int = -1,
 ) -> tuple[pd.DataFrame, dict[str, int]]:
-    """Return Gaia/HIP evidence rows using sky proximity and parallax distance."""
+    """Return the union of H2BN and local-scan Gaia/HIP pairing evidence."""
 
     ckdtree = _require_ckdtree()
-    hip = pq.read_table(hip_sources_path).to_pandas()
-    if hip.empty:
-        return _empty_raw_match_evidence(), {
-            "gaia_rows_scanned": 0,
-            "gaia_rows_skipped": 0,
-        }
+    hip = hip_sources.copy()
     hip["source_id_str"] = hip["source_id"].astype("uint64").astype(str)
-
-    hip_xyz = _unit_vectors(hip["ra_deg"].to_numpy(), hip["dec_deg"].to_numpy())
+    hip_by_id = {
+        str(rec["source_id_str"]): rec for _, rec in hip.iterrows()
+    }
+    scannable_hip = hip.loc[
+        np.isfinite(pd.to_numeric(hip["ra_deg"], errors="coerce"))
+        & np.isfinite(pd.to_numeric(hip["dec_deg"], errors="coerce"))
+        & np.isfinite(pd.to_numeric(hip["apparent_mag"], errors="coerce"))
+    ].reset_index(drop=True)
+    hip_xyz = _unit_vectors(
+        scannable_hip["ra_deg"].to_numpy(),
+        scannable_hip["dec_deg"].to_numpy(),
+    )
     hip_tree = ckdtree(hip_xyz)
     chord_radius = 2.0 * math.sin(math.radians(max_sep_arcsec / 3600.0) / 2.0)
     h2bn_gaia_to_hip = _mapping_dict(h2bn_crossmatch, "gaia_source_id")
     h2bn_hip_to_gaia = _mapping_dict(h2bn_crossmatch, "hip_source_id")
+    h2bn_pairs = {
+        (str(int(rec.gaia_source_id)), str(int(rec.hip_source_id)))
+        for rec in h2bn_crossmatch.itertuples(index=False)
+    }
+    h2bn_metadata = {
+        (str(int(rec.gaia_source_id)), str(int(rec.hip_source_id))): (
+            int(rec.number_of_neighbours),
+            _safe_float(rec.angular_distance),
+        )
+        for rec in h2bn_crossmatch.itertuples(index=False)
+    }
     neighbourhood_gaia_to_hips = _mapping_sets(
         hipparcos2_neighbourhood, "gaia_source_id"
     )
@@ -388,7 +381,8 @@ def build_raw_match_evidence(
     )
 
     rows: list[dict[str, Any]] = []
-    hip_sky_counts = np.zeros(len(hip), dtype=np.int32)
+    hip_sky_counts = np.zeros(len(scannable_hip), dtype=np.int32)
+    h2bn_gaia_records: dict[str, pd.Series] = {}
     gaia_rows_scanned = 0
     gaia_rows_skipped = 0
     parquet = pq.ParquetFile(gaia_parquet_path)
@@ -402,7 +396,9 @@ def build_raw_match_evidence(
     ]
     optional_columns = ["parallax", "parallax_error"]
     available_columns = set(parquet.schema_arrow.names)
-    columns = base_columns + [col for col in optional_columns if col in available_columns]
+    columns = base_columns + [
+        col for col in optional_columns if col in available_columns
+    ]
     for batch in parquet.iter_batches(batch_size=batch_size, columns=columns):
         gaia = batch.to_pandas()
         gaia_rows_scanned += len(gaia)
@@ -420,16 +416,19 @@ def build_raw_match_evidence(
         ]
         for col in numeric_cols:
             gaia[col] = pd.to_numeric(gaia[col], errors="coerce")
-        finite = (
+        gaia["source_id_str"] = gaia["source_id"].astype("uint64").astype(str)
+        h2bn_batch = gaia["source_id_str"].isin(h2bn_gaia_to_hip)
+        for _, gaia_rec in gaia.loc[h2bn_batch].iterrows():
+            h2bn_gaia_records[str(gaia_rec["source_id_str"])] = gaia_rec
+        scannable = (
             np.isfinite(gaia["ra"])
             & np.isfinite(gaia["dec"])
             & np.isfinite(gaia["phot_g_mean_mag"])
         )
-        gaia_rows_skipped += int((~finite).sum())
-        if not finite.any():
+        gaia_rows_skipped += int((~scannable).sum())
+        if not scannable.any() or scannable_hip.empty:
             continue
-        gaia = gaia.loc[finite].reset_index(drop=True)
-        gaia["source_id_str"] = gaia["source_id"].astype("uint64").astype(str)
+        gaia = gaia.loc[scannable].reset_index(drop=True)
         gaia_xyz = _unit_vectors(gaia["ra"].to_numpy(), gaia["dec"].to_numpy())
         neighbour_lists = hip_tree.query_ball_point(
             gaia_xyz,
@@ -443,77 +442,121 @@ def build_raw_match_evidence(
             gaia_vec = gaia_xyz[gaia_i]
             hip_idx = np.asarray(hip_indices, dtype=np.int64)
             hip_sky_counts[hip_idx] += 1
-            hip_subset = hip.iloc[hip_idx]
-            mag_delta = np.abs(
-                hip_subset["apparent_mag"].to_numpy(dtype=float)
-                - float(gaia_rec["phot_g_mean_mag"])
-            )
-            if max_mag_delta is None:
-                keep = np.ones(len(mag_delta), dtype=bool)
-            else:
-                keep = mag_delta <= max_mag_delta
-            if not keep.any():
-                continue
-            dots = np.clip(hip_xyz[hip_idx[keep]] @ gaia_vec, -1.0, 1.0)
+            hip_subset = scannable_hip.iloc[hip_idx]
+            dots = np.clip(hip_xyz[hip_idx] @ gaia_vec, -1.0, 1.0)
             sep_arcsec = np.degrees(np.arccos(dots)) * 3600.0
-            for seq, local_i in enumerate(np.flatnonzero(keep)):
+            for local_i in range(len(hip_subset)):
                 hip_rec = hip_subset.iloc[int(local_i)]
                 rows.append(
                     _raw_candidate_record(
                         gaia_rec=gaia_rec,
                         hip_rec=hip_rec,
-                        sep_arcsec=float(sep_arcsec[seq]),
-                        mag_delta=float(mag_delta[local_i]),
+                        sep_arcsec=float(sep_arcsec[local_i]),
+                        local_scan_pair=True,
                         gaia_sky_count=len(hip_indices),
                         h2bn_gaia_to_hip=h2bn_gaia_to_hip,
                         h2bn_hip_to_gaia=h2bn_hip_to_gaia,
+                        h2bn_pairs=h2bn_pairs,
+                        h2bn_metadata=h2bn_metadata,
                         neighbourhood_gaia_to_hips=neighbourhood_gaia_to_hips,
                         neighbourhood_hip_to_gaias=neighbourhood_hip_to_gaias,
                     )
                 )
 
-    if not rows:
-        return _empty_raw_match_evidence(), {
-            "gaia_rows_scanned": gaia_rows_scanned,
-            "gaia_rows_skipped": gaia_rows_skipped,
-        }
-
-    evidence = pd.DataFrame(rows, columns=RAW_MATCH_EVIDENCE_COLS)
+    evidence = pd.DataFrame(rows, columns=RAW_PAIRING_EVIDENCE_COLS)
     hip_counts = pd.Series(
         hip_sky_counts,
-        index=hip["source_id_str"].to_numpy(),
+        index=scannable_hip["source_id_str"].to_numpy(),
         dtype=np.int32,
     )
-    evidence["hip_sky_neighbour_count"] = (
-        evidence["hip_source_id"].map(hip_counts).fillna(0).astype(np.int32)
-    )
-    evidence["gaia_candidate_count"] = evidence.groupby("gaia_source_id")[
-        "hip_source_id"
-    ].transform("nunique")
-    evidence["hip_candidate_count"] = evidence.groupby("hip_source_id")[
-        "gaia_source_id"
-    ].transform("nunique")
-    evidence["one_to_one_candidate"] = evidence["gaia_candidate_count"].eq(1) & evidence[
-        "hip_candidate_count"
-    ].eq(1)
-    evidence["isolated_sky_pair"] = evidence["gaia_sky_neighbour_count"].eq(
-        1
-    ) & evidence["hip_sky_neighbour_count"].eq(1)
-    evidence["within_tight_sky_threshold"] = pd.to_numeric(
-        evidence["separation_arcsec"], errors="coerce"
-    ).le(auto_sep_arcsec)
-    evidence["within_parallax_3d_threshold"] = pd.to_numeric(
-        evidence["parallax_3d_separation_pc"], errors="coerce"
-    ).le(max_parallax_3d_separation_pc)
-    for idx, rec in evidence.iterrows():
-        decision, category, action, severity, reasons = _classify_raw_evidence_row(rec)
-        evidence.loc[idx, "decision"] = decision
-        evidence.loc[idx, "evidence_category"] = category
-        evidence.loc[idx, "recommended_action"] = action
-        evidence.loc[idx, "severity"] = severity
-        evidence.loc[idx, "reasons"] = ";".join(reasons)
+    if not evidence.empty:
+        evidence["hip_sky_neighbour_count"] = (
+            evidence["hip_source_id"].astype(str).map(hip_counts).astype("Int64")
+        )
+        evidence["gaia_candidate_count"] = evidence.groupby("gaia_source_id")[
+            "hip_source_id"
+        ].transform("nunique")
+        evidence["hip_candidate_count"] = evidence.groupby("hip_source_id")[
+            "gaia_source_id"
+        ].transform("nunique")
+        evidence["one_to_one_candidate"] = evidence["gaia_candidate_count"].eq(
+            1
+        ) & evidence["hip_candidate_count"].eq(1)
+        evidence["isolated_sky_pair"] = evidence["gaia_sky_neighbour_count"].eq(
+            1
+        ) & evidence["hip_sky_neighbour_count"].eq(1)
+
+    local_pairs = {
+        (str(int(rec.gaia_source_id)), str(int(rec.hip_source_id)))
+        for rec in evidence.itertuples(index=False)
+    }
+    h2bn_only_rows: list[dict[str, Any]] = []
+    for gaia_id, hip_id in sorted(h2bn_pairs - local_pairs):
+        gaia_rec = h2bn_gaia_records.get(gaia_id)
+        hip_rec = hip_by_id.get(hip_id)
+        sep_arcsec = _record_angular_separation_arcsec(gaia_rec, hip_rec)
+        h2bn_only_rows.append(
+            _raw_candidate_record(
+                gaia_rec=gaia_rec,
+                hip_rec=hip_rec,
+                gaia_source_id=gaia_id,
+                hip_source_id=hip_id,
+                sep_arcsec=sep_arcsec,
+                local_scan_pair=False,
+                gaia_sky_count=None,
+                h2bn_gaia_to_hip=h2bn_gaia_to_hip,
+                h2bn_hip_to_gaia=h2bn_hip_to_gaia,
+                h2bn_pairs=h2bn_pairs,
+                h2bn_metadata=h2bn_metadata,
+                neighbourhood_gaia_to_hips=neighbourhood_gaia_to_hips,
+                neighbourhood_hip_to_gaias=neighbourhood_hip_to_gaias,
+            )
+        )
+
+    if h2bn_only_rows:
+        evidence = pd.concat(
+            [
+                evidence,
+                pd.DataFrame(h2bn_only_rows, columns=RAW_PAIRING_EVIDENCE_COLS),
+            ],
+            ignore_index=True,
+        )
+    if evidence.empty:
+        evidence = _empty_raw_pairing_evidence()
+    else:
+        evidence["gaia_source_id"] = pd.to_numeric(
+            evidence["gaia_source_id"], errors="raise"
+        ).astype("uint64")
+        evidence["hip_source_id"] = pd.to_numeric(
+            evidence["hip_source_id"], errors="raise"
+        ).astype("uint64")
+        for col in (
+            "gaia_sky_neighbour_count",
+            "hip_sky_neighbour_count",
+            "gaia_candidate_count",
+            "hip_candidate_count",
+            "h2bn_number_of_neighbours",
+        ):
+            evidence[col] = pd.to_numeric(evidence[col], errors="coerce").astype(
+                "Int64"
+            )
+        for col in (
+            "h2bn_pair",
+            "local_scan_pair",
+            "one_to_one_candidate",
+            "isolated_sky_pair",
+            "gaia_has_h2bn_map",
+            "hip_has_h2bn_map",
+            "h2bn_conflict",
+            "in_hipparcos2_neighbourhood",
+            "hipparcos2_neighbourhood_conflict",
+        ):
+            evidence[col] = evidence[col].astype("boolean")
+        evidence = evidence.drop_duplicates(
+            ["gaia_source_id", "hip_source_id"], keep="first"
+        )
     evidence = evidence.sort_values(
-        ["decision", "separation_arcsec", "apparent_mag_delta", "gaia_source_id"],
+        ["gaia_source_id", "hip_source_id"],
         kind="mergesort",
         ignore_index=True,
     )
@@ -521,41 +564,6 @@ def build_raw_match_evidence(
         "gaia_rows_scanned": gaia_rows_scanned,
         "gaia_rows_skipped": gaia_rows_skipped,
     }
-
-
-def build_raw_supplemental_crossmatch(evidence: pd.DataFrame) -> pd.DataFrame:
-    """Build a supplemental Gaia-HIP map from clean raw sky/mag candidates."""
-
-    if evidence.empty:
-        return empty_gaia_hip_mapping()
-    match_column = (
-        "evidence_category" if "evidence_category" in evidence else "decision"
-    )
-    matched = evidence.loc[evidence[match_column].eq("supplemental_match")].copy()
-    if matched.empty:
-        return empty_gaia_hip_mapping()
-    out = pd.DataFrame(
-        {
-            "gaia_source_id": pd.to_numeric(
-                matched["gaia_source_id"], errors="raise"
-            ).astype("uint64"),
-            "hip_source_id": pd.to_numeric(
-                matched["hip_source_id"], errors="raise"
-            ).astype("uint64"),
-            "mapping_source": RAW_SKY_CROSSMATCH_MAPPING_SOURCE,
-            "number_of_neighbours": np.int16(1),
-            "angular_distance": pd.to_numeric(
-                matched["separation_arcsec"], errors="raise"
-            ).astype(np.float32),
-        }
-    )
-    return out[GAIA_HIP_MAP_COLS].sort_values(
-        ["gaia_source_id", "hip_source_id"],
-        kind="mergesort",
-        ignore_index=True,
-    )
-
-
 def read_h2bn_crossmatch(path: Path) -> pd.DataFrame:
     """Read a Gaia-HIP crossmatch table from pipeline Parquet or Gaia/Vizier ECSV."""
 
@@ -665,23 +673,27 @@ def propagate_hip_sky_to_gaia_epoch(
 
 def _raw_candidate_record(
     *,
-    gaia_rec: pd.Series,
-    hip_rec: pd.Series,
+    gaia_rec: pd.Series | None,
+    hip_rec: pd.Series | None,
+    gaia_source_id: str | None = None,
+    hip_source_id: str | None = None,
     sep_arcsec: float,
-    mag_delta: float,
-    gaia_sky_count: int,
+    local_scan_pair: bool,
+    gaia_sky_count: int | None,
     h2bn_gaia_to_hip: dict[str, str],
     h2bn_hip_to_gaia: dict[str, str],
+    h2bn_pairs: set[tuple[str, str]],
+    h2bn_metadata: dict[tuple[str, str], tuple[int, float]],
     neighbourhood_gaia_to_hips: dict[str, set[str]],
     neighbourhood_hip_to_gaias: dict[str, set[str]],
 ) -> dict[str, Any]:
-    gaia_id = str(gaia_rec["source_id_str"])
-    hip_id = str(hip_rec["source_id_str"])
+    gaia_id = gaia_source_id or str(gaia_rec["source_id_str"])
+    hip_id = hip_source_id or str(hip_rec["source_id_str"])
     gaia_h2bn_hip = h2bn_gaia_to_hip.get(gaia_id)
     hip_h2bn_gaia = h2bn_hip_to_gaia.get(hip_id)
     gaia_has_map = gaia_h2bn_hip is not None
     hip_has_map = hip_h2bn_gaia is not None
-    h2bn_pair = gaia_h2bn_hip == hip_id and hip_h2bn_gaia == gaia_id
+    h2bn_pair = (gaia_id, hip_id) in h2bn_pairs
     h2bn_conflict = (
         (gaia_has_map and gaia_h2bn_hip != hip_id)
         or (hip_has_map and hip_h2bn_gaia != gaia_id)
@@ -693,13 +705,20 @@ def _raw_candidate_record(
         not in_neighbourhood
         and (bool(neighbourhood_hips) or bool(neighbourhood_gaias))
     )
-    bp = _safe_float(gaia_rec.get("phot_bp_mean_mag"))
-    rp = _safe_float(gaia_rec.get("phot_rp_mean_mag"))
+    gaia_g = _safe_float(_record_get(gaia_rec, "phot_g_mean_mag"))
+    hip_hp = _safe_float(_record_get(hip_rec, "apparent_mag"))
+    signed_mag_difference = (
+        gaia_g - hip_hp
+        if math.isfinite(gaia_g) and math.isfinite(hip_hp)
+        else float("nan")
+    )
+    bp = _safe_float(_record_get(gaia_rec, "phot_bp_mean_mag"))
+    rp = _safe_float(_record_get(gaia_rec, "phot_rp_mean_mag"))
     bp_rp = bp - rp if math.isfinite(bp) and math.isfinite(rp) else pd.NA
-    gaia_plx = _safe_float(gaia_rec.get("parallax"))
-    gaia_e_plx = _safe_float(gaia_rec.get("parallax_error"))
-    hip_plx = _safe_float(hip_rec.get("plx_mas"))
-    hip_e_plx = _safe_float(hip_rec.get("e_plx_mas"))
+    gaia_plx = _safe_float(_record_get(gaia_rec, "parallax"))
+    gaia_e_plx = _safe_float(_record_get(gaia_rec, "parallax_error"))
+    hip_plx = _safe_float(_record_get(hip_rec, "plx_mas"))
+    hip_e_plx = _safe_float(_record_get(hip_rec, "e_plx_mas"))
     gaia_r_pc = _distance_pc_from_parallax_mas(gaia_plx)
     hip_r_pc = _distance_pc_from_parallax_mas(hip_plx)
     gaia_frac_error = _parallax_frac_error(gaia_plx, gaia_e_plx)
@@ -709,32 +728,39 @@ def _raw_candidate_record(
         hip_r_pc,
         sep_arcsec,
     )
-    delta_d_pc = _delta_d_pc(gaia_r_pc, hip_r_pc)
+    radial_gap_pc = _radial_gap_pc(gaia_r_pc, hip_r_pc)
     combined_distance_sigma_pc = _combined_distance_sigma_pc(
         gaia_r_pc,
         hip_r_pc,
         gaia_frac_error,
         hip_frac_error,
     )
-    delta_d_sigma = _delta_d_sigma(delta_d_pc, combined_distance_sigma_pc)
+    radial_gap_sigma = _radial_gap_sigma(
+        radial_gap_pc, combined_distance_sigma_pc
+    )
+    h2bn_number_of_neighbours, h2bn_angular_distance = h2bn_metadata.get(
+        (gaia_id, hip_id), (pd.NA, float("nan"))
+    )
     return {
-        "gaia_source_id": gaia_id,
-        "hip_source_id": hip_id,
-        "decision": "",
-        "evidence_category": "",
-        "recommended_action": "",
-        "severity": "",
-        "reasons": "",
+        "gaia_source_id": int(gaia_id),
+        "hip_source_id": int(hip_id),
+        "h2bn_pair": bool(h2bn_pair),
+        "local_scan_pair": bool(local_scan_pair),
         "separation_arcsec": sep_arcsec,
-        "apparent_mag_delta": mag_delta,
-        "gaia_ra_deg": _safe_float(gaia_rec["ra"]),
-        "gaia_dec_deg": _safe_float(gaia_rec["dec"]),
-        "hip_ra_deg": _safe_float(hip_rec["ra_deg"]),
-        "hip_dec_deg": _safe_float(hip_rec["dec_deg"]),
-        "hip_ra_deg_epoch1991": _safe_float(hip_rec["ra_deg_epoch1991"]),
-        "hip_dec_deg_epoch1991": _safe_float(hip_rec["dec_deg_epoch1991"]),
-        "gaia_apparent_mag": _safe_float(gaia_rec["phot_g_mean_mag"]),
-        "hip_apparent_mag": _safe_float(hip_rec["apparent_mag"]),
+        "gaia_ra_deg": _safe_float(_record_get(gaia_rec, "ra")),
+        "gaia_dec_deg": _safe_float(_record_get(gaia_rec, "dec")),
+        "hip_ra_deg": _safe_float(_record_get(hip_rec, "ra_deg")),
+        "hip_dec_deg": _safe_float(_record_get(hip_rec, "dec_deg")),
+        "hip_ra_deg_epoch1991": _safe_float(
+            _record_get(hip_rec, "ra_deg_epoch1991")
+        ),
+        "hip_dec_deg_epoch1991": _safe_float(
+            _record_get(hip_rec, "dec_deg_epoch1991")
+        ),
+        "gaia_g_mag": gaia_g,
+        "hip_hp_mag": hip_hp,
+        "gaia_g_minus_hip_hp_mag": signed_mag_difference,
+        "abs_gaia_g_minus_hip_hp_mag": abs(signed_mag_difference),
         "gaia_phot_bp_mean_mag": bp if math.isfinite(bp) else pd.NA,
         "gaia_phot_rp_mean_mag": rp if math.isfinite(rp) else pd.NA,
         "gaia_bp_rp": bp_rp,
@@ -747,118 +773,34 @@ def _raw_candidate_record(
         "gaia_parallax_frac_error": gaia_frac_error,
         "hip_parallax_frac_error": hip_frac_error,
         "parallax_3d_separation_pc": parallax_3d_sep_pc,
-        "delta_d_pc": delta_d_pc,
+        "radial_gap_pc": radial_gap_pc,
         "combined_distance_sigma_pc": combined_distance_sigma_pc,
-        "delta_d_sigma": delta_d_sigma,
-        "hip_pmra_masyr": _safe_float(hip_rec.get("pmra_masyr")),
-        "hip_pmdec_masyr": _safe_float(hip_rec.get("pmdec_masyr")),
-        "hip_solution_type": _safe_float(hip_rec.get("solution_type")),
-        "gaia_sky_neighbour_count": int(gaia_sky_count),
-        "hip_sky_neighbour_count": 0,
-        "gaia_candidate_count": 1,
-        "hip_candidate_count": 1,
-        "one_to_one_candidate": True,
-        "isolated_sky_pair": False,
-        "h2bn_pair": bool(h2bn_pair),
+        "radial_gap_sigma": radial_gap_sigma,
+        "hip_pmra_masyr": _safe_float(_record_get(hip_rec, "pmra_masyr")),
+        "hip_pmdec_masyr": _safe_float(_record_get(hip_rec, "pmdec_masyr")),
+        "hip_solution_type": _safe_float(_record_get(hip_rec, "solution_type")),
+        "gaia_sky_neighbour_count": (
+            int(gaia_sky_count) if gaia_sky_count is not None else pd.NA
+        ),
+        "hip_sky_neighbour_count": 0 if local_scan_pair else pd.NA,
+        "gaia_candidate_count": 1 if local_scan_pair else pd.NA,
+        "hip_candidate_count": 1 if local_scan_pair else pd.NA,
+        "one_to_one_candidate": True if local_scan_pair else pd.NA,
+        "isolated_sky_pair": False if local_scan_pair else pd.NA,
         "gaia_has_h2bn_map": bool(gaia_has_map),
         "hip_has_h2bn_map": bool(hip_has_map),
         "h2bn_conflict": bool(h2bn_conflict),
         "in_hipparcos2_neighbourhood": bool(in_neighbourhood),
         "hipparcos2_neighbourhood_conflict": bool(neighbourhood_conflict),
-        "within_tight_sky_threshold": False,
-        "within_parallax_3d_threshold": False,
-        "gaia_h2bn_hip_source_id": gaia_h2bn_hip or pd.NA,
-        "hip_h2bn_gaia_source_id": hip_h2bn_gaia or pd.NA,
+        "gaia_h2bn_hip_source_id": (
+            int(gaia_h2bn_hip) if gaia_h2bn_hip is not None else pd.NA
+        ),
+        "hip_h2bn_gaia_source_id": (
+            int(hip_h2bn_gaia) if hip_h2bn_gaia is not None else pd.NA
+        ),
+        "h2bn_number_of_neighbours": h2bn_number_of_neighbours,
+        "h2bn_angular_distance": h2bn_angular_distance,
     }
-
-
-def _classify_raw_evidence_row(
-    rec: pd.Series,
-) -> tuple[str, str, str, str, list[str]]:
-    reasons = ["close_sky_position"]
-    if math.isfinite(_safe_float(rec.get("apparent_mag_delta"))):
-        reasons.append("apparent_magnitude_recorded")
-    if bool(rec["isolated_sky_pair"]):
-        reasons.append("isolated_within_scan_radius")
-    elif bool(rec["one_to_one_candidate"]):
-        reasons.append("one_to_one_candidate_but_not_sky_isolated")
-
-    if bool(rec["h2bn_pair"]):
-        reasons.append("h2bn_crossmatch_pair")
-        if bool(rec["one_to_one_candidate"]):
-            return (
-                "h2bn_recovered",
-                "h2bn_recovered",
-                "already_in_h2bn_crossmatch",
-                "info",
-                reasons,
-            )
-        reasons.append("h2bn_pair_has_local_ambiguity")
-        return (
-            "manual_review",
-            "local_ambiguity",
-            "inspect_ambiguous_h2bn_pair",
-            "medium",
-            reasons,
-        )
-
-    if bool(rec["h2bn_conflict"]):
-        reasons.append("h2bn_conflict")
-        return (
-            "manual_review",
-            "h2bn_disagreement",
-            "inspect_h2bn_conflict",
-            "high",
-            reasons,
-        )
-
-    if bool(rec["hipparcos2_neighbourhood_conflict"]):
-        reasons.append("hipparcos2_neighbourhood_conflict")
-        return (
-            "manual_review",
-            "hipparcos2_neighbourhood_disagreement",
-            "inspect_hipparcos2_neighbourhood_conflict",
-            "medium",
-            reasons,
-        )
-
-    if not bool(rec["one_to_one_candidate"]):
-        reasons.append("ambiguous_candidate_field")
-        return (
-            "manual_review",
-            "local_ambiguity",
-            "inspect_ambiguous_raw_match",
-            "medium",
-            reasons,
-        )
-
-    if bool(rec["within_tight_sky_threshold"]):
-        reasons.append("clean_one_to_one_tight_sky_candidate")
-        return (
-            "supplemental_match",
-            "supplemental_match",
-            "add_supplemental_crossmatch",
-            "medium",
-            reasons,
-        )
-
-    parallax_3d_sep = _safe_float(rec.get("parallax_3d_separation_pc"))
-    if bool(rec["within_parallax_3d_threshold"]):
-        reasons.append("clean_one_to_one_parallax_3d_candidate")
-        return (
-            "supplemental_match",
-            "supplemental_match",
-            "add_supplemental_crossmatch",
-            "medium",
-            reasons,
-        )
-
-    if math.isfinite(parallax_3d_sep):
-        reasons.append("parallax_3d_separation_gt_threshold")
-        return "separate_object", "nearby_nonmatch", "keep_separate", "info", reasons
-
-    reasons.append("missing_parallax_3d_separation")
-    return "separate_object", "nearby_nonmatch", "keep_separate", "info", reasons
 
 
 def _mapping_sets(mapping: pd.DataFrame, key_col: str) -> dict[str, set[str]]:
@@ -887,7 +829,7 @@ def _parallax_frac_error(parallax_mas: float, parallax_error_mas: float) -> floa
     return abs(parallax_error_mas / parallax_mas)
 
 
-def _delta_d_pc(gaia_r_pc: float, hip_r_pc: float) -> float:
+def _radial_gap_pc(gaia_r_pc: float, hip_r_pc: float) -> float:
     if not math.isfinite(gaia_r_pc) or not math.isfinite(hip_r_pc):
         return float("nan")
     return abs(gaia_r_pc - hip_r_pc)
@@ -913,14 +855,16 @@ def _combined_distance_sigma_pc(
     )
 
 
-def _delta_d_sigma(delta_d_pc: float, combined_distance_sigma_pc: float) -> float:
+def _radial_gap_sigma(
+    radial_gap_pc: float, combined_distance_sigma_pc: float
+) -> float:
     if (
-        not math.isfinite(delta_d_pc)
+        not math.isfinite(radial_gap_pc)
         or not math.isfinite(combined_distance_sigma_pc)
         or combined_distance_sigma_pc <= 0
     ):
         return float("nan")
-    return delta_d_pc / combined_distance_sigma_pc
+    return radial_gap_pc / combined_distance_sigma_pc
 
 
 def _parallax_3d_separation_pc(
@@ -943,15 +887,46 @@ def _parallax_3d_separation_pc(
     return math.sqrt(max(separation_sq, 0.0))
 
 
-def _evidence_category_counts(evidence: pd.DataFrame) -> dict[str, int]:
-    counts = {category: 0 for category in EVIDENCE_CATEGORIES}
-    if evidence.empty or "evidence_category" not in evidence:
-        return counts
-    values = evidence["evidence_category"].value_counts(dropna=False)
-    for key, value in values.items():
-        key_str = str(key)
-        if key_str:
-            counts[key_str] = int(value)
+def _pairing_context_counts(evidence: pd.DataFrame) -> dict[str, int]:
+    counts = {
+        column: int(evidence[column].fillna(False).astype(bool).sum())
+        for column in (
+            "one_to_one_candidate",
+            "isolated_sky_pair",
+            "gaia_has_h2bn_map",
+            "hip_has_h2bn_map",
+            "h2bn_conflict",
+            "in_hipparcos2_neighbourhood",
+            "hipparcos2_neighbourhood_conflict",
+        )
+    }
+    local = evidence["local_scan_pair"].fillna(False).astype(bool)
+    h2bn = evidence["h2bn_pair"].fillna(False).astype(bool)
+    one_to_one = evidence["one_to_one_candidate"].fillna(False).astype(bool)
+    counts["ambiguous_local_pair"] = int((local & ~one_to_one).sum())
+    counts["ambiguous_h2bn_local_pair"] = int(
+        (h2bn & local & ~one_to_one).sum()
+    )
+    return counts
+
+
+def _descriptive_bins(
+    values: pd.Series,
+    *,
+    edges: tuple[float, ...],
+    labels: tuple[str, ...],
+) -> dict[str, int]:
+    numeric = pd.to_numeric(values, errors="coerce")
+    finite = numeric[np.isfinite(numeric)]
+    if len(labels) != len(edges) + 1:
+        raise ValueError("Descriptive bin labels must be one longer than edges")
+    counts: dict[str, int] = {}
+    lower = -math.inf
+    for edge, label in zip(edges, labels[:-1], strict=True):
+        counts[label] = int(((finite > lower) & (finite <= edge)).sum())
+        lower = edge
+    counts[labels[-1]] = int((finite > lower).sum())
+    counts["missing"] = int(numeric.isna().sum())
     return counts
 
 
@@ -984,14 +959,36 @@ def _safe_float(value: Any) -> float:
     return out
 
 
+def _record_get(record: pd.Series | None, key: str) -> Any:
+    if record is None:
+        return None
+    return record.get(key)
+
+
+def _record_angular_separation_arcsec(
+    gaia_rec: pd.Series | None,
+    hip_rec: pd.Series | None,
+) -> float:
+    gaia_ra = _safe_float(_record_get(gaia_rec, "ra"))
+    gaia_dec = _safe_float(_record_get(gaia_rec, "dec"))
+    hip_ra = _safe_float(_record_get(hip_rec, "ra_deg"))
+    hip_dec = _safe_float(_record_get(hip_rec, "dec_deg"))
+    if not all(math.isfinite(value) for value in (gaia_ra, gaia_dec, hip_ra, hip_dec)):
+        return float("nan")
+    gaia_xyz = _unit_vectors(np.array([gaia_ra]), np.array([gaia_dec]))[0]
+    hip_xyz = _unit_vectors(np.array([hip_ra]), np.array([hip_dec]))[0]
+    dot = float(np.clip(gaia_xyz @ hip_xyz, -1.0, 1.0))
+    return math.degrees(math.acos(dot)) * 3600.0
+
+
 def _write_dataframe(df: pd.DataFrame, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     table = pa.Table.from_pandas(df, preserve_index=False)
     pq.write_table(table, str(path), compression="zstd")
 
 
-def _empty_raw_match_evidence() -> pd.DataFrame:
-    return pd.DataFrame(columns=RAW_MATCH_EVIDENCE_COLS)
+def _empty_raw_pairing_evidence() -> pd.DataFrame:
+    return pd.DataFrame(columns=RAW_PAIRING_EVIDENCE_COLS)
 
 
 def _require_ckdtree():

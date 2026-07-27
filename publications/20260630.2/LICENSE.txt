@@ -1,58 +1,46 @@
-# License for Publication 20260630.2
+Found in Space original material
+================================
 
-Publication: Found in Space Gaia-Hipparcos2 visual deduplication pairing
-evidence catalog for the controlled core dataset
+Copyright (c) 2026 Found in Space contributors.
 
-This publication is an academic public-interest data work.
+The original prose, documentation, organization, selection, arrangement, and
+Found in Space-authored derived evidence fields in this publication are
+licensed under the Creative Commons Attribution 4.0 International licence
+(CC BY 4.0):
 
-## Found in Space Original Material
+https://creativecommons.org/licenses/by/4.0/
 
-To the extent that Found in Space holds copyright, database rights, or related
-rights in the original material in this publication, that material is released
-under the Creative Commons Attribution 4.0 International License (CC BY 4.0).
+You may share and adapt that original material for any purpose provided that
+appropriate attribution is given, a link to the licence is supplied, and
+changes are indicated.
 
-This includes:
+Upstream data and database rights
+=================================
 
-- publication text and documentation;
-- Found-in-Space-authored generated summary files;
-- the Found-in-Space supplemental crossmatch rows in
-  `catalog/fis_gaia_hip_supplemental_crossmatch_map.parquet`;
-- Found-in-Space-authored visual deduplication pairing evidence summaries;
-- selection, arrangement, and explanatory material authored for this release.
+This licence does not grant new rights over upstream Gaia, ESA,
+Hipparcos/Tycho, CDS/VizieR, or other cited-source data. Their applicable
+licences, database rights, acknowledgement requirements, and terms of use
+continue to apply.
 
-License text: https://creativecommons.org/licenses/by/4.0/
+The pairing rows and factual catalog values do not represent a Found in Space
+claim that the paired records are the same astrophysical object. The
+publication makes no winner, removal, or merged-record decision.
 
-Suggested attribution:
+No warranty
+===========
 
-> Found in Space, "Found in Space Gaia-Hipparcos2 visual deduplication pairing
-> evidence catalog for the controlled core dataset", publication 20260630.2,
-> 2026.
+Unless required by applicable law, the publication is provided without
+warranties or conditions of any kind. Users are responsible for validating
+fitness for their scientific, visualization, or operational purpose.
 
-## Upstream Data and Derived Evidence
+Attribution
+===========
 
-This publication includes evidence and metadata derived from upstream
-astronomical catalogues. Those upstream data and any rights in them remain
-subject to their source terms, citation requirements, and credit requirements.
+When using this publication:
 
-In particular:
-
-- Gaia DR3 data are open and free to use provided credit is given to
-  ESA/Gaia/DPAC, and Gaia asks users to cite the Gaia mission and DR3 release
-  papers.
-- ESA states that the Hipparcos and Tycho catalogues are distributed under the
-  Creative Commons Attribution-NonCommercial 3.0 IGO License (CC BY-NC 3.0 IGO)
-  and require credit to ESA.
-- VizieR/CDS catalogue access should be acknowledged where it was used.
-
-The evidence files in `evidence/` are provided for scholarly provenance and
-reproducibility. They should be reused with attention to the upstream terms
-listed in `NOTICE.md`.
-
-## No Warranty
-
-This publication is provided as-is, without warranty of any kind. It contains
-Found in Space Gaia-Hipparcos2 pairing evidence and supplemental crossmatch
-rows.
-
-Use of upstream catalog names, identifiers, or data does not imply endorsement
-by ESA, DPAC, CDS, VizieR, or the original catalogue authors.
+1. cite the Found in Space release identifier `20260630.2`;
+2. credit Found in Space for the publication organization and derived evidence;
+3. cite Gaia DR3, the Gaia crossmatch documentation, the Hipparcos new
+   reduction, and CDS/VizieR as applicable; and
+4. preserve the notices and source references supplied with redistributed
+   copies.

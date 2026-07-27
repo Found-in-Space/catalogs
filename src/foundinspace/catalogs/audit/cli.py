@@ -1,3 +1,4 @@
+import subprocess
 from pathlib import Path
 
 import click
@@ -8,6 +9,7 @@ from foundinspace.catalogs.audit.pipeline import (
     run_audit_report,
 )
 from foundinspace.catalogs.audit.gaia_match_table import build_gaia_raw_match_table
+from foundinspace.catalogs.audit.publication import assemble_pairing_publication
 from foundinspace.catalogs.audit.raw_match import run_raw_gaia_hip_match
 from foundinspace.pipeline.project import load_project
 
@@ -147,89 +149,37 @@ def _load_project_or_die(project_path: Path, *required: str):
     show_default=True,
     help="Maximum angular separation for broad local Gaia/HIP evidence.",
 )
-@click.option(
-    "--max-mag-delta",
-    type=float,
-    default=0.5,
-    show_default=True,
-    help="Maximum apparent-magnitude difference for broad local evidence.",
-)
-@click.option(
-    "--auto-sep-arcsec",
-    type=float,
-    default=0.25,
-    show_default=True,
-    help="Maximum angular separation for automatic supplemental matches.",
-)
-@click.option(
-    "--auto-mag-delta",
-    type=float,
-    default=0.25,
-    show_default=True,
-    help="Maximum apparent-magnitude difference for automatic supplemental matches.",
-)
-@click.option(
-    "--auto-distance-frac-diff",
-    type=float,
-    default=0.10,
-    show_default=True,
-    help="Legacy fractional-distance threshold retained for diagnostics only.",
-)
 def match_cmd(
     project_path: Path,
     force: bool,
     max_sep_arcsec: float,
-    max_mag_delta: float,
-    auto_sep_arcsec: float,
-    auto_mag_delta: float,
-    auto_distance_frac_diff: float,
 ) -> None:
-    """Build local Gaia/HIP match evidence and supplemental crossmatch maps."""
+    """Build policy-neutral Gaia/HIP pairing evidence from staged data."""
     project = _load_project_or_die(
         project_path,
         "merge",
         "gaia",
         "hip",
         "gaia-to-hip",
-        "overrides",
     )
     try:
         report = run_audit_match(
             gaia_dir=project.gaia.output_dir,
             hip_path=project.hip.output_parquet,
-            official_crossmatch_path=project.gaia_to_hip.output_parquet,
-            overrides_path=project.overrides.output_parquet,
+            h2bn_crossmatch_path=project.gaia_to_hip.output_parquet,
             audit_dir=default_audit_dir(project.merge.output_dir),
             max_sep_arcsec=max_sep_arcsec,
-            max_mag_delta=max_mag_delta,
-            auto_sep_arcsec=auto_sep_arcsec,
-            auto_mag_delta=auto_mag_delta,
-            auto_distance_frac_diff=auto_distance_frac_diff,
             force=force,
         )
     except RuntimeError as exc:
         raise click.ClickException(str(exc)) from exc
-    click.echo(f"Match evidence: {Path(report.match_evidence_path).resolve()}")
-    click.echo(
-        f"Supplemental crossmatch: {Path(report.supplemental_crossmatch_path).resolve()}"
-    )
-    click.echo(
-        f"Combined crossmatch: {Path(report.combined_crossmatch_path).resolve()}"
-    )
-    if report.distance_histogram_png_path:
-        click.echo(
-            f"Distance histogram: {Path(report.distance_histogram_png_path).resolve()}"
-        )
-    if report.distance_quality_plot_png_path:
-        click.echo(
-            "Distance vs quality: "
-            f"{Path(report.distance_quality_plot_png_path).resolve()}"
-        )
+    click.echo(f"Pairing evidence: {Path(report.pairing_evidence_path).resolve()}")
+    click.echo(f"Report: {Path(report.report_path).resolve()}")
     click.echo(
         "Summary: "
-        f"evidence={report.evidence_rows:,}, "
-        f"supplemental={report.supplemental_rows:,}, "
-        f"combined={report.combined_rows:,}"
+        f"pairs={report.pairing_rows:,}, "
+        f"h2bn={report.h2bn_rows:,}, "
+        f"local_scan={report.local_scan_rows:,}"
     )
 
 
@@ -264,7 +214,7 @@ def match_cmd(
     "--output-dir",
     required=True,
     type=click.Path(file_okay=False, path_type=Path),
-    help="Directory for raw match evidence and crossmatch outputs.",
+    help="Directory for policy-neutral raw pairing evidence.",
 )
 @click.option("--force", "-f", is_flag=True, default=False)
 @click.option(
@@ -273,27 +223,6 @@ def match_cmd(
     default=5.0,
     show_default=True,
     help="Maximum angular separation for raw local Gaia/HIP evidence.",
-)
-@click.option(
-    "--max-mag-delta",
-    type=float,
-    default=None,
-    help="Optional hard Gaia G / Hipparcos Hp magnitude gate. Omit to record only.",
-)
-@click.option(
-    "--auto-sep-arcsec",
-    type=float,
-    default=0.25,
-    show_default=True,
-    help="Maximum sky separation for automatic tight crossmatches.",
-)
-@click.option(
-    "--max-parallax-3d-separation-pc",
-    "max_parallax_3d_separation_pc",
-    type=float,
-    default=1.0,
-    show_default=True,
-    help="Maximum parallax-derived 3D separation for non-tight crossmatches.",
 )
 @click.option(
     "--batch-size",
@@ -317,13 +246,10 @@ def raw_match_cmd(
     output_dir: Path,
     force: bool,
     max_sep_arcsec: float,
-    max_mag_delta: float | None,
-    auto_sep_arcsec: float,
-    max_parallax_3d_separation_pc: float,
     batch_size: int,
     workers: int,
 ) -> None:
-    """Build raw sky-and-apparent-magnitude Gaia/HIP match evidence."""
+    """Build the H2BN/local-scan union as factual pairing evidence."""
     try:
         report = run_raw_gaia_hip_match(
             hip_ecsv_path=hip_ecsv,
@@ -332,31 +258,109 @@ def raw_match_cmd(
             hipparcos2_neighbourhood_path=hipparcos2_neighbourhood,
             output_dir=output_dir,
             max_sep_arcsec=max_sep_arcsec,
-            max_mag_delta=max_mag_delta,
-            auto_sep_arcsec=auto_sep_arcsec,
-            max_parallax_3d_separation_pc=max_parallax_3d_separation_pc,
             batch_size=batch_size,
             workers=workers,
             force=force,
         )
     except (RuntimeError, ValueError, FileExistsError, FileNotFoundError) as exc:
         raise click.ClickException(str(exc)) from exc
-    click.echo(f"HIP match sources: {Path(report.hip_match_sources_path).resolve()}")
-    click.echo(f"Raw match evidence: {Path(report.match_evidence_path).resolve()}")
-    click.echo(
-        f"Raw supplemental crossmatch: "
-        f"{Path(report.supplemental_crossmatch_path).resolve()}"
-    )
-    click.echo(
-        f"Raw combined crossmatch: {Path(report.combined_crossmatch_path).resolve()}"
-    )
+    click.echo(f"Pairing evidence: {Path(report.pairing_evidence_path).resolve()}")
     click.echo(f"Report: {Path(report.report_path).resolve()}")
     click.echo(
         "Summary: "
         f"gaia_scanned={report.gaia_rows_scanned:,}, "
-        f"evidence={report.evidence_rows:,}, "
-        f"supplemental={report.supplemental_rows:,}, "
-        f"h2bn_recovered={report.h2bn_pairs_recovered:,}"
+        f"pairs={report.pairing_rows:,}, "
+        f"h2bn={report.h2bn_rows:,}, "
+        f"local_scan={report.local_scan_rows:,}"
+    )
+
+
+@cli.command(name="assemble-pairing-publication")
+@click.option(
+    "--release-dir",
+    required=True,
+    type=click.Path(file_okay=False, path_type=Path),
+)
+@click.option(
+    "--raw-output-dir",
+    required=True,
+    type=click.Path(exists=True, file_okay=False, path_type=Path),
+)
+@click.option(
+    "--gaia-compact-parquet",
+    required=True,
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+)
+@click.option(
+    "--gaia-summary",
+    required=True,
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+)
+@click.option(
+    "--gaia-package-dir",
+    required=True,
+    type=click.Path(exists=True, file_okay=False, path_type=Path),
+)
+@click.option(
+    "--hip-ecsv",
+    required=True,
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+)
+@click.option(
+    "--h2bn-ecsv",
+    required=True,
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+)
+@click.option(
+    "--h2bn-crossmatch",
+    required=True,
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+)
+@click.option(
+    "--hipparcos2-neighbourhood",
+    required=True,
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+)
+def assemble_pairing_publication_cmd(
+    release_dir: Path,
+    raw_output_dir: Path,
+    gaia_compact_parquet: Path,
+    gaia_summary: Path,
+    gaia_package_dir: Path,
+    hip_ecsv: Path,
+    h2bn_ecsv: Path,
+    h2bn_crossmatch: Path,
+    hipparcos2_neighbourhood: Path,
+) -> None:
+    """Assemble the pairing publication from a clean, pushed catalogs commit."""
+
+    try:
+        result = assemble_pairing_publication(
+            release_dir=release_dir,
+            raw_output_dir=raw_output_dir,
+            gaia_compact_parquet=gaia_compact_parquet,
+            gaia_summary=gaia_summary,
+            gaia_package_dir=gaia_package_dir,
+            hip_ecsv=hip_ecsv,
+            h2bn_ecsv=h2bn_ecsv,
+            h2bn_crossmatch=h2bn_crossmatch,
+            hipparcos2_neighbourhood=hipparcos2_neighbourhood,
+        )
+    except (
+        FileNotFoundError,
+        subprocess.CalledProcessError,
+        ValueError,
+    ) as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(f"Pairing evidence: {Path(result.evidence_path).resolve()}")
+    click.echo(f"Support provenance: {Path(result.support_provenance_path).resolve()}")
+    click.echo(f"Checksums: {Path(result.checksums_path).resolve()}")
+    click.echo(
+        "Counts: "
+        f"pairs={result.pairing_rows:,}, "
+        f"h2bn={result.h2bn_rows:,}, "
+        f"local_scan={result.local_scan_rows:,}, "
+        f"overlap={result.overlap_rows:,}"
     )
 
 
