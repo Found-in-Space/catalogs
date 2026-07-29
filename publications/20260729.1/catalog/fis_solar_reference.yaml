@@ -1,0 +1,76 @@
+format_version: 1
+catalog:
+  catalog_id: fis.solar-reference
+  release: "20260729.1"
+  provider_id: fis.solar-reference
+  provider_role: optional_static_reference
+  core_catalog_member: false
+  core_octree_member: false
+  automatic_merge: false
+  consumer_opt_in_required: true
+
+stars:
+  - object_id: sun
+    object_type: star
+    provenance_kind: published_reference
+
+    identifiers:
+      proper_name: Sun
+      alternate_names:
+        - Sol
+
+    physical_values:
+      absolute_magnitude:
+        value: 4.81
+        bandpass: Johnson_V
+        magnitude_system: vegamag
+        value_kind: published_estimate
+        source:
+          authors: "Willmer, C. N. A."
+          year: 2018
+          title: "The Absolute Magnitude of the Sun in Several Filters"
+          journal: "The Astrophysical Journal Supplement Series"
+          volume: 236
+          article: 47
+          doi: "10.3847/1538-4365/aabfdf"
+          arxiv: "1804.07788"
+
+      effective_temperature:
+        value: 5772
+        unit: K
+        value_kind: nominal_exact_conversion_constant
+        exact_by_definition: true
+        interpretation: >
+          IAU nominal conversion constant, not an uncertainty-free measurement
+          of the instantaneous physical Sun.
+        standard: "IAU 2015 Resolution B3"
+        source:
+          authors: "Prsa et al."
+          year: 2016
+          title: >
+            Nominal Values for Selected Solar and Planetary Quantities:
+            IAU 2015 Resolution B3
+          journal: "The Astronomical Journal"
+          volume: 152
+          article: 41
+          doi: "10.3847/0004-6256/152/2/41"
+          arxiv: "1605.09788"
+
+    default_session_placement:
+      optional: true
+      placement_kind: synthetic_coordinate_origin
+      coordinate_frame: solar_origin_cartesian_icrs
+      unit: pc
+      x_icrs_pc: 0.0
+      y_icrs_pc: 0.0
+      z_icrs_pc: 0.0
+      interpretation: >
+        Optional application convention for placing a Sun object at the solar
+        origin. These coordinates are not observational astrometry.
+
+    consumer_policy:
+      include_automatically: false
+      may_omit: true
+      may_replace: true
+      may_restyle: true
+      core_octree_identity: null

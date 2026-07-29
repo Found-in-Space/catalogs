@@ -1,0 +1,61 @@
+format_version = 1
+release = "20260729.1"
+title = "Optional solar reference"
+status = "release-candidate"
+
+[summary]
+description = "One opt-in Sun reference entry for static-provider composition; excluded from the core external-star catalog and octree."
+
+[scope]
+catalog_entries = 1
+provider_role = "optional_static_reference"
+core_catalog_member = false
+core_octree_member = false
+pipeline_override = false
+automatic_merge = false
+default_session_placement_is_synthetic = true
+consumer_opt_in_required = true
+
+[inputs]
+absolute_magnitude_reference = "Willmer 2018, ApJS 236, 47, doi:10.3847/1538-4365/aabfdf"
+effective_temperature_standard = "IAU 2015 Resolution B3"
+effective_temperature_reference = "Prsa et al. 2016, AJ 152, 41, doi:10.3847/0004-6256/152/2/41"
+migration_source_repository = "https://github.com/Found-in-Space/pipeline"
+migration_source_commit = "9c014848a7a99f6d93583ae7dfa51a740733fa9c"
+migration_source_path = "src/foundinspace/pipeline/overrides/data/sun.yaml"
+
+[outputs]
+solar_reference = "catalog/fis_solar_reference.yaml"
+readme = "README.md"
+run_log = "run_log.md"
+checksums = "checksums.sha256"
+license = "LICENSE.txt"
+notice = "NOTICE.md"
+references = "REFERENCES.md"
+
+[expected_values]
+object_count = 1
+catalog_id = "fis.solar-reference"
+provider_id = "fis.solar-reference"
+object_id = "sun"
+johnson_v_absolute_magnitude_vegamag = 4.81
+nominal_effective_temperature_k = 5772
+default_x_icrs_pc = 0.0
+default_y_icrs_pc = 0.0
+default_z_icrs_pc = 0.0
+
+[provenance]
+created_by = "Found in Space"
+created_at = "2026-07-29"
+source_method = "Authored from cited public primary sources; migrated from the previously public pipeline reference record."
+notes = "The solar values are published independently from the optional synthetic session placement. This release is not produced by or dependent on a local dirty pipeline checkout."
+
+[license]
+found_in_space_original_material = "CC-BY-4.0"
+upstream_terms_apply = true
+summary = "Found in Space original prose, organization, and schema are CC BY 4.0; cited publications and standards retain their own rights."
+
+[references]
+willmer_2018 = "C. N. A. Willmer, The Absolute Magnitude of the Sun in Several Filters, ApJS 236:47, doi:10.3847/1538-4365/aabfdf, arXiv:1804.07788"
+iau_2015_resolution_b3 = "IAU 2015 Resolution B3 on Recommended Nominal Conversion Constants for Selected Solar and Planetary Properties, arXiv:1510.07674"
+prsa_2016 = "A. Prsa et al., Nominal Values for Selected Solar and Planetary Quantities: IAU 2015 Resolution B3, AJ 152:41, doi:10.3847/0004-6256/152/2/41, arXiv:1605.09788"

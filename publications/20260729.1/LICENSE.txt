@@ -1,0 +1,43 @@
+Found in Space original material
+================================
+
+Copyright (c) 2026 Found in Space contributors.
+
+The original prose, documentation, organization, and YAML schema authored for
+this publication are licensed under the Creative Commons Attribution 4.0
+International licence (CC BY 4.0):
+
+https://creativecommons.org/licenses/by/4.0/
+
+You may share and adapt that original material for any purpose provided that
+appropriate attribution is given, a link to the licence is supplied, and
+changes are indicated.
+
+Scientific facts and cited publications
+=======================================
+
+This licence does not grant new rights over the cited scientific publications,
+standards, or their copyrighted expression. The small factual values recorded
+here remain attributable to the sources listed in REFERENCES.md. Rights in
+those publications remain with their respective rights holders.
+
+The optional synthetic origin placement is a Found in Space application
+convention and is not observational data.
+
+No warranty
+===========
+
+Unless required by applicable law, this publication is provided without
+warranties or conditions of any kind. Consumers are responsible for selecting
+appropriate passbands, physical interpretations, placements, and render
+behavior for their use.
+
+Attribution
+===========
+
+Suggested publication attribution:
+
+Found in Space, "Optional solar reference", publication 20260729.1 (2026).
+
+Scientific use should additionally cite Willmer (2018), IAU 2015 Resolution
+B3, and Prsa et al. (2016) as described in REFERENCES.md and NOTICE.md.
