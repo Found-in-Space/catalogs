@@ -27,3 +27,16 @@ Catalog publications must be reproducible from immutable or public code inputs.
 
 Before finalizing a publication, verify the imported package location and
 version source are from the pinned environment, not a local checkout.
+
+## Publication Lifecycle
+
+- Treat every published release payload as immutable.
+- Require each manifest to identify a standalone publication or a release in a
+  stable evolving series.
+- Publish substantive revisions to an evolving series with Zenodo's **New
+  version** workflow in the same record lineage. Do not create an unrelated
+  Zenodo record.
+- Record the release-specific Version DOI for reproducibility and the stable
+  Concept DOI for series-level or latest-version references.
+- Keep post-publication DOI tracking metadata outside the deposited payload and
+  its checksum manifest.

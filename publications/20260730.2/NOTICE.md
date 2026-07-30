@@ -11,7 +11,7 @@ preserve their original executable identities and values; their provenance has
 been expanded and an obsolete best-neighbour statement corrected.
 
 A `resolved` tracker status means the cited distance evidence was judged
-suitable for this one-off controlled rendering dataset. It does not supersede
+suitable for the current controlled rendering use case. It does not supersede
 Gaia, Hipparcos, SIMBAD, VizieR, or the cited specialist work for general
 scientific use. The 33 provisional tracker rows are evidence only and must not
 be applied.
@@ -47,6 +47,21 @@ source checksums are in `evidence/alpha_cen_pairing_review.json`.
 
 Consumers must select both YAML files explicitly and preserve the publication
 release and checksums in run provenance.
+
+## Versioning Boundary
+
+`fis.overrides` is an evolving catalog distributed as a single Zenodo version
+chain. Every published release is an immutable snapshot. Changes to catalog
+rows, evidence, checksums, selection rules, or methodology require a new
+release and Zenodo's **New version** workflow in the same lineage. A
+metadata-only correction may edit the published record only when it leaves the
+payload and its scientific interpretation unchanged.
+
+Each release has a Version DOI and the series has one stable Concept DOI.
+Reproducible work must cite the exact release and Version DOI; references to
+the evolving series or its latest version may cite the Concept DOI. Release
+`20260730.2` is the initial planned Zenodo deposit, so neither DOI has been
+assigned yet.
 
 ## Upstream Sources
 

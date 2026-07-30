@@ -9,6 +9,26 @@ photometry, and temperature sources. The 48 reviewed additions record
 astrometry, photometry, and temperature donor rows and use the distance-source
 groups below.
 
+## Catalog Citation and DOI Policy
+
+This release belongs to the evolving `fis.overrides` catalog. Cite the
+release-specific Zenodo Version DOI when exact reproducibility matters. Cite
+the stable Zenodo Concept DOI when referring to the catalog series as a whole
+or intentionally resolving to its latest published version. Row-level
+scientific sources must still be cited as appropriate.
+
+Release `20260730.2` is the planned first Zenodo deposit. Its Version DOI and
+the series Concept DOI are therefore pending and must not be guessed or
+pre-filled. After publication, the assigned identifiers will be recorded in
+repository tracking metadata without changing this immutable release payload.
+Later data, evidence, checksum, selection, or methodology changes will be
+published through Zenodo's **New version** action in the same version chain.
+
+Suggested citation before DOI assignment:
+
+> Found in Space (2026), *Found in Space stellar overrides*, version
+> 20260730.2, release candidate.
+
 ## Retained Alpha Centauri Overrides
 
 - van Leeuwen, F. (2007), "Validation of the new Hipparcos reduction,"

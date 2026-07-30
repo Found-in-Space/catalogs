@@ -4,10 +4,10 @@ Release: `20260730.2`
 Series ID: `fis.overrides`
 Status: release candidate
 
-This is the first complete publication candidate for the original Found in
-Space stellar override collection. It is cumulative: the three original Alpha
-Centauri overrides are retained, and 48 reviewed distance replacements are
-added.
+This is the first Zenodo publication candidate for the evolving Found in Space
+stellar override catalog. It is a cumulative release snapshot: the three
+original Alpha Centauri overrides are retained, and 48 reviewed distance
+replacements are added.
 
 The executable set contains exactly 51 `replace` actions:
 
@@ -17,6 +17,33 @@ The executable set contains exactly 51 `replace` actions:
 Sirius B and Procyon B are not part of the legacy base. They were deliberately
 retired in pipeline history before publication. The Sun is also absent: it is a
 separate opt-in application reference, not a stellar override in this series.
+
+## Catalog Lifecycle and Citation
+
+`fis.overrides` is an evolving, versioned catalog. Every published release is
+an immutable snapshot. A change to executable catalog data, evidence,
+checksums, selection rules, or methodology must be published with Zenodo's
+**New version** action in the same record lineage. It must not replace files in
+an already-published snapshot or create an unrelated Zenodo record.
+
+Each published release receives its own Version DOI. Zenodo also assigns a
+stable Concept DOI to the version chain when the first release is published.
+Use the Version DOI when citing the exact inputs of a reproducible run. Use the
+Concept DOI when referring to the evolving catalog as a whole or intentionally
+following its latest version. A metadata-only correction that does not change
+the payload or its scientific interpretation may be made by editing the
+published record metadata.
+
+No Zenodo version of `fis.overrides` exists yet. Release `20260730.2` is the
+planned initial deposit, so both DOI values remain pending until publication.
+The exact initial-deposit and later-revision steps are recorded in
+`zenodo/draft-metadata.md`.
+
+Zenodo guidance:
+
+- <https://help.zenodo.org/docs/deposit/manage-versions/>
+- <https://help.zenodo.org/docs/deposit/manage-files/>
+- <https://zenodo.org/help/versioning>
 
 ## Version History
 
@@ -38,10 +65,12 @@ The 48 additions are byte-identical to the deterministic output at public
 pipeline commit `ffd569dd1e733c5bd39bb2dd6050763d98e06a43`. Exactly 48 tracker
 rows have `status == resolved`; the other 33 are evidence only.
 
-Repository candidate `20260730.1` incorrectly presented those 48 additions as
-a standalone catalog. It was never deposited with Zenodo and has no DOI.
-Release `20260730.2` supersedes that unpublished candidate and restores the
-intended cumulative publication.
+Repository candidate `20260730.1` incorrectly contained only those 48
+additions and omitted the original base. It was never deposited with Zenodo and
+has no DOI. Release `20260730.2` supersedes that unpublished candidate and
+restores the intended cumulative publication. Because `20260730.1` was not
+published, it is not an earlier Zenodo version and does not start a separate
+DOI lineage.
 
 ## Catalog Components
 
@@ -49,8 +78,10 @@ intended cumulative publication.
   refreshed provenance.
 - `catalog/distance_resolution_v1_resolved.yaml` — the 48 reviewed additions.
 
-The files remain separate so their distinct provenance can be audited. Together
-they form one version of series `fis.overrides`.
+The files remain separate so their distinct provenance can be audited.
+Together they form the complete executable payload of release `20260730.2` in
+series `fis.overrides`; consumers must not treat either component as a
+standalone version.
 
 ## Pipeline Use
 

@@ -6,11 +6,10 @@ import hashlib
 import json
 import shutil
 import subprocess
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 from astropy.table import Table
@@ -24,6 +23,7 @@ PUBLICATION_EVIDENCE_FILENAME = "gaia_hip_pairing_evidence.parquet"
 PUBLICATION_REPORT_FILENAME = "gaia_hip_pairing_report.json"
 SUPPORT_PROVENANCE_FILENAME = "support_input_provenance.json"
 CHECKSUMS_FILENAME = "checksums.sha256"
+POST_PUBLICATION_TRACKING_PATHS = frozenset({"zenodo/published-record.toml"})
 
 ACQUISITION_EVIDENCE_FILES = {
     "package.json": "gaia_acquisition_package.json",
@@ -221,14 +221,24 @@ def assemble_pairing_publication(
 
 
 def regenerate_checksums(release_dir: Path, *, checksums_path: Path) -> None:
-    """Regenerate a complete SHA256 manifest for a publication directory."""
+    """Regenerate the immutable payload's complete SHA256 manifest.
+
+    Post-publication Zenodo tracking metadata is deliberately outside the
+    published payload because its identifiers do not exist until after the
+    immutable snapshot has been deposited.
+    """
 
     release_dir = Path(release_dir).resolve()
     checksums_path = Path(checksums_path).resolve()
     files = sorted(
         path
         for path in release_dir.rglob("*")
-        if path.is_file() and path.resolve() != checksums_path
+        if (
+            path.is_file()
+            and path.resolve() != checksums_path
+            and path.relative_to(release_dir).as_posix()
+            not in POST_PUBLICATION_TRACKING_PATHS
+        )
     )
     lines = [
         f"{_sha256(path)}  {path.relative_to(release_dir).as_posix()}"

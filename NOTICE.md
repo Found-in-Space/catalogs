@@ -11,6 +11,10 @@ publication repository.
 - Catalog publications under `publications/` are versioned academic data works.
   Each publication may carry its own `LICENSE.txt`, `NOTICE.md`, citation
   metadata, and upstream attribution requirements.
+- Published release payloads are immutable. When a catalog declares itself an
+  evolving series, substantive revisions are published through Zenodo's
+  **New version** workflow in one lineage, with a release-specific Version DOI
+  and a stable series Concept DOI.
 - Source catalog data and derived evidence may remain subject to the terms of
   the upstream data providers. A publication license does not remove or replace
   those upstream terms.

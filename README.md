@@ -21,6 +21,11 @@ Status: public repository with initial catalog publication work in progress.
 - This repo publishes curated inputs and the provenance needed to understand
   them, not raw source catalogues or scratch build outputs.
 - Each publication should explain itself from its own directory.
+- A publication manifest should say whether the release is a standalone work
+  or an immutable version of an evolving series.
+- Every published release is immutable. Revisions to an evolving catalog use
+  Zenodo's **New version** workflow in the same lineage: each release receives
+  a Version DOI and the series retains one stable Concept DOI.
 - Generated records, such as counts and checksums, should be generated from the
   final files rather than hand-edited.
 - External code used to create a publication should be referenced by repository

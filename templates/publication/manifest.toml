@@ -1,10 +1,18 @@
 format_version = 1
 release = "YYYYMMDD.N"
+series_id = "CHANGE_ME"
 title = "CHANGE_ME"
 status = "draft"
+publication_model = "CHANGE_ME: standalone or evolving-versioned-series"
 
 [summary]
 description = "CHANGE_ME"
+
+[lifecycle]
+release_snapshot = "immutable"
+zenodo_relationship = "CHANGE_ME: initial-record, new-version, or standalone-record"
+version_doi_status = "assigned-on-publication"
+concept_doi_status = "CHANGE_ME"
 
 [inputs]
 # Record the inputs that matter for this publication.

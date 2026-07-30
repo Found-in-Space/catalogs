@@ -19,6 +19,12 @@ Use a new release number whenever a separate product is published or an
 existing publication changes. Do not reuse one release ID for separate
 products.
 
+For an evolving catalog, every repository release ID names one immutable
+snapshot. The release ID is not the Zenodo Concept DOI and does not create a
+new Zenodo lineage. Publish later snapshots with Zenodo's **New version**
+workflow so each has a new Version DOI while the series keeps its stable
+Concept DOI.
+
 ## First Planned Releases
 
 - `20260515.1` - first clean mag-11 build publication.

@@ -20,6 +20,27 @@ represent the intended cumulative publication. It was not deposited with
 Zenodo and has no DOI. This release supersedes that unpublished repository
 candidate.
 
+## Publication Lifecycle Decision
+
+`fis.overrides` is maintained as one evolving Zenodo version chain. Every
+published release is immutable and cumulative unless its manifest explicitly
+states otherwise. Changes to executable rows, evidence, checksums, selection
+rules, or methodology require a new repository release and Zenodo's **New
+version** workflow in the existing lineage. Metadata may be edited in place
+only when neither the release payload nor its scientific interpretation
+changes.
+
+Every published snapshot has a distinct Version DOI. The Concept DOI remains
+stable across the chain. Controlled runs must record the release ID,
+`checksums.sha256`, and Version DOI. The Concept DOI is for the evolving series
+or latest-version references, not for pinning reproducible inputs.
+
+No earlier `fis.overrides` Zenodo record exists. Consequently, `20260730.2`
+will be the initial deposit rather than a Zenodo revision. Publishing it will
+assign both the first Version DOI and the stable Concept DOI. Subsequent
+releases must use **New version** on that record and must not create a separate
+catalog record.
+
 ## Public Source State
 
 Legacy Alpha source:
@@ -170,7 +191,7 @@ local pipeline checkout.
 Final validation results:
 
 - deterministic rebuild from published evidence: passed;
-- complete catalogs test suite: `14 passed`;
+- complete catalogs test suite: `16 passed`;
 - Python byte-compilation of `src` and `tests`: passed;
 - release checksum verification: every file passed;
 - repository diff whitespace/error check: passed; and

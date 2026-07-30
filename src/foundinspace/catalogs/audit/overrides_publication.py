@@ -23,6 +23,19 @@ RELEASE = "20260730.2"
 SERIES_ID = "fis.overrides"
 LEGACY_PIPELINE_COMMIT = "74635226a917ec4c2c1c08c46b38cd05d227732a"
 DISTANCE_PIPELINE_COMMIT = "ffd569dd1e733c5bd39bb2dd6050763d98e06a43"
+LIFECYCLE_POLICY = {
+    "release_snapshot": "immutable",
+    "zenodo_record_model": "single-version-chain",
+    "content_change_process": "zenodo-new-version",
+    "metadata_only_change_process": "edit-published-record-metadata",
+    "version_doi_policy": "new-for-each-published-version",
+    "concept_doi_policy": "stable-across-version-chain",
+    "citation_policy": "version-doi-for-reproducibility",
+    "initial_zenodo_deposit": True,
+    "prior_zenodo_version_exists": False,
+    "version_doi_status": "assigned-on-publication",
+    "concept_doi_status": "assigned-on-first-publication",
+}
 
 ALPHA_COMPONENT = {
     "path": "catalog/alpha_cen.yaml",
@@ -236,6 +249,7 @@ def assemble_overrides_publication(
         "release": RELEASE,
         "series_id": SERIES_ID,
         "supersedes_unpublished_release_candidate": "20260730.1",
+        "publication_lifecycle": LIFECYCLE_POLICY,
         "catalog_files": {
             ALPHA_COMPONENT["path"]: {
                 "rows": len(alpha_stars),
@@ -263,6 +277,9 @@ def assemble_overrides_publication(
             "runtime_loader_passed": True,
             "pinned_public_pipeline_dependency_verified": True,
             "all_rows_pass_quality_checks": True,
+            "immutable_release_snapshot_declared": True,
+            "single_zenodo_version_chain_declared": True,
+            "version_and_concept_doi_roles_declared": True,
         },
         "legacy_override_ids": sorted(EXPECTED_LEGACY_IDS),
         "retired_binary_override_ids": sorted(RETIRED_BINARY_IDS),
@@ -273,6 +290,7 @@ def assemble_overrides_publication(
         "format_version": 1,
         "release": RELEASE,
         "series_id": SERIES_ID,
+        "publication_lifecycle": LIFECYCLE_POLICY,
         "legacy_base": {
             "repository": "https://github.com/Found-in-Space/pipeline",
             "commit": LEGACY_PIPELINE_COMMIT,
@@ -718,6 +736,23 @@ def _validate_manifest(
 ) -> None:
     _require_equal("manifest release", manifest.get("release"), RELEASE)
     _require_equal("manifest series", manifest.get("series_id"), SERIES_ID)
+    _require_equal(
+        "manifest publication model",
+        manifest.get("publication_model"),
+        "evolving-versioned-series",
+    )
+    _require_equal(
+        "manifest release contents model",
+        manifest.get("release_contents_model"),
+        "cumulative",
+    )
+    lifecycle = manifest.get("lifecycle", {})
+    for field, expected in LIFECYCLE_POLICY.items():
+        _require_equal(
+            f"manifest lifecycle {field}",
+            lifecycle.get(field),
+            expected,
+        )
     scope = manifest.get("scope", {})
     for field in (
         "total_override_rows",

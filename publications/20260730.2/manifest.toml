@@ -3,11 +3,25 @@ release = "20260730.2"
 series_id = "fis.overrides"
 title = "Found in Space stellar overrides"
 status = "release-candidate"
-publication_model = "additive-version"
+publication_model = "evolving-versioned-series"
+release_contents_model = "cumulative"
 supersedes_unpublished_release_candidate = "20260730.1"
 
 [summary]
 description = "The original three Alpha Centauri overrides plus 48 reviewed distance replacements, published together as one cumulative 51-row version."
+
+[lifecycle]
+release_snapshot = "immutable"
+zenodo_record_model = "single-version-chain"
+content_change_process = "zenodo-new-version"
+metadata_only_change_process = "edit-published-record-metadata"
+version_doi_policy = "new-for-each-published-version"
+concept_doi_policy = "stable-across-version-chain"
+citation_policy = "version-doi-for-reproducibility"
+initial_zenodo_deposit = true
+prior_zenodo_version_exists = false
+version_doi_status = "assigned-on-publication"
+concept_doi_status = "assigned-on-first-publication"
 
 [scope]
 total_override_rows = 51
@@ -75,6 +89,7 @@ checksums = "checksums.sha256"
 license = "LICENSE.txt"
 notice = "NOTICE.md"
 references = "REFERENCES.md"
+zenodo_draft_metadata = "zenodo/draft-metadata.md"
 
 [consumer_contract]
 pipeline_config_key = "overrides.source_paths"

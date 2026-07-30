@@ -40,5 +40,9 @@ Suggested publication attribution:
 Found in Space, "Found in Space stellar overrides", publication
 20260730.2 (2026).
 
+After Zenodo publication, cite the release-specific Version DOI when exact
+reproducibility matters. Cite the stable Concept DOI only when referring to the
+evolving `fis.overrides` series or intentionally following its latest version.
+
 Scientific use should additionally cite the row-level sources recorded in the
 catalog and summarized in REFERENCES.md.

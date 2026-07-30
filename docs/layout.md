@@ -20,6 +20,11 @@ tests/
 decides for itself what files it needs: data, configs, evidence, reports,
 generated counts, checksums, or something else.
 
+A release directory becomes an immutable snapshot when published. An evolving
+catalog uses a new adjacent release directory for each revision and records the
+same stable series identity in every manifest. The corresponding Zenodo
+deposits remain in one version chain.
+
 Do not split one publication across top-level folders by artifact type. If a
 publication needs supporting evidence, put that evidence inside the
 publication.
@@ -37,6 +42,11 @@ formalizing.
 once we know what is useful.
 
 `src/` and `tests/` contain local maintenance tooling.
+
+Post-publication Zenodo tracking metadata may be stored as
+`zenodo/published-record.toml` inside the release directory for repository
+bookkeeping. Because the identifiers do not exist until publication, that file
+is not part of the deposited payload or its `checksums.sha256`.
 
 ## Do Not Store
 

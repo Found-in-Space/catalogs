@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import hashlib
 import json
+import tomllib
 from pathlib import Path
 
 import pandas as pd
-import tomllib
 import yaml
+
+from foundinspace.catalogs.audit.publication import regenerate_checksums
 from foundinspace.pipeline.overrides.pipeline import build_overrides_dataframe
 
 RELEASE_DIR = Path(__file__).parents[1] / "publications" / "20260730.2"
@@ -42,6 +44,21 @@ def test_override_publication_scope_selection_and_runtime_contract():
 
     assert manifest["release"] == "20260730.2"
     assert manifest["series_id"] == "fis.overrides"
+    assert manifest["publication_model"] == "evolving-versioned-series"
+    assert manifest["release_contents_model"] == "cumulative"
+    assert manifest["lifecycle"] == {
+        "release_snapshot": "immutable",
+        "zenodo_record_model": "single-version-chain",
+        "content_change_process": "zenodo-new-version",
+        "metadata_only_change_process": "edit-published-record-metadata",
+        "version_doi_policy": "new-for-each-published-version",
+        "concept_doi_policy": "stable-across-version-chain",
+        "citation_policy": "version-doi-for-reproducibility",
+        "initial_zenodo_deposit": True,
+        "prior_zenodo_version_exists": False,
+        "version_doi_status": "assigned-on-publication",
+        "concept_doi_status": "assigned-on-first-publication",
+    }
     assert manifest["scope"]["total_override_rows"] == 51
     assert manifest["scope"]["retained_legacy_rows"] == 3
     assert manifest["scope"]["reviewed_addition_rows"] == 48
@@ -218,6 +235,14 @@ def test_override_publication_evidence_build_and_per_row_quality():
     assert counts["excluded_sun_rows"] == 1
     assert counts["actions"] == {"replace": 51}
     assert all(publication_report["validation"].values())
+    lifecycle = publication_report["publication_lifecycle"]
+    assert lifecycle["release_snapshot"] == "immutable"
+    assert lifecycle["zenodo_record_model"] == "single-version-chain"
+    assert lifecycle["content_change_process"] == "zenodo-new-version"
+    assert lifecycle["version_doi_policy"] == (
+        "new-for-each-published-version"
+    )
+    assert lifecycle["concept_doi_policy"] == "stable-across-version-chain"
 
     assert quality_report["summary"]["rows_checked"] == 51
     assert quality_report["summary"]["rows_passed"] == 51
@@ -256,6 +281,62 @@ def test_override_publication_evidence_build_and_per_row_quality():
         provenance["current_pairing_review"]["supplemental_pairing_map_used"]
         is False
     )
+    assert provenance["publication_lifecycle"] == lifecycle
+
+
+def test_override_publication_documents_version_lifecycle_and_zenodo_process():
+    required_phrases = {
+        "README.md": (
+            "evolving, versioned catalog",
+            "immutable snapshot",
+            "New version",
+            "Version DOI",
+            "Concept DOI",
+        ),
+        "NOTICE.md": (
+            "evolving catalog",
+            "immutable snapshot",
+            "New version",
+            "Version DOI",
+            "Concept DOI",
+        ),
+        "REFERENCES.md": (
+            "evolving `fis.overrides` catalog",
+            "Version DOI",
+            "Concept DOI",
+            "New version",
+        ),
+        "run_log.md": (
+            "one evolving Zenodo version chain",
+            "immutable",
+            "New version",
+            "Version DOI",
+            "Concept DOI",
+        ),
+        "LICENSE.txt": (
+            "Version DOI",
+            "Concept DOI",
+            "evolving `fis.overrides` series",
+        ),
+        "zenodo/draft-metadata.md": (
+            "initial Zenodo deposit",
+            "immutable",
+            "New version",
+            "Version DOI",
+            "Concept DOI",
+            "No earlier `fis.overrides` record exists",
+        ),
+    }
+    for relative_path, phrases in required_phrases.items():
+        text = (RELEASE_DIR / relative_path).read_text(encoding="utf-8")
+        for phrase in phrases:
+            assert phrase in text, f"{relative_path} is missing {phrase!r}"
+
+    release_text = "\n".join(
+        (RELEASE_DIR / relative_path).read_text(encoding="utf-8")
+        for relative_path in required_phrases
+    )
+    assert "one-off controlled rendering dataset" not in release_text
 
 
 def test_override_publication_checksums_cover_every_release_file():
@@ -268,9 +349,32 @@ def test_override_publication_checksums_cover_every_release_file():
     expected_files = {
         path.relative_to(RELEASE_DIR).as_posix()
         for path in RELEASE_DIR.rglob("*")
-        if path.is_file() and path != checksum_path
+        if (
+            path.is_file()
+            and path != checksum_path
+            and path.relative_to(RELEASE_DIR).as_posix()
+            != "zenodo/published-record.toml"
+        )
     }
     assert set(recorded) == expected_files
 
     for relative_path, expected_digest in recorded.items():
         assert _sha256(RELEASE_DIR / relative_path) == expected_digest
+
+
+def test_checksums_exclude_post_publication_zenodo_tracking(tmp_path):
+    release_dir = tmp_path / "20260730.2"
+    zenodo_dir = release_dir / "zenodo"
+    zenodo_dir.mkdir(parents=True)
+    (release_dir / "payload.txt").write_text("payload\n", encoding="utf-8")
+    (zenodo_dir / "published-record.toml").write_text(
+        'record_doi = "assigned-after-publication"\n',
+        encoding="utf-8",
+    )
+    checksum_path = release_dir / "checksums.sha256"
+
+    regenerate_checksums(release_dir, checksums_path=checksum_path)
+
+    checksum_text = checksum_path.read_text(encoding="utf-8")
+    assert "payload.txt" in checksum_text
+    assert "published-record.toml" not in checksum_text
