@@ -1,0 +1,44 @@
+Found in Space original material
+================================
+
+Copyright (c) 2026 Found in Space contributors.
+
+The original prose, documentation, organization, and YAML catalog schema
+authored for this publication are licensed under the Creative Commons
+Attribution 4.0 International licence (CC BY 4.0):
+
+https://creativecommons.org/licenses/by/4.0/
+
+You may share and adapt that original material for any purpose provided that
+appropriate attribution is given, a link to the licence is supplied, and
+changes are indicated.
+
+Scientific facts, catalog-derived evidence, and cited publications
+==================================================================
+
+This licence does not grant new rights over Gaia, Hipparcos, SIMBAD, VizieR,
+StarHorse, other upstream catalog material, or the cited scientific
+publications. Their terms, attribution requirements, and rights remain with
+their respective providers and rights holders.
+
+The publication records compact review evidence, factual values, citations,
+and Found in Space selection/provenance structure. It does not reproduce the
+cited papers, tables, figures, or substantial copyrighted expression.
+
+No warranty
+===========
+
+Unless required by applicable law, this publication is provided without
+warranties or conditions of any kind. Consumers are responsible for deciding
+whether these opt-in rendering corrections are appropriate for their use.
+
+Attribution
+===========
+
+Suggested publication attribution:
+
+Found in Space, "Reviewed stellar distance overrides", publication
+20260730.1 (2026).
+
+Scientific use should additionally cite the row-level sources recorded in the
+catalog and summarized in REFERENCES.md.
