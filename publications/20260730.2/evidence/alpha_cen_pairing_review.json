@@ -1,0 +1,58 @@
+{
+  "format_version": 1,
+  "review_date": "2026-07-30",
+  "policy": "Gaia DR3 hipparcos2_best_neighbour remains the only automatic Gaia-Hipparcos pairing authority.",
+  "source": {
+    "catalog": "gaiadr3.hipparcos2_best_neighbour",
+    "raw_artifact": "gaia_hipparcos2_best_neighbour.ecsv",
+    "raw_sha256": "2590acdbfd6016527dcb028a76a4ee9ea7775e6c3161924f2a9844b1ce221159",
+    "raw_rows": 99525,
+    "processed_artifact": "gaia_hip_map.parquet",
+    "processed_sha256": "6c81f00ca81a9c0124a95b01702e5712f63575320916b479aab1fb9841c70561",
+    "processed_rows": 99525
+  },
+  "query": {
+    "field": "original_ext_source_id",
+    "values": [
+      70890,
+      71681,
+      71683
+    ]
+  },
+  "results": [
+    {
+      "override_id": "manual.alpha_cen_a.replace.v1",
+      "hip_source_id": 71683,
+      "mapping_found": false,
+      "gaia_source_id": null,
+      "number_of_neighbours": null,
+      "angular_distance_arcsec": null,
+      "application_note": "The HIP-targeted replacement applies to the retained Hipparcos row; no Gaia row is suppressed through H2BN for this target."
+    },
+    {
+      "override_id": "manual.alpha_cen_b.replace.v1",
+      "hip_source_id": 71681,
+      "mapping_found": true,
+      "gaia_source_id": "5877748442128924544",
+      "number_of_neighbours": 1,
+      "angular_distance_arcsec": 0.46895134,
+      "application_note": "The HIP-targeted replacement participates in the normal H2BN merge and suppresses the paired Gaia row."
+    },
+    {
+      "override_id": "manual.proxima_cen.replace.v1",
+      "hip_source_id": 70890,
+      "mapping_found": true,
+      "gaia_source_id": "5853498713190525696",
+      "number_of_neighbours": 1,
+      "angular_distance_arcsec": 0.042399194,
+      "application_note": "The HIP-targeted replacement participates in the normal H2BN merge and suppresses the paired Gaia row; the historical claim that Proxima was missing from H2BN is obsolete."
+    }
+  ],
+  "validation": {
+    "three_targets_reviewed": true,
+    "mapped_targets": 2,
+    "unmapped_targets": 1,
+    "supplemental_pairing_map_used": false,
+    "pairing_policy_changed": false
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "format_version": 1,
+  "release": "20260730.2",
+  "series_id": "fis.overrides",
+  "supersedes_unpublished_release_candidate": "20260730.1",
+  "catalog_files": {
+    "catalog/alpha_cen.yaml": {
+      "rows": 3,
+      "sha256": "641875b03b082cd124b1e17b11cf72a01c5b0be8013cb428d110fa906871f3a9",
+      "role": "retained legacy base with refreshed provenance"
+    },
+    "catalog/distance_resolution_v1_resolved.yaml": {
+      "rows": 48,
+      "sha256": "a53122ace82402969eace466adc9178ab184e7c4758ddd3e90a69372985a43c4",
+      "role": "reviewed additions"
+    }
+  },
+  "counts": {
+    "total_override_rows": 51,
+    "retained_legacy_rows": 3,
+    "reviewed_addition_rows": 48,
+    "excluded_provisional_rows": 33,
+    "excluded_retired_binary_rows": 2,
+    "excluded_sun_rows": 1,
+    "runtime_override_rows": 51,
+    "quality_checked_rows": 51,
+    "quality_passed_rows": 51,
+    "actions": {
+      "replace": 51
+    }
+  },
+  "validation": {
+    "legacy_source_evidence_matches_public_history": true,
+    "legacy_executable_projection_unchanged": true,
+    "legacy_provenance_refreshed": true,
+    "current_best_neighbour_state_reviewed": true,
+    "distance_component_matches_public_source": true,
+    "resolved_tracker_targets_match_distance_component": true,
+    "override_ids_unique": true,
+    "target_keys_unique": true,
+    "retired_binary_overrides_absent": true,
+    "sun_absent": true,
+    "runtime_loader_passed": true,
+    "pinned_public_pipeline_dependency_verified": true,
+    "all_rows_pass_quality_checks": true
+  },
+  "legacy_override_ids": [
+    "manual.alpha_cen_a.replace.v1",
+    "manual.alpha_cen_b.replace.v1",
+    "manual.proxima_cen.replace.v1"
+  ],
+  "retired_binary_override_ids": [
+    "manual.procyon_b.replace.v1",
+    "manual.sirius_b.replace.v1"
+  ],
+  "evidence_sha256": {
+    "distance_resolution_tracker": {
+      "path": "evidence/distance-resolution-v1.csv",
+      "sha256": "f5b07f745de8ca2521ae615b5f57f3fc9d8004dc2e3717250909ab989466120f"
+    },
+    "candidate_review": {
+      "path": "evidence/external-distance-required.parquet",
+      "sha256": "3461a681183100952105e27590929ad04d7a926eb30fe869820555eee44acaf7"
+    },
+    "pipeline_candidates": {
+      "path": "evidence/current-pipeline-candidates.parquet",
+      "sha256": "0e5337f992c1a1ce0faa66136da0f2d9cb66a92ffb64ff94d723c5f45af4dbe2"
+    },
+    "gaia_staged": {
+      "path": "evidence/gaia-staged.parquet",
+      "sha256": "91f7c5287ffb04ea5b1250bbc97fee238eb03e54aac8cc44596202e025fd83a4"
+    },
+    "hip_staged": {
+      "path": "evidence/hip-staged.parquet",
+      "sha256": "f0502f6bd9dc04b64605c82245d461d712a0505ac7ef639e9945f646b3eeb94b"
+    },
+    "alpha_cen_legacy_source": {
+      "path": "evidence/alpha_cen_legacy_source.yaml",
+      "sha256": "8626f9a9f4a4550921108280a1092e0190503f4912a77549e1e50f228bbafb9f"
+    },
+    "alpha_cen_pairing_review": {
+      "path": "evidence/alpha_cen_pairing_review.json",
+      "sha256": "a280e151bec0ed39ee340d6df4f7a1080f876c678679275c91dd6a23c10cc445"
+    }
+  }
+}

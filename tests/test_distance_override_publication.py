@@ -9,45 +9,67 @@ import tomllib
 import yaml
 from foundinspace.pipeline.overrides.pipeline import build_overrides_dataframe
 
-RELEASE_DIR = Path(__file__).parents[1] / "publications" / "20260730.1"
-CATALOG_PATH = RELEASE_DIR / "catalog" / "distance_resolution_v1_resolved.yaml"
+RELEASE_DIR = Path(__file__).parents[1] / "publications" / "20260730.2"
+ALPHA_PATH = RELEASE_DIR / "catalog" / "alpha_cen.yaml"
+DISTANCE_PATH = RELEASE_DIR / "catalog" / "distance_resolution_v1_resolved.yaml"
+CATALOG_PATHS = (ALPHA_PATH, DISTANCE_PATH)
+EXPECTED_LEGACY_IDS = {
+    "manual.alpha_cen_a.replace.v1",
+    "manual.alpha_cen_b.replace.v1",
+    "manual.proxima_cen.replace.v1",
+}
+RETIRED_BINARY_IDS = {
+    "manual.procyon_b.replace.v1",
+    "manual.sirius_b.replace.v1",
+}
 
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def test_distance_override_publication_selection_and_runtime_contract():
+def _stars(path: Path) -> list[dict]:
+    return yaml.safe_load(path.read_text(encoding="utf-8"))["stars"]
+
+
+def test_override_publication_scope_selection_and_runtime_contract():
     with (RELEASE_DIR / "manifest.toml").open("rb") as stream:
         manifest = tomllib.load(stream)
-    catalog = yaml.safe_load(CATALOG_PATH.read_text(encoding="utf-8"))
+    alpha_stars = _stars(ALPHA_PATH)
+    distance_stars = _stars(DISTANCE_PATH)
+    all_stars = [*alpha_stars, *distance_stars]
     tracker = pd.read_csv(RELEASE_DIR / "evidence" / "distance-resolution-v1.csv")
 
-    assert manifest["release"] == "20260730.1"
+    assert manifest["release"] == "20260730.2"
+    assert manifest["series_id"] == "fis.overrides"
+    assert manifest["scope"]["total_override_rows"] == 51
+    assert manifest["scope"]["retained_legacy_rows"] == 3
+    assert manifest["scope"]["reviewed_addition_rows"] == 48
     assert manifest["scope"]["tracker_rows"] == 81
-    assert manifest["scope"]["resolved_override_rows"] == 48
     assert manifest["scope"]["excluded_provisional_rows"] == 33
-    assert manifest["scope"]["selection"] == "status == resolved"
+    assert manifest["scope"]["excluded_retired_binary_rows"] == 2
+    assert manifest["scope"]["excluded_sun_rows"] == 1
+    assert manifest["scope"]["replace_actions"] == 51
+    assert manifest["scope"]["quality_checked_rows"] == 51
     assert manifest["scope"]["includes_sun"] is False
     assert manifest["scope"]["changes_pairing_policy"] is False
 
-    assert catalog["dataset"]["dataset_id"] == "fis.distance-resolution-v1.resolved"
-    assert catalog["dataset"]["resolved_row_count"] == 48
-    assert catalog["dataset"]["excluded_provisional_row_count"] == 33
-    stars = catalog["stars"]
-    assert len(stars) == 48
-    assert len({star["override_id"] for star in stars}) == 48
-    assert len({(star["source"], str(star["source_id"])) for star in stars}) == 48
-    assert {star["action"] for star in stars} == {"replace"}
-    assert {star["override_policy_version"] for star in stars} == {
-        "distance_resolution_v1"
-    }
+    assert len(alpha_stars) == 3
+    assert len(distance_stars) == 48
+    assert len(all_stars) == 51
+    assert len({star["override_id"] for star in all_stars}) == 51
+    assert len(
+        {(star["source"], str(star["source_id"])) for star in all_stars}
+    ) == 51
+    assert {star["action"] for star in all_stars} == {"replace"}
+    assert not RETIRED_BINARY_IDS.intersection(
+        star["override_id"] for star in all_stars
+    )
     assert not any(
         star["source"] == "manual" or str(star["source_id"]).lower() == "sun"
-        for star in stars
+        for star in all_stars
     )
 
-    assert len(tracker) == 81
     assert tracker["status"].value_counts().to_dict() == {
         "resolved": 48,
         "provisional": 33,
@@ -56,19 +78,105 @@ def test_distance_override_publication_selection_and_runtime_contract():
         (str(row.official_source), str(row.official_source_id))
         for row in tracker.loc[tracker["status"] == "resolved"].itertuples()
     }
-    published = {(star["source"], str(star["source_id"])) for star in stars}
-    assert published == tracker_resolved
+    published_additions = {
+        (star["source"], str(star["source_id"])) for star in distance_stars
+    }
+    assert published_additions == tracker_resolved
 
-    runtime = build_overrides_dataframe(source_paths=(CATALOG_PATH,))
-    assert len(runtime) == 48
+    runtime = build_overrides_dataframe(source_paths=CATALOG_PATHS)
+    assert len(runtime) == 51
     assert set(runtime["action"]) == {"replace"}
-    assert set(runtime["override_policy_version"]) == {"distance_resolution_v1"}
+    assert set(runtime["override_id"]) == {
+        star["override_id"] for star in all_stars
+    }
 
 
-def test_distance_override_publication_evidence_and_build_report():
-    catalog = yaml.safe_load(CATALOG_PATH.read_text(encoding="utf-8"))
+def test_legacy_alpha_values_history_pairing_and_references():
+    alpha_stars = _stars(ALPHA_PATH)
+    historical_stars = _stars(
+        RELEASE_DIR / "evidence" / "alpha_cen_legacy_source.yaml"
+    )
+    historical_by_id = {
+        star["override_id"]: star for star in historical_stars
+    }
+    assert set(historical_by_id) == EXPECTED_LEGACY_IDS
+    assert (
+        _sha256(RELEASE_DIR / "evidence" / "alpha_cen_legacy_source.yaml")
+        == "8626f9a9f4a4550921108280a1092e0190503f4912a77549e1e50f228bbafb9f"
+    )
+
+    executable_fields = {
+        "override_id",
+        "action",
+        "source",
+        "source_id",
+        "override_reason",
+        "override_policy_version",
+        "ra_deg",
+        "dec_deg",
+        "r_pc",
+        "mag_abs",
+        "teff",
+        "photometry_band",
+        "photometry_quality",
+        "photometry_value",
+    }
+    for star in alpha_stars:
+        historical = historical_by_id[star["override_id"]]
+        assert {
+            field: star[field] for field in executable_fields
+        } == {
+            field: historical[field] for field in executable_fields
+        }
+        provenance = star["provenance"]
+        assert provenance["review_status"] == "retained_after_current_state_review"
+        assert provenance["legacy_source"]["executable_values_changed"] is False
+        assert provenance["position"]["reference"]
+        assert provenance["selected_distance"]["reference"]
+        assert provenance["selected_distance"]["symmetric_error_pc"] > 0
+        assert provenance["preserved_payload"]["photometry_reference"]
+        assert provenance["preserved_payload"]["temperature_reference"]
+
+    pairing = json.loads(
+        (RELEASE_DIR / "evidence" / "alpha_cen_pairing_review.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert pairing["source"]["raw_rows"] == 99_525
+    assert (
+        pairing["source"]["raw_sha256"]
+        == "2590acdbfd6016527dcb028a76a4ee9ea7775e6c3161924f2a9844b1ce221159"
+    )
+    by_id = {row["override_id"]: row for row in pairing["results"]}
+    assert by_id["manual.alpha_cen_a.replace.v1"]["mapping_found"] is False
+    assert by_id["manual.alpha_cen_b.replace.v1"]["gaia_source_id"] == (
+        "5877748442128924544"
+    )
+    assert by_id["manual.proxima_cen.replace.v1"]["gaia_source_id"] == (
+        "5853498713190525696"
+    )
+    assert pairing["validation"]["supplemental_pairing_map_used"] is False
+    assert pairing["validation"]["pairing_policy_changed"] is False
+
+
+def test_override_publication_evidence_build_and_per_row_quality():
+    distance_catalog = yaml.safe_load(
+        DISTANCE_PATH.read_text(encoding="utf-8")
+    )
     build_report = json.loads(
-        (RELEASE_DIR / "evidence" / "build_report.json").read_text(encoding="utf-8")
+        (RELEASE_DIR / "evidence" / "build_report.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    publication_report = json.loads(
+        (RELEASE_DIR / "evidence" / "publication_build_report.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    quality_report = json.loads(
+        (RELEASE_DIR / "evidence" / "override_quality_report.json").read_text(
+            encoding="utf-8"
+        )
     )
     provenance = json.loads(
         (RELEASE_DIR / "evidence" / "input_provenance.json").read_text(
@@ -89,7 +197,7 @@ def test_distance_override_publication_evidence_and_build_report():
         "gaia_staged": RELEASE_DIR / "evidence" / "gaia-staged.parquet",
         "hip_staged": RELEASE_DIR / "evidence" / "hip-staged.parquet",
     }
-    embedded_inputs = catalog["dataset"]["inputs"]
+    embedded_inputs = distance_catalog["dataset"]["inputs"]
     for name, path in input_paths.items():
         digest = _sha256(path)
         assert embedded_inputs[name]["sha256"] == digest
@@ -99,16 +207,58 @@ def test_distance_override_publication_evidence_and_build_report():
     assert build_report["deterministic_rebuild_match"] is True
     assert build_report["yaml_rows"] == 48
     assert build_report["provisional_tracker_rows"] == 33
-    assert build_report["output_sha256"] == _sha256(CATALOG_PATH)
-    assert provenance["source_code"]["catalog_sha256"] == _sha256(CATALOG_PATH)
+    assert build_report["output_sha256"] == _sha256(DISTANCE_PATH)
+
+    counts = publication_report["counts"]
+    assert counts["total_override_rows"] == 51
+    assert counts["retained_legacy_rows"] == 3
+    assert counts["reviewed_addition_rows"] == 48
+    assert counts["excluded_provisional_rows"] == 33
+    assert counts["excluded_retired_binary_rows"] == 2
+    assert counts["excluded_sun_rows"] == 1
+    assert counts["actions"] == {"replace": 51}
+    assert all(publication_report["validation"].values())
+
+    assert quality_report["summary"]["rows_checked"] == 51
+    assert quality_report["summary"]["rows_passed"] == 51
+    assert quality_report["summary"]["rows_failed"] == 0
+    assert quality_report["summary"]["checks_per_row"] == 19
+    assert len(quality_report["rows"]) == 51
+    assert all(row["passed"] for row in quality_report["rows"])
+    assert all(
+        all(row["checks"].values()) for row in quality_report["rows"]
+    )
+    assert all(row["references"]["distance"] for row in quality_report["rows"])
+    assert all(row["references"]["position"] for row in quality_report["rows"])
+    assert all(row["references"]["photometry"] for row in quality_report["rows"])
+    assert all(row["references"]["temperature"] for row in quality_report["rows"])
+
     assert (
-        provenance["source_code"]["commit"]
+        provenance["legacy_base"]["source_sha256"]
+        == "8626f9a9f4a4550921108280a1092e0190503f4912a77549e1e50f228bbafb9f"
+    )
+    assert (
+        provenance["reviewed_addition"]["commit"]
         == "ffd569dd1e733c5bd39bb2dd6050763d98e06a43"
     )
     assert provenance["validation_environment"]["local_checkout_imported"] is False
+    assert provenance["validation_environment"]["direct_url_verified"] is True
+    assert (
+        provenance["validation_environment"]["requested_revision"]
+        == "ffd569dd1e733c5bd39bb2dd6050763d98e06a43"
+    )
+    assert (
+        provenance["validation_environment"]["resolved_commit"]
+        == "ffd569dd1e733c5bd39bb2dd6050763d98e06a43"
+    )
+    assert provenance["current_pairing_review"]["policy_changed"] is False
+    assert (
+        provenance["current_pairing_review"]["supplemental_pairing_map_used"]
+        is False
+    )
 
 
-def test_distance_override_publication_checksums_cover_every_release_file():
+def test_override_publication_checksums_cover_every_release_file():
     checksum_path = RELEASE_DIR / "checksums.sha256"
     recorded = {}
     for line in checksum_path.read_text(encoding="utf-8").splitlines():
