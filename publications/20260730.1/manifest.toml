@@ -1,0 +1,63 @@
+format_version = 1
+release = "20260730.1"
+title = "Reviewed stellar distance overrides"
+status = "release-candidate"
+
+[summary]
+description = "Forty-eight opt-in reviewed replacements for stellar rows whose automatic pipeline distance is unsuitable for the controlled Found in Space build."
+
+[scope]
+tracker_rows = 81
+resolved_override_rows = 48
+excluded_provisional_rows = 33
+selection = "status == resolved"
+action = "replace"
+override_policy_version = "distance_resolution_v1"
+automatic_application = false
+packaged_pipeline_default = false
+includes_sun = false
+changes_pairing_policy = false
+
+[inputs]
+pipeline_repository = "https://github.com/Found-in-Space/pipeline"
+pipeline_commit = "ffd569dd1e733c5bd39bb2dd6050763d98e06a43"
+pipeline_source_path = "tools/curation/distance_resolution_v1/distance-resolution-v1-resolved.yaml"
+pipeline_source_sha256 = "a53122ace82402969eace466adc9178ab184e7c4758ddd3e90a69372985a43c4"
+tracker = "evidence/distance-resolution-v1.csv"
+tracker_sha256 = "f5b07f745de8ca2521ae615b5f57f3fc9d8004dc2e3717250909ab989466120f"
+candidate_review = "evidence/external-distance-required.parquet"
+candidate_review_sha256 = "3461a681183100952105e27590929ad04d7a926eb30fe869820555eee44acaf7"
+pipeline_candidates = "evidence/current-pipeline-candidates.parquet"
+pipeline_candidates_sha256 = "0e5337f992c1a1ce0faa66136da0f2d9cb66a92ffb64ff94d723c5f45af4dbe2"
+gaia_staged = "evidence/gaia-staged.parquet"
+gaia_staged_sha256 = "91f7c5287ffb04ea5b1250bbc97fee238eb03e54aac8cc44596202e025fd83a4"
+hip_staged = "evidence/hip-staged.parquet"
+hip_staged_sha256 = "f0502f6bd9dc04b64605c82245d461d712a0505ac7ef639e9945f646b3eeb94b"
+
+[outputs]
+override_catalog = "catalog/distance_resolution_v1_resolved.yaml"
+build_report = "evidence/build_report.json"
+input_provenance = "evidence/input_provenance.json"
+readme = "README.md"
+run_log = "run_log.md"
+checksums = "checksums.sha256"
+license = "LICENSE.txt"
+notice = "NOTICE.md"
+references = "REFERENCES.md"
+
+[consumer_contract]
+pipeline_config_key = "overrides.source_paths"
+selection_must_be_explicit = true
+merge_precedence = "manual override"
+provisional_rows_must_not_be_applied = true
+
+[provenance]
+created_by = "Found in Space"
+created_at = "2026-07-30"
+deterministic_rebuild_match = true
+notes = "The executable catalog is copied without modification from the exact public pipeline commit and validated against the included compact evidence."
+
+[license]
+found_in_space_original_material = "CC-BY-4.0"
+upstream_terms_apply = true
+summary = "Found in Space original prose, organization, and catalog schema are CC BY 4.0; cited publications and upstream catalog-derived evidence retain their own rights and attribution requirements."

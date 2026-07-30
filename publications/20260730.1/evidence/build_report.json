@@ -1,0 +1,24 @@
+{
+  "candidate_review_identity_match": true,
+  "deterministic_rebuild_match": true,
+  "distance_match": true,
+  "identity_match": true,
+  "input_sha256": {
+    "candidate_review": "3461a681183100952105e27590929ad04d7a926eb30fe869820555eee44acaf7",
+    "distance_resolution_tracker": "f5b07f745de8ca2521ae615b5f57f3fc9d8004dc2e3717250909ab989466120f",
+    "gaia_staged": "91f7c5287ffb04ea5b1250bbc97fee238eb03e54aac8cc44596202e025fd83a4",
+    "hip_staged": "f0502f6bd9dc04b64605c82245d461d712a0505ac7ef639e9945f646b3eeb94b",
+    "pipeline_candidates": "0e5337f992c1a1ce0faa66136da0f2d9cb66a92ffb64ff94d723c5f45af4dbe2"
+  },
+  "max_apparent_magnitude_delta": 3.552713678800501e-15,
+  "notes_match": true,
+  "output_sha256": "a53122ace82402969eace466adc9178ab184e7c4758ddd3e90a69372985a43c4",
+  "payload_rows_cross_checked": 48,
+  "pipeline_candidate_rows_matched": 81,
+  "provisional_tracker_rows": 33,
+  "reference_match": true,
+  "resolved_tracker_rows": 48,
+  "tracker_rows": 81,
+  "uncertainty_match": true,
+  "yaml_rows": 48
+}
