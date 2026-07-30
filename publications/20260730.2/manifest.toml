@@ -1,0 +1,118 @@
+format_version = 1
+release = "20260730.2"
+series_id = "fis.overrides"
+title = "Found in Space stellar overrides"
+status = "release-candidate"
+publication_model = "evolving-versioned-series"
+release_contents_model = "cumulative"
+supersedes_unpublished_release_candidate = "20260730.1"
+
+[summary]
+description = "The original three Alpha Centauri overrides plus 48 reviewed distance replacements, published together as one cumulative 51-row version."
+
+[lifecycle]
+release_snapshot = "immutable"
+zenodo_record_model = "single-version-chain"
+content_change_process = "zenodo-new-version"
+metadata_only_change_process = "edit-published-record-metadata"
+version_doi_policy = "new-for-each-published-version"
+concept_doi_policy = "stable-across-version-chain"
+citation_policy = "version-doi-for-reproducibility"
+initial_zenodo_deposit = true
+prior_zenodo_version_exists = false
+version_doi_status = "assigned-on-publication"
+concept_doi_status = "assigned-on-first-publication"
+
+[scope]
+total_override_rows = 51
+retained_legacy_rows = 3
+reviewed_addition_rows = 48
+tracker_rows = 81
+excluded_provisional_rows = 33
+excluded_retired_binary_rows = 2
+excluded_sun_rows = 1
+replace_actions = 51
+quality_checked_rows = 51
+automatic_application = false
+packaged_pipeline_default = false
+includes_sun = false
+changes_pairing_policy = false
+
+[legacy_base]
+pipeline_repository = "https://github.com/Found-in-Space/pipeline"
+pipeline_commit = "74635226a917ec4c2c1c08c46b38cd05d227732a"
+source_path = "src/foundinspace/pipeline/overrides/data/alpha_cen.yaml"
+source_sha256 = "8626f9a9f4a4550921108280a1092e0190503f4912a77549e1e50f228bbafb9f"
+historical_evidence = "evidence/alpha_cen_legacy_source.yaml"
+catalog_path = "catalog/alpha_cen.yaml"
+catalog_sha256 = "641875b03b082cd124b1e17b11cf72a01c5b0be8013cb428d110fa906871f3a9"
+pairing_review = "evidence/alpha_cen_pairing_review.json"
+pairing_review_sha256 = "a280e151bec0ed39ee340d6df4f7a1080f876c678679275c91dd6a23c10cc445"
+executable_values_changed = false
+
+[reviewed_addition]
+pipeline_repository = "https://github.com/Found-in-Space/pipeline"
+pipeline_commit = "ffd569dd1e733c5bd39bb2dd6050763d98e06a43"
+pipeline_source_path = "tools/curation/distance_resolution_v1/distance-resolution-v1-resolved.yaml"
+catalog_path = "catalog/distance_resolution_v1_resolved.yaml"
+catalog_sha256 = "a53122ace82402969eace466adc9178ab184e7c4758ddd3e90a69372985a43c4"
+selection = "status == resolved"
+tracker = "evidence/distance-resolution-v1.csv"
+tracker_sha256 = "f5b07f745de8ca2521ae615b5f57f3fc9d8004dc2e3717250909ab989466120f"
+candidate_review = "evidence/external-distance-required.parquet"
+candidate_review_sha256 = "3461a681183100952105e27590929ad04d7a926eb30fe869820555eee44acaf7"
+pipeline_candidates = "evidence/current-pipeline-candidates.parquet"
+pipeline_candidates_sha256 = "0e5337f992c1a1ce0faa66136da0f2d9cb66a92ffb64ff94d723c5f45af4dbe2"
+gaia_staged = "evidence/gaia-staged.parquet"
+gaia_staged_sha256 = "91f7c5287ffb04ea5b1250bbc97fee238eb03e54aac8cc44596202e025fd83a4"
+hip_staged = "evidence/hip-staged.parquet"
+hip_staged_sha256 = "f0502f6bd9dc04b64605c82245d461d712a0505ac7ef639e9945f646b3eeb94b"
+
+[explicit_exclusions]
+retired_binary_override_ids = [
+  "manual.procyon_b.replace.v1",
+  "manual.sirius_b.replace.v1",
+]
+retired_on_pipeline_main_commit = "7fcb20d2506d50540445a6c990e9080e6faf6de6"
+sun_override_id = "manual.sun.add.v1"
+
+[outputs]
+alpha_cen_catalog = "catalog/alpha_cen.yaml"
+distance_resolution_catalog = "catalog/distance_resolution_v1_resolved.yaml"
+distance_component_build_report = "evidence/build_report.json"
+publication_build_report = "evidence/publication_build_report.json"
+override_quality_report = "evidence/override_quality_report.json"
+input_provenance = "evidence/input_provenance.json"
+readme = "README.md"
+run_log = "run_log.md"
+checksums = "checksums.sha256"
+license = "LICENSE.txt"
+notice = "NOTICE.md"
+references = "REFERENCES.md"
+zenodo_draft_metadata = "zenodo/draft-metadata.md"
+
+[consumer_contract]
+pipeline_config_key = "overrides.source_paths"
+selection_must_be_explicit = true
+all_two_catalog_paths_required = true
+merge_precedence = "manual override"
+legacy_override_ids_must_be_retained = true
+published_best_neighbour_only = true
+supplemental_pairing_map_used = false
+provisional_rows_must_not_be_applied = true
+retired_binary_rows_must_not_be_applied = true
+sun_must_not_be_applied = true
+
+[provenance]
+created_by = "Found in Space"
+created_at = "2026-07-30"
+historical_legacy_source_matches_public_history = true
+legacy_executable_projection_unchanged = true
+legacy_provenance_refreshed = true
+distance_component_deterministic_rebuild_match = true
+notes = "The publication validates the three retained legacy records and 48 reviewed additions through a pinned public pipeline dependency. The historical Alpha source is preserved byte-for-byte; the executable publication copy adds current references and pairing provenance without changing executable values."
+
+[license]
+found_in_space_original_material = "CC-BY-4.0"
+upstream_terms_apply = true
+summary = "Found in Space original prose, organization, and catalog schema are CC BY 4.0; cited publications and upstream catalog-derived evidence retain their own rights and attribution requirements."

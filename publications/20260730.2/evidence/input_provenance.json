@@ -1,0 +1,122 @@
+{
+  "format_version": 1,
+  "release": "20260730.2",
+  "series_id": "fis.overrides",
+  "publication_lifecycle": {
+    "release_snapshot": "immutable",
+    "zenodo_record_model": "single-version-chain",
+    "content_change_process": "zenodo-new-version",
+    "metadata_only_change_process": "edit-published-record-metadata",
+    "version_doi_policy": "new-for-each-published-version",
+    "concept_doi_policy": "stable-across-version-chain",
+    "citation_policy": "version-doi-for-reproducibility",
+    "initial_zenodo_deposit": true,
+    "prior_zenodo_version_exists": false,
+    "version_doi_status": "assigned-on-publication",
+    "concept_doi_status": "assigned-on-first-publication"
+  },
+  "legacy_base": {
+    "repository": "https://github.com/Found-in-Space/pipeline",
+    "commit": "74635226a917ec4c2c1c08c46b38cd05d227732a",
+    "commit_time": "2026-07-29T09:41:55+01:00",
+    "source_path": "src/foundinspace/pipeline/overrides/data/alpha_cen.yaml",
+    "source_sha256": "8626f9a9f4a4550921108280a1092e0190503f4912a77549e1e50f228bbafb9f",
+    "published_historical_evidence": "evidence/alpha_cen_legacy_source.yaml",
+    "publication_catalog_path": "catalog/alpha_cen.yaml",
+    "publication_catalog_sha256": "641875b03b082cd124b1e17b11cf72a01c5b0be8013cb428d110fa906871f3a9",
+    "retained_override_rows": 3,
+    "transformation": "Executable fields and override IDs are unchanged. Stale pairing prose was replaced and structured row-level provenance was added."
+  },
+  "current_pairing_review": {
+    "catalog": "gaiadr3.hipparcos2_best_neighbour",
+    "evidence_path": "evidence/alpha_cen_pairing_review.json",
+    "evidence_sha256": "a280e151bec0ed39ee340d6df4f7a1080f876c678679275c91dd6a23c10cc445",
+    "policy_changed": false,
+    "supplemental_pairing_map_used": false
+  },
+  "reviewed_addition": {
+    "repository": "https://github.com/Found-in-Space/pipeline",
+    "commit": "ffd569dd1e733c5bd39bb2dd6050763d98e06a43",
+    "commit_time": "2026-07-30T12:02:20+02:00",
+    "catalog_source_path": "tools/curation/distance_resolution_v1/distance-resolution-v1-resolved.yaml",
+    "catalog_path": "catalog/distance_resolution_v1_resolved.yaml",
+    "catalog_sha256": "a53122ace82402969eace466adc9178ab184e7c4758ddd3e90a69372985a43c4",
+    "rows": 48,
+    "build_entrypoint": "tools.curation.distance_resolution_v1.build_overrides_cli"
+  },
+  "explicit_exclusions": {
+    "retired_binary_component": {
+      "historical_path": "src/foundinspace/pipeline/overrides/data/binaries.yaml",
+      "historical_sha256": "2f752a0b38d3e5ad123199a97557b68fc0120521ba006e5c352bc8e0b54ec7d7",
+      "override_ids": [
+        "manual.procyon_b.replace.v1",
+        "manual.sirius_b.replace.v1"
+      ],
+      "retired_on_main_commit": "7fcb20d2506d50540445a6c990e9080e6faf6de6",
+      "reason": "Sirius B and Procyon B were deliberately retired before the original publication was assembled."
+    },
+    "sun_component": {
+      "historical_path": "src/foundinspace/pipeline/overrides/data/sun.yaml",
+      "historical_sha256": "6010b9016f35847f276c36aca313cee16c87f9e6adc975018bc5f26c5be5e6dd",
+      "reason": "The Sun is a separate opt-in reference publication, not an executable stellar override in this series."
+    }
+  },
+  "validation_environment": {
+    "dependency": "found-in-space-pipeline",
+    "source": "git+https://github.com/Found-in-Space/pipeline.git",
+    "requested_revision": "ffd569dd1e733c5bd39bb2dd6050763d98e06a43",
+    "resolved_commit": "ffd569dd1e733c5bd39bb2dd6050763d98e06a43",
+    "declared_in": [
+      "pyproject.toml",
+      "uv.lock"
+    ],
+    "imported_module_location": "installed environment site-packages",
+    "local_checkout_imported": false,
+    "direct_url_verified": true
+  },
+  "published_inputs": {
+    "distance_resolution_tracker": {
+      "path": "evidence/distance-resolution-v1.csv",
+      "sha256": "f5b07f745de8ca2521ae615b5f57f3fc9d8004dc2e3717250909ab989466120f"
+    },
+    "candidate_review": {
+      "path": "evidence/external-distance-required.parquet",
+      "sha256": "3461a681183100952105e27590929ad04d7a926eb30fe869820555eee44acaf7"
+    },
+    "pipeline_candidates": {
+      "path": "evidence/current-pipeline-candidates.parquet",
+      "sha256": "0e5337f992c1a1ce0faa66136da0f2d9cb66a92ffb64ff94d723c5f45af4dbe2"
+    },
+    "gaia_staged": {
+      "path": "evidence/gaia-staged.parquet",
+      "sha256": "91f7c5287ffb04ea5b1250bbc97fee238eb03e54aac8cc44596202e025fd83a4"
+    },
+    "hip_staged": {
+      "path": "evidence/hip-staged.parquet",
+      "sha256": "f0502f6bd9dc04b64605c82245d461d712a0505ac7ef639e9945f646b3eeb94b"
+    },
+    "alpha_cen_legacy_source": {
+      "path": "evidence/alpha_cen_legacy_source.yaml",
+      "sha256": "8626f9a9f4a4550921108280a1092e0190503f4912a77549e1e50f228bbafb9f"
+    },
+    "alpha_cen_pairing_review": {
+      "path": "evidence/alpha_cen_pairing_review.json",
+      "sha256": "a280e151bec0ed39ee340d6df4f7a1080f876c678679275c91dd6a23c10cc445"
+    }
+  },
+  "observed_counts": {
+    "total_override_rows": 51,
+    "retained_legacy_rows": 3,
+    "reviewed_addition_rows": 48,
+    "excluded_provisional_rows": 33,
+    "excluded_retired_binary_rows": 2,
+    "excluded_sun_rows": 1,
+    "runtime_override_rows": 51,
+    "quality_checked_rows": 51,
+    "quality_passed_rows": 51,
+    "actions": {
+      "replace": 51
+    }
+  },
+  "policy_boundary": "The three original Alpha Centauri overrides retain their executable identities and values. Exactly 48 tracker rows reviewed as resolved are added. Thirty-three provisional rows, two retired binary overrides, and the Sun remain non-executable."
+}

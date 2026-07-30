@@ -3,12 +3,15 @@ from pathlib import Path
 
 import click
 
+from foundinspace.catalogs.audit.gaia_match_table import build_gaia_raw_match_table
+from foundinspace.catalogs.audit.overrides_publication import (
+    assemble_overrides_publication,
+)
 from foundinspace.catalogs.audit.pipeline import (
     default_audit_dir,
     run_audit_match,
     run_audit_report,
 )
-from foundinspace.catalogs.audit.gaia_match_table import build_gaia_raw_match_table
 from foundinspace.catalogs.audit.publication import assemble_pairing_publication
 from foundinspace.catalogs.audit.raw_match import run_raw_gaia_hip_match
 from foundinspace.pipeline.project import load_project
@@ -362,6 +365,32 @@ def assemble_pairing_publication_cmd(
         f"local_scan={result.local_scan_rows:,}, "
         f"overlap={result.overlap_rows:,}"
     )
+
+
+@cli.command(name="assemble-overrides-publication")
+@click.option(
+    "--release-dir",
+    required=True,
+    type=click.Path(exists=True, file_okay=False, path_type=Path),
+)
+def assemble_overrides_publication_cmd(release_dir: Path) -> None:
+    """Assemble the additive version of the stellar override publication."""
+
+    try:
+        result = assemble_overrides_publication(release_dir=release_dir)
+    except (FileNotFoundError, ValueError) as exc:
+        raise click.ClickException(str(exc)) from exc
+    click.echo(f"Release: {result.release}")
+    click.echo(
+        "Counts: "
+        f"total={result.total_rows:,}, "
+        f"legacy={result.legacy_rows:,}, "
+        f"reviewed={result.reviewed_rows:,}"
+    )
+    click.echo(f"Build report: {Path(result.report_path).resolve()}")
+    click.echo(f"Quality report: {Path(result.quality_report_path).resolve()}")
+    click.echo(f"Input provenance: {Path(result.provenance_path).resolve()}")
+    click.echo(f"Checksums: {Path(result.checksums_path).resolve()}")
 
 
 @cli.command(name="report")
