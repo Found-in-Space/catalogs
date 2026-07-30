@@ -36,8 +36,10 @@ stable across the chain. Controlled runs must record the release ID,
 or latest-version references, not for pinning reproducible inputs.
 
 No earlier `fis.overrides` Zenodo record exists. Consequently, `20260730.2`
-will be the initial deposit rather than a Zenodo revision. Publishing it will
-assign both the first Version DOI and the stable Concept DOI. Subsequent
+will be the initial deposit rather than a Zenodo revision. Version DOI
+[`10.5281/zenodo.21703732`](https://doi.org/10.5281/zenodo.21703732) was
+reserved before the final package was assembled. Publishing the deposit will
+register that Version DOI and assign the stable Concept DOI. Subsequent
 releases must use **New version** on that record and must not create a separate
 catalog record.
 

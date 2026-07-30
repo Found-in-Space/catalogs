@@ -17,17 +17,20 @@ the stable Zenodo Concept DOI when referring to the catalog series as a whole
 or intentionally resolving to its latest published version. Row-level
 scientific sources must still be cited as appropriate.
 
-Release `20260730.2` is the planned first Zenodo deposit. Its Version DOI and
-the series Concept DOI are therefore pending and must not be guessed or
-pre-filled. After publication, the assigned identifiers will be recorded in
-repository tracking metadata without changing this immutable release payload.
-Later data, evidence, checksum, selection, or methodology changes will be
-published through Zenodo's **New version** action in the same version chain.
+Release `20260730.2` is the planned first Zenodo deposit. Zenodo reserved
+Version DOI
+[`10.5281/zenodo.21703732`](https://doi.org/10.5281/zenodo.21703732) before
+packaging; it will be registered when the deposit is published. The series
+Concept DOI remains pending until that first publication. After publication,
+the identifiers will be recorded in repository tracking metadata without
+changing this immutable release payload. Later data, evidence, checksum,
+selection, or methodology changes will be published through Zenodo's
+**New version** action in the same version chain.
 
-Suggested citation before DOI assignment:
+Suggested citation:
 
-> Found in Space (2026), *Found in Space stellar overrides*, version
-> 20260730.2, release candidate.
+> Siebert, K. W. (2026), *Found in Space stellar overrides*, version
+> 20260730.2, Zenodo, <https://doi.org/10.5281/zenodo.21703732>.
 
 ## Retained Alpha Centauri Overrides
 
