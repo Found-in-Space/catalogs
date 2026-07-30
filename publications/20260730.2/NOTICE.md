@@ -59,9 +59,11 @@ payload and its scientific interpretation unchanged.
 
 Each release has a Version DOI and the series has one stable Concept DOI.
 Reproducible work must cite the exact release and Version DOI; references to
-the evolving series or its latest version may cite the Concept DOI. Release
-`20260730.2` is the initial planned Zenodo deposit, so neither DOI has been
-assigned yet.
+the evolving series or its latest version may cite the Concept DOI. Zenodo
+reserved Version DOI
+[`10.5281/zenodo.21703732`](https://doi.org/10.5281/zenodo.21703732) for
+release `20260730.2` before packaging. It will be registered, and the stable
+Concept DOI assigned, when the initial deposit is published.
 
 ## Upstream Sources
 

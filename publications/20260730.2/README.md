@@ -34,10 +34,17 @@ following its latest version. A metadata-only correction that does not change
 the payload or its scientific interpretation may be made by editing the
 published record metadata.
 
-No Zenodo version of `fis.overrides` exists yet. Release `20260730.2` is the
-planned initial deposit, so both DOI values remain pending until publication.
-The exact initial-deposit and later-revision steps are recorded in
+No Zenodo version of `fis.overrides` exists yet. Zenodo reserved Version DOI
+[`10.5281/zenodo.21703732`](https://doi.org/10.5281/zenodo.21703732) for
+release `20260730.2` before packaging. Zenodo will register that DOI and assign
+the stable Concept DOI when the initial deposit is published. The exact
+initial-deposit and later-revision steps are recorded in
 `zenodo/draft-metadata.md`.
+
+Suggested citation:
+
+> Siebert, K. W. (2026), *Found in Space stellar overrides*, version
+> 20260730.2, Zenodo, <https://doi.org/10.5281/zenodo.21703732>.
 
 Zenodo guidance:
 

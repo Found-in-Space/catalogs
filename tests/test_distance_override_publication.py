@@ -56,7 +56,9 @@ def test_override_publication_scope_selection_and_runtime_contract():
         "citation_policy": "version-doi-for-reproducibility",
         "initial_zenodo_deposit": True,
         "prior_zenodo_version_exists": False,
-        "version_doi_status": "assigned-on-publication",
+        "version_doi": "10.5281/zenodo.21703732",
+        "version_doi_url": "https://doi.org/10.5281/zenodo.21703732",
+        "version_doi_status": "reserved-before-publication",
         "concept_doi_status": "assigned-on-first-publication",
     }
     assert manifest["scope"]["total_override_rows"] == 51

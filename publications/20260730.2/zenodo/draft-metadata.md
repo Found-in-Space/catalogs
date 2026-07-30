@@ -2,13 +2,15 @@
 
 This file is preparation material for the initial Zenodo deposit of
 `fis.overrides`. It records the required metadata and the lifecycle that later
-releases must follow. It does not contain a reserved or assigned DOI.
+releases must follow. Zenodo reserved the release-specific Version DOI before
+the final archive was assembled.
 
 ## Record Metadata
 
 - Title: **Found in Space stellar overrides**
 - Upload type: **Dataset**
 - Version: **20260730.2**
+- Reserved Version DOI: **10.5281/zenodo.21703732**
 - Publication date: set to the actual publication date
 - Creator: **Siebert, Kaj Wik**
 - Affiliation: **University College London**
@@ -50,40 +52,46 @@ evidence, checksums, selection rules, or methodology are issued with Zenodo's
 
 ## DOI and Citation Policy
 
-The initial publication assigns:
+The initial publication uses:
 
-- a Version DOI for the immutable `20260730.2` snapshot; and
+- the reserved Version DOI
+  [`10.5281/zenodo.21703732`](https://doi.org/10.5281/zenodo.21703732) for the
+  immutable `20260730.2` snapshot; and
 - a Concept DOI that remains stable across all versions of `fis.overrides`.
 
 Use the Version DOI for reproducible work tied to this exact release. Use the
 Concept DOI for the evolving catalog series or when intentionally following
-the latest published version. Do not invent either value before Zenodo assigns
-it.
+the latest published version. The Version DOI is registered and the Concept
+DOI is assigned when the initial deposit is published.
 
-Suggested citation after publication:
+Suggested citation:
 
 > Siebert, K. W. (2026), *Found in Space stellar overrides*, version
-> 20260730.2, Zenodo, `<VERSION_DOI>`.
+> 20260730.2, Zenodo, <https://doi.org/10.5281/zenodo.21703732>.
 
 ## Initial Publication Procedure
 
 No earlier `fis.overrides` record exists in Zenodo. For `20260730.2`:
 
-1. Merge the release commit into the public catalogs repository.
-2. From a clean checkout of that exact public commit, run the assembler, full
+1. Create a new upload in the Found in Space community and reserve its Version
+   DOI.
+2. Embed the reserved DOI in the release metadata, regenerate derived evidence
+   and checksums, and merge the release commit into the public catalogs
+   repository.
+3. From a clean checkout of that exact public commit, run the assembler, full
    tests, and `sha256sum --check checksums.sha256`.
-3. Create a path-preserving release archive outside
+4. Create a path-preserving release archive outside
    `publications/20260730.2/`; do not place the archive inside the checksummed
    payload.
-4. Create a new Zenodo upload, enter the metadata above, and upload the release
-   archive. This is the one time a new Zenodo record is created for this
-   series.
-5. Verify the previewed file, title, version, creator, licence, description,
-   and checksums before selecting **Publish**.
-6. After publication, record the assigned record ID, Version DOI, Concept
+5. Return to the DOI-reserving Zenodo draft, enter the metadata above, and
+   upload the release archive. This is the one time a new Zenodo record is
+   created for this series.
+6. Verify the previewed file, title, version, creator, licence, description,
+   and checksums before submitting it for community review and publication.
+7. After publication, record the assigned record ID, Version DOI, Concept
    record ID, Concept DOI, publication URL, release commit, and archive
    checksum in `zenodo/published-record.toml`.
-7. Treat `zenodo/published-record.toml` as post-publication repository tracking
+8. Treat `zenodo/published-record.toml` as post-publication repository tracking
    metadata. Do not add it to the already-published archive or to that
    snapshot's `checksums.sha256`.
 
