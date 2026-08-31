@@ -2,107 +2,73 @@
 
 Release: `20260515.1`
 
-This publication contains the Found-In-Space supplemental Gaia-Hipparcos2
-display de-duplication map and the evidence used to derive it.
+This publication contains a `15,916`-row Gaia-Hipparcos2 mapping delta used to
+reduce visually duplicated stars and radial "finger of god" artefacts in Found
+in Space rendering. It is applied alongside the official Gaia
+`hipparcos2_best_neighbour` table, which is not republished here.
 
-It does not republish the official Gaia `hipparcos2_best_neighbour` table. Use
-the supplemental map alongside the official Gaia table when building a complete
-Gaia-HIP display mapping.
+## Scientific boundary
 
-Large source downloads remain in local scratch and are recorded by checksum and
-query metadata rather than committed as release payloads.
+This is a visual de-duplication aid, not a scientific crossmatch. A row says
+that two catalogue entries should be collapsed in this display context; it
+does not claim that they are the same physical star, that either catalogue is
+wrong, or that either source should be removed from scientific analysis.
 
-## License And Notice
-
-Found in Space original material in this publication is released under CC BY
-4.0, as described in `LICENSE.txt`.
-
-Source catalogue data and source-derived evidence remain subject to upstream
-terms and credit requirements. See `NOTICE.md` for Gaia, Hipparcos/Tycho,
-VizieR/CDS acknowledgements and publication references.
-
-See `REFERENCES.md` for the upstream catalogues, archive tables, and scientific
-publications this release depends on.
+Gaia and Hipparcos may differ or fail to record the same objects for many
+reasons, including observing epoch, astrometric uncertainty, multiplicity,
+variability, catalogue selection, and problematic solutions. Establishing
+physical identity requires more detailed analysis than this display policy.
 
 ## Catalog
 
-- `catalog/fis_gaia_hip_supplemental_display_map.parquet` - the published
-  Found-In-Space supplemental mapping delta.
-
-For a paper-style narrative summary of the release, including abstract,
-methodology, findings, output tables, and embedded figures, see `PAPER.md`.
-
-The catalog schema is:
+`catalog/fis_gaia_hip_supplemental_display_map.parquet`
 
 ```text
-gaia_source_id
-hip_source_id
-mapping_source
-number_of_neighbours
-angular_distance
+gaia_source_id       uint64
+hip_source_id        uint64
+mapping_source       string
+number_of_neighbours int16
+angular_distance     float32 (arcsec)
 ```
 
-Rows: `15,916`
+All `15,916` rows are one-to-one and have
+`mapping_source = fis_raw_sky_render_v1`.
 
-All rows have `mapping_source = fis_raw_sky_render_v1`.
+## Selection summary
 
-## Current Evidence
+Hipparcos positions were propagated to the Gaia epoch and compared with Gaia
+DR3 sources within `5 arcsec`. Supplemental display pairs must be locally
+one-to-one, must not conflict with the official best-neighbour or neighbourhood
+tables, and must satisfy either:
 
-- `evidence/gaia_hip_display_match_evidence.parquet` - full local
-  sky/proximity/distance evidence table for the display matching scan.
-- `evidence/gaia_hip_display_match_report.json` - row counts, thresholds, and
-  paths from the matching scan.
-- `evidence/gaia_g15_parallax_download.adql` - exact Gaia query used for the
-  raw `G <= 15` parallax matching download.
-- `evidence/gaia_g15_parallax_download_state.json` - Gaia async job metadata
-  for that download.
-- `evidence/gaia_g15_parallax_conversion_summary.json` - VOTable-to-Parquet
-  conversion summary for the local working table.
-- `evidence/hip_gaia_magnitude_relationship.png` - plot of Hipparcos `Hpmag`
-  against Gaia DR3 `phot_g_mean_mag` for official Gaia-HIP matches.
-- `evidence/hip_gaia_magnitude_relationship.parquet` - backing rows for the
-  plot.
-- `evidence/hip_gaia_magnitude_outliers.csv` - official matches with missing
-  Gaia `G` or `G` fainter than the processed Hipparcos faint limit.
-- `evidence/hip_gaia_magnitude_summary.json` - summary statistics and row
-  counts.
-- `evidence/hip_healpix_cone_footprint_summary.csv` - footprint estimates for
-  targeted Gaia cone fetches around faint Hipparcos stars.
-- `evidence/hip_healpix_neighbor_footprint_summary.csv` - footprint estimates
-  for containing-HEALPix-cell plus neighbour expansion.
-- `evidence/hip_healpix_footprint_summary.json` - summary of the targeted
-  HEALPix/cone-fetch alternative.
+- sky separation `<= 0.25 arcsec`; or
+- sky separation `<= 5 arcsec` and rendered 3D separation `<= 1 pc`.
 
-## Key Observations So Far
+Magnitude and colour are diagnostic evidence only, not hard gates. The scan
+produced `126,220` evidence pairs and `15,916` supplemental display rows:
+`15,725` through the tight-sky rule and `191` through the rendered-distance
+rule.
 
-- Raw Hipparcos rows downloaded: `117,955`.
-- Processed finite-distance Hipparcos rows: `113,942`.
-- Faintest processed Hipparcos `Hpmag`: `14.5622`.
-- Official Gaia-HIP rows joined to Gaia photometry: `99,525`.
-- Official matches with finite Gaia `G`: `99,463`.
-- Official matches with Gaia `G > 14.5622`: `30`.
-- Pipeline-shaped Gaia `G <= 15` sizing count: `36,635,159` rows.
-- Raw Gaia `G <= 15` parallax matching download: `36,909,365` rows with
-  `source_id`, sky position, Gaia photometry, `parallax`, and
-  `parallax_error`.
-- Parallax display-matching scan: `126,220` Gaia-HIP evidence pairs within
-  `5 arcsec`, producing `15,916` one-to-one supplemental display matches.
+## Evidence
 
-The `G > 14.5622` rows are retained as evidence because some official matches
-have extreme Gaia/HIP magnitude disagreement. They should inform the mapping
-review, but they should not by themselves define the Gaia download cutoff.
+- `evidence/gaia_hip_display_match_evidence.parquet` - full decision evidence.
+- `evidence/gaia_hip_display_match_report.json` - thresholds and row counts.
+- `evidence/gaia_g15_parallax_download.adql` and related JSON files - Gaia
+  acquisition and conversion provenance.
+- `evidence/hip_gaia_magnitude_*` - magnitude diagnostics.
+- `evidence/hip_healpix_*` - targeted-fetch footprint analysis.
+- `evidence/vr_finger_of_god.jpg` and `evidence/vr_from_sun.jpg` - qualitative
+  VR validation captures.
 
-## Current Decision
+![VR finger-of-god view](evidence/vr_finger_of_god.jpg)
 
-This release publishes only Found-In-Space supplemental display matches not
-covered by the official Gaia best-neighbour map. A local combined map was
-created to validate one-to-one composition, but it is intentionally not part of
-the publication.
+![VR view from the Sun](evidence/vr_from_sun.jpg)
 
-The supplemental display policy uses one-to-one local sky proximity,
-official-table conflict checks, and parallax-derived rendered separation.
-Magnitude and colour remain evidence-only diagnostics rather than hard default
-gates.
+Detailed execution history is retained in `run_log.md`. `PAPER.md` provides a
+short narrative summary.
 
-The targeted HEALPix/cone-fetch approach remains recorded as a fallback if the
-full-sky skinny download proves awkward operationally.
+## Licence and references
+
+Found in Space original material is released under CC BY 4.0. Upstream Gaia,
+Hipparcos/Tycho, and VizieR/CDS terms and credit requirements continue to
+apply. See `LICENSE.txt`, `NOTICE.md`, and `REFERENCES.md`.
