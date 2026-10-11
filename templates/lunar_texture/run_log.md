@@ -32,8 +32,10 @@ versions must not be substituted for that missing historical evidence.
 
 ## Evidence export
 
-The assembler parses original JSON evidence and JSON command-output logs,
-replacing the source-machine roots with `${RUN_ROOT}` and `${PRODUCER_ROOT}`.
+The assembler parses original JSON evidence and preserves complete command-output
+logs as text in JSON wrappers, replacing the source-machine roots with
+`${RUN_ROOT}` and `${PRODUCER_ROOT}`. The acquisition log retains the failed
+timeout attempt preceding the successful resumed-download receipt.
 Relative roles, command arguments, temporary filenames, timestamps, and
 scientific metadata are retained. Unknown absolute paths and unreviewed URLs
 are rejected. `evidence/export_inventory.json` records original and exported

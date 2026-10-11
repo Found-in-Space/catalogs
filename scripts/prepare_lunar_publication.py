@@ -82,10 +82,10 @@ def portable(value, run_root: Path, producer_root: Path):
         require(
             not re.search(r"/(?:data|home|tmp|Users)/", value), "Embedded local path"
         )
-        if "://" in value:
+        for token in re.findall(r"https?://[^\s\"<>]+", value):
             from urllib.parse import urlsplit
 
-            url = urlsplit(value)
+            url = urlsplit(token.rstrip(".,;:)]}"))
             require(
                 url.scheme == "https" and not url.username and not url.password,
                 "Unexpected URL scheme or embedded credentials",
@@ -294,10 +294,14 @@ def prepare(
         ("evidence/sources", "*.json"),
         ("work/state", "*.json"),
         ("source", "*.tif.download.json"),
-        ("logs", "*.log"),
     ):
         for path in sorted((run_root / folder).glob(pattern)):
             records[path.relative_to(run_root).as_posix()] = read_json(path)
+    for path in sorted((run_root / "logs").glob("*.log")):
+        records[path.relative_to(run_root).as_posix()] = {
+            "format_version": 1,
+            "text": path.read_text(encoding="utf-8"),
+        }
     required = {
         "work/state/build-base.json",
         "work/state/emit-tiles.json",
@@ -405,7 +409,9 @@ def prepare(
                     "original_sha256": sha256(run_root / relative),
                     "published_path": target.relative_to(staging).as_posix(),
                     "published_sha256": sha256(target),
-                    "transformation": "portable-json",
+                    "transformation": "portable-text-in-json"
+                    if relative.startswith("logs/")
+                    else "portable-json",
                 }
             )
         shutil.copytree(output / "manifests", staging / "payload/manifests")

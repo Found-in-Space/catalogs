@@ -117,6 +117,21 @@ def test_portable_paths_keep_distinct_roles_and_embedded_stdout():
     assert evidence["commands"][1] == "/data/runs/moon/source/input.tif"
 
 
+def test_complete_log_text_keeps_failed_attempt_and_public_url():
+    text = (
+        "Error: could not download https://planetarymaps.usgs.gov/mosaic/input.tif: timed out\n"
+        '{"path": "/data/runs/moon/source/input.tif", "resumed": true}\n'
+    )
+    result = TOOL["portable"](
+        text, Path("/data/runs/moon"), Path("/data/work/producer")
+    )
+    assert result.startswith(
+        "Error: could not download https://planetarymaps.usgs.gov/"
+    )
+    assert '"path": "${RUN_ROOT}/source/input.tif"' in result
+    assert result.endswith('"resumed": true}\n')
+
+
 @pytest.mark.parametrize(
     "value",
     [
