@@ -23,8 +23,9 @@ uv run --no-project python scripts/prepare_lunar_publication.py \
   --destination /path/to/catalogs/publications/YYYYMMDD.N
 ```
 
-Source and tile bytes are streamed through SHA-256; only one level's tile
-addresses are tracked in memory. The script cross-checks producer metadata,
+Source and tile bytes are streamed through SHA-256. Four tile readers have at
+most eight pending hashes; only one level's tile addresses are tracked in memory.
+The script cross-checks producer metadata,
 stage states, manifests, source admission, and committed code identities.
 It refuses an existing destination and places the candidate atomically after
 the evidence export and checksum manifest are complete.

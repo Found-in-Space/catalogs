@@ -15,6 +15,8 @@ import subprocess
 import sys
 import tempfile
 import tomllib
+from collections import deque
+from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -116,6 +118,12 @@ def producer_identities(value):
             yield from producer_identities(item)
 
 
+def verify_tile(tile: Path, checksum: str) -> int:
+    require(tile.is_file() and not tile.is_symlink(), "Missing or symlinked tile")
+    require(sha256(tile) == checksum, f"Tile checksum mismatch: {tile.name}")
+    return tile.stat().st_size
+
+
 def verify_tiles(output: Path, product: dict, validation: dict) -> list[dict]:
     require(validation.get("valid") is True, "Producer validation did not pass")
     require(
@@ -144,7 +152,11 @@ def verify_tiles(output: Path, product: dict, validation: dict) -> list[dict]:
         manifest_set.append({"zoom": zoom, "manifest_sha256": digest})
         count = total_bytes = 0
         seen = set()
-        with manifest.open(encoding="ascii") as stream:
+        with (
+            manifest.open(encoding="ascii") as stream,
+            ThreadPoolExecutor(max_workers=4) as pool,
+        ):
+            pending = deque()
             for line in stream:
                 checksum, separator, name = line.rstrip("\n").partition("  ")
                 match = TILE_PATH.fullmatch(name)
@@ -158,14 +170,12 @@ def verify_tiles(output: Path, product: dict, validation: dict) -> list[dict]:
                 )
                 require((x, y) not in seen, "Duplicate tile address")
                 seen.add((x, y))
-                tile = output / name
-                require(
-                    tile.is_file() and not tile.is_symlink(),
-                    "Missing or symlinked tile",
-                )
-                require(sha256(tile) == checksum, f"Tile checksum mismatch: {name}")
+                pending.append(pool.submit(verify_tile, output / name, checksum))
                 count += 1
-                total_bytes += tile.stat().st_size
+                if len(pending) >= 8:
+                    total_bytes += pending.popleft().result()
+            for future in pending:
+                total_bytes += future.result()
         require(count == level["tile_count"] == 4**zoom, "Tile count mismatch")
         require(total_bytes == level["tile_bytes"], "Tile byte count mismatch")
         rows.append(
@@ -176,6 +186,11 @@ def verify_tiles(output: Path, product: dict, validation: dict) -> list[dict]:
                 "manifest": level["manifest"],
                 "sha256": digest,
             }
+        )
+        print(
+            f"Verified zoom {zoom}: {count:,} tiles, {total_bytes:,} bytes",
+            file=sys.stderr,
+            flush=True,
         )
     manifest_digest = hashlib.sha256(
         json.dumps(
@@ -461,6 +476,8 @@ def prepare(
                 "tile_count": product["tiles"]["total_count"],
                 "tile_bytes": product["tiles"]["total_bytes"],
                 "source_and_all_tile_bytes_rehashed": True,
+                "tile_hash_workers": 4,
+                "maximum_pending_tile_hashes": 8,
                 "project_and_product_identities_recomputed": True,
                 "producer_code_trees_recomputed_from_recorded_commits": True,
                 "pixel_reconstruction": "authenticated-producer-report; not rerun by assembler",
