@@ -25,6 +25,7 @@ audit = [
     "scipy>=1.17.1",
 ]
 dev = [
+    "boto3>=1.43.111",
     "pytest>=8",
 ]
 publication = [

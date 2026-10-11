@@ -1,0 +1,1353 @@
+{
+  "base_reprojection": [
+    {
+      "actual_pixels_sha256": "67a2979c16482baa774affd18fa7a9e33772f2ddb3b0b181d84923ab724ca2f0",
+      "expected_pixels_sha256": "67a2979c16482baa774affd18fa7a9e33772f2ddb3b0b181d84923ab724ca2f0",
+      "pixels_compared": 262144,
+      "pixels_different": 0,
+      "tile": [
+        8,
+        0,
+        0
+      ]
+    },
+    {
+      "actual_pixels_sha256": "321e1ea0ebefed6135447182b57ca9699f565b15db1dc93c67321d14d175d328",
+      "expected_pixels_sha256": "321e1ea0ebefed6135447182b57ca9699f565b15db1dc93c67321d14d175d328",
+      "pixels_compared": 262144,
+      "pixels_different": 0,
+      "tile": [
+        8,
+        255,
+        255
+      ]
+    },
+    {
+      "actual_pixels_sha256": "0f7cfc93bc38820cf156cb679d110f7d5c668778dea48a353fa1968ae4e5fa0c",
+      "expected_pixels_sha256": "0f7cfc93bc38820cf156cb679d110f7d5c668778dea48a353fa1968ae4e5fa0c",
+      "pixels_compared": 262144,
+      "pixels_different": 0,
+      "tile": [
+        8,
+        128,
+        128
+      ]
+    },
+    {
+      "actual_pixels_sha256": "68ce51c2a711ed8a9d260aa8f667da0bd8b6c334aaa2e6688af921e55d499635",
+      "expected_pixels_sha256": "68ce51c2a711ed8a9d260aa8f667da0bd8b6c334aaa2e6688af921e55d499635",
+      "pixels_compared": 262144,
+      "pixels_different": 0,
+      "tile": [
+        8,
+        127,
+        42
+      ]
+    }
+  ],
+  "byte_identical_regeneration_required": false,
+  "commands": [
+    {
+      "argv": [
+        "gdalwarp",
+        "-q",
+        "-of",
+        "GTiff",
+        "-ot",
+        "Byte",
+        "-s_srs",
+        "${SAMPLE_ROOT}/resources/moon-simple-cylindrical-1737400.wkt",
+        "-t_srs",
+        "${SAMPLE_ROOT}/resources/moon-geographic-1737400.wkt",
+        "-te_srs",
+        "${SAMPLE_ROOT}/resources/moon-geographic-1737400.wkt",
+        "-te",
+        "-180.0",
+        "89.296875",
+        "-178.59375",
+        "90.0",
+        "-ts",
+        "512",
+        "512",
+        "-r",
+        "bilinear",
+        "-srcnodata",
+        "0.0",
+        "-dstnodata",
+        "0",
+        "-wm",
+        "1024",
+        "-wo",
+        "NUM_THREADS=4",
+        "${RUN_ROOT}/source/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif",
+        "${SAMPLE_ROOT}/base-8-0-0/reprojected.tif"
+      ],
+      "seconds": 0.10527197599913052,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${SAMPLE_ROOT}/base-8-0-0/reprojected.tif",
+        "${SAMPLE_ROOT}/base-8-0-0/actual.pgm"
+      ],
+      "seconds": 0.03243881099842838,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/base-8-0-0/actual.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/base-8-0-0/actual.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "-srcwin",
+        "0",
+        "0",
+        "512",
+        "512",
+        "${RUN_ROOT}/work/levels/8.tif",
+        "${SAMPLE_ROOT}/base-8-0-0/expected.pgm"
+      ],
+      "seconds": 0.034080335000908235,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/base-8-0-0/expected.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/base-8-0-0/expected.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdalwarp",
+        "-q",
+        "-of",
+        "GTiff",
+        "-ot",
+        "Byte",
+        "-s_srs",
+        "${SAMPLE_ROOT}/resources/moon-simple-cylindrical-1737400.wkt",
+        "-t_srs",
+        "${SAMPLE_ROOT}/resources/moon-geographic-1737400.wkt",
+        "-te_srs",
+        "${SAMPLE_ROOT}/resources/moon-geographic-1737400.wkt",
+        "-te",
+        "178.59375",
+        "-90.0",
+        "180.0",
+        "-89.296875",
+        "-ts",
+        "512",
+        "512",
+        "-r",
+        "bilinear",
+        "-srcnodata",
+        "0.0",
+        "-dstnodata",
+        "0",
+        "-wm",
+        "1024",
+        "-wo",
+        "NUM_THREADS=4",
+        "${RUN_ROOT}/source/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif",
+        "${SAMPLE_ROOT}/base-8-255-255/reprojected.tif"
+      ],
+      "seconds": 0.1053340329999628,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${SAMPLE_ROOT}/base-8-255-255/reprojected.tif",
+        "${SAMPLE_ROOT}/base-8-255-255/actual.pgm"
+      ],
+      "seconds": 0.03317843199874915,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/base-8-255-255/actual.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/base-8-255-255/actual.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "-srcwin",
+        "130560",
+        "130560",
+        "512",
+        "512",
+        "${RUN_ROOT}/work/levels/8.tif",
+        "${SAMPLE_ROOT}/base-8-255-255/expected.pgm"
+      ],
+      "seconds": 0.03335614500065276,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/base-8-255-255/expected.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/base-8-255-255/expected.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdalwarp",
+        "-q",
+        "-of",
+        "GTiff",
+        "-ot",
+        "Byte",
+        "-s_srs",
+        "${SAMPLE_ROOT}/resources/moon-simple-cylindrical-1737400.wkt",
+        "-t_srs",
+        "${SAMPLE_ROOT}/resources/moon-geographic-1737400.wkt",
+        "-te_srs",
+        "${SAMPLE_ROOT}/resources/moon-geographic-1737400.wkt",
+        "-te",
+        "0.0",
+        "-0.703125",
+        "1.40625",
+        "0.0",
+        "-ts",
+        "512",
+        "512",
+        "-r",
+        "bilinear",
+        "-srcnodata",
+        "0.0",
+        "-dstnodata",
+        "0",
+        "-wm",
+        "1024",
+        "-wo",
+        "NUM_THREADS=4",
+        "${RUN_ROOT}/source/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif",
+        "${SAMPLE_ROOT}/base-8-128-128/reprojected.tif"
+      ],
+      "seconds": 0.23702280200086534,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${SAMPLE_ROOT}/base-8-128-128/reprojected.tif",
+        "${SAMPLE_ROOT}/base-8-128-128/actual.pgm"
+      ],
+      "seconds": 0.03277421400161984,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/base-8-128-128/actual.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/base-8-128-128/actual.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "-srcwin",
+        "65536",
+        "65536",
+        "512",
+        "512",
+        "${RUN_ROOT}/work/levels/8.tif",
+        "${SAMPLE_ROOT}/base-8-128-128/expected.pgm"
+      ],
+      "seconds": 0.033547834000273724,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/base-8-128-128/expected.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/base-8-128-128/expected.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdalwarp",
+        "-q",
+        "-of",
+        "GTiff",
+        "-ot",
+        "Byte",
+        "-s_srs",
+        "${SAMPLE_ROOT}/resources/moon-simple-cylindrical-1737400.wkt",
+        "-t_srs",
+        "${SAMPLE_ROOT}/resources/moon-geographic-1737400.wkt",
+        "-te_srs",
+        "${SAMPLE_ROOT}/resources/moon-geographic-1737400.wkt",
+        "-te",
+        "-1.40625",
+        "59.765625",
+        "0.0",
+        "60.46875",
+        "-ts",
+        "512",
+        "512",
+        "-r",
+        "bilinear",
+        "-srcnodata",
+        "0.0",
+        "-dstnodata",
+        "0",
+        "-wm",
+        "1024",
+        "-wo",
+        "NUM_THREADS=4",
+        "${RUN_ROOT}/source/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif",
+        "${SAMPLE_ROOT}/base-8-127-42/reprojected.tif"
+      ],
+      "seconds": 0.10357220399964717,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${SAMPLE_ROOT}/base-8-127-42/reprojected.tif",
+        "${SAMPLE_ROOT}/base-8-127-42/actual.pgm"
+      ],
+      "seconds": 0.0328245689997857,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/base-8-127-42/actual.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/base-8-127-42/actual.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "-srcwin",
+        "65024",
+        "21504",
+        "512",
+        "512",
+        "${RUN_ROOT}/work/levels/8.tif",
+        "${SAMPLE_ROOT}/base-8-127-42/expected.pgm"
+      ],
+      "seconds": 0.033401579999917885,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/base-8-127-42/expected.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/base-8-127-42/expected.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "GTiff",
+        "-ot",
+        "Byte",
+        "-srcwin",
+        "63488",
+        "63488",
+        "4096",
+        "4096",
+        "-outsize",
+        "16",
+        "16",
+        "-r",
+        "average",
+        "${RUN_ROOT}/work/levels/8.tif",
+        "${SAMPLE_ROOT}/average-z0/averaged.tif"
+      ],
+      "seconds": 0.14912464400003955,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${SAMPLE_ROOT}/average-z0/averaged.tif",
+        "${SAMPLE_ROOT}/average-z0/actual.pgm"
+      ],
+      "seconds": 0.03196806199957791,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/average-z0/actual.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/average-z0/actual.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "-srcwin",
+        "248",
+        "248",
+        "16",
+        "16",
+        "${RUN_ROOT}/work/levels/0.tif",
+        "${SAMPLE_ROOT}/average-z0/expected.pgm"
+      ],
+      "seconds": 0.033129209999970044,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/average-z0/expected.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/average-z0/expected.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "GTiff",
+        "-ot",
+        "Byte",
+        "-srcwin",
+        "64512",
+        "64512",
+        "2048",
+        "2048",
+        "-outsize",
+        "16",
+        "16",
+        "-r",
+        "average",
+        "${RUN_ROOT}/work/levels/8.tif",
+        "${SAMPLE_ROOT}/average-z1/averaged.tif"
+      ],
+      "seconds": 0.06814791600118042,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${SAMPLE_ROOT}/average-z1/averaged.tif",
+        "${SAMPLE_ROOT}/average-z1/actual.pgm"
+      ],
+      "seconds": 0.03241519199946197,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/average-z1/actual.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/average-z1/actual.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "-srcwin",
+        "504",
+        "504",
+        "16",
+        "16",
+        "${RUN_ROOT}/work/levels/1.tif",
+        "${SAMPLE_ROOT}/average-z1/expected.pgm"
+      ],
+      "seconds": 0.03702794300079404,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/average-z1/expected.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/average-z1/expected.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "GTiff",
+        "-ot",
+        "Byte",
+        "-srcwin",
+        "65024",
+        "65024",
+        "1024",
+        "1024",
+        "-outsize",
+        "16",
+        "16",
+        "-r",
+        "average",
+        "${RUN_ROOT}/work/levels/8.tif",
+        "${SAMPLE_ROOT}/average-z2/averaged.tif"
+      ],
+      "seconds": 0.047217373001331,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${SAMPLE_ROOT}/average-z2/averaged.tif",
+        "${SAMPLE_ROOT}/average-z2/actual.pgm"
+      ],
+      "seconds": 0.03226379700026882,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/average-z2/actual.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/average-z2/actual.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "-srcwin",
+        "1016",
+        "1016",
+        "16",
+        "16",
+        "${RUN_ROOT}/work/levels/2.tif",
+        "${SAMPLE_ROOT}/average-z2/expected.pgm"
+      ],
+      "seconds": 0.03590509199966618,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/average-z2/expected.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/average-z2/expected.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "GTiff",
+        "-ot",
+        "Byte",
+        "-srcwin",
+        "65280",
+        "65280",
+        "512",
+        "512",
+        "-outsize",
+        "16",
+        "16",
+        "-r",
+        "average",
+        "${RUN_ROOT}/work/levels/8.tif",
+        "${SAMPLE_ROOT}/average-z3/averaged.tif"
+      ],
+      "seconds": 0.041367964000528445,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${SAMPLE_ROOT}/average-z3/averaged.tif",
+        "${SAMPLE_ROOT}/average-z3/actual.pgm"
+      ],
+      "seconds": 0.031852068001171574,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/average-z3/actual.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/average-z3/actual.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "-srcwin",
+        "2040",
+        "2040",
+        "16",
+        "16",
+        "${RUN_ROOT}/work/levels/3.tif",
+        "${SAMPLE_ROOT}/average-z3/expected.pgm"
+      ],
+      "seconds": 0.03651582100064843,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/average-z3/expected.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/average-z3/expected.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "GTiff",
+        "-ot",
+        "Byte",
+        "-srcwin",
+        "65408",
+        "65408",
+        "256",
+        "256",
+        "-outsize",
+        "16",
+        "16",
+        "-r",
+        "average",
+        "${RUN_ROOT}/work/levels/8.tif",
+        "${SAMPLE_ROOT}/average-z4/averaged.tif"
+      ],
+      "seconds": 0.040497903999494156,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${SAMPLE_ROOT}/average-z4/averaged.tif",
+        "${SAMPLE_ROOT}/average-z4/actual.pgm"
+      ],
+      "seconds": 0.03145340599985502,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/average-z4/actual.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/average-z4/actual.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "-srcwin",
+        "4088",
+        "4088",
+        "16",
+        "16",
+        "${RUN_ROOT}/work/levels/4.tif",
+        "${SAMPLE_ROOT}/average-z4/expected.pgm"
+      ],
+      "seconds": 0.036201127999447635,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/average-z4/expected.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/average-z4/expected.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "GTiff",
+        "-ot",
+        "Byte",
+        "-srcwin",
+        "65472",
+        "65472",
+        "128",
+        "128",
+        "-outsize",
+        "16",
+        "16",
+        "-r",
+        "average",
+        "${RUN_ROOT}/work/levels/8.tif",
+        "${SAMPLE_ROOT}/average-z5/averaged.tif"
+      ],
+      "seconds": 0.04103210399989621,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${SAMPLE_ROOT}/average-z5/averaged.tif",
+        "${SAMPLE_ROOT}/average-z5/actual.pgm"
+      ],
+      "seconds": 0.03166502499880153,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/average-z5/actual.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/average-z5/actual.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "-srcwin",
+        "8184",
+        "8184",
+        "16",
+        "16",
+        "${RUN_ROOT}/work/levels/5.tif",
+        "${SAMPLE_ROOT}/average-z5/expected.pgm"
+      ],
+      "seconds": 0.035914577998482855,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/average-z5/expected.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/average-z5/expected.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "GTiff",
+        "-ot",
+        "Byte",
+        "-srcwin",
+        "65504",
+        "65504",
+        "64",
+        "64",
+        "-outsize",
+        "16",
+        "16",
+        "-r",
+        "average",
+        "${RUN_ROOT}/work/levels/8.tif",
+        "${SAMPLE_ROOT}/average-z6/averaged.tif"
+      ],
+      "seconds": 0.04081781700006104,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${SAMPLE_ROOT}/average-z6/averaged.tif",
+        "${SAMPLE_ROOT}/average-z6/actual.pgm"
+      ],
+      "seconds": 0.032420519999504904,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/average-z6/actual.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/average-z6/actual.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "-srcwin",
+        "16376",
+        "16376",
+        "16",
+        "16",
+        "${RUN_ROOT}/work/levels/6.tif",
+        "${SAMPLE_ROOT}/average-z6/expected.pgm"
+      ],
+      "seconds": 0.036229178000212414,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/average-z6/expected.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/average-z6/expected.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "GTiff",
+        "-ot",
+        "Byte",
+        "-srcwin",
+        "65520",
+        "65520",
+        "32",
+        "32",
+        "-outsize",
+        "16",
+        "16",
+        "-r",
+        "average",
+        "${RUN_ROOT}/work/levels/8.tif",
+        "${SAMPLE_ROOT}/average-z7/averaged.tif"
+      ],
+      "seconds": 0.04122219199962274,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${SAMPLE_ROOT}/average-z7/averaged.tif",
+        "${SAMPLE_ROOT}/average-z7/actual.pgm"
+      ],
+      "seconds": 0.03227141600109462,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/average-z7/actual.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/average-z7/actual.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "-srcwin",
+        "32760",
+        "32760",
+        "16",
+        "16",
+        "${RUN_ROOT}/work/levels/7.tif",
+        "${SAMPLE_ROOT}/average-z7/expected.pgm"
+      ],
+      "seconds": 0.035967411000456195,
+      "stderr": "ERROR 6: ${SAMPLE_ROOT}/average-z7/expected.pgm: SetGeoTransform() not supported for this dataset.\nERROR 6: ${SAMPLE_ROOT}/average-z7/expected.pgm: Dataset does not support the SetSpatialRef() method.\n"
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "VRT",
+        "-a_nodata",
+        "none",
+        "-srcwin",
+        "0",
+        "0",
+        "512",
+        "512",
+        "${RUN_ROOT}/work/levels/0.tif",
+        "${SAMPLE_ROOT}/png-0-0-0/window.vrt"
+      ],
+      "seconds": 0.03214994599875354,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_retile.py",
+        "-q",
+        "-of",
+        "PNG",
+        "-ot",
+        "Byte",
+        "-ps",
+        "512",
+        "512",
+        "-overlap",
+        "0",
+        "-co",
+        "ZLEVEL=6",
+        "-useDirForEachRow",
+        "-targetDir",
+        "${SAMPLE_ROOT}/png-0-0-0/tiles",
+        "${SAMPLE_ROOT}/png-0-0-0/window.vrt"
+      ],
+      "seconds": 0.06986192899967136,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${SAMPLE_ROOT}/png-0-0-0/tiles/0/1/window_1_1.png",
+        "${SAMPLE_ROOT}/png-0-0-0/actual.pgm"
+      ],
+      "seconds": 0.022842907999802264,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${RUN_ROOT}/output/imagery/0/0/0.png",
+        "${SAMPLE_ROOT}/png-0-0-0/expected.pgm"
+      ],
+      "seconds": 0.023188260000097216,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "VRT",
+        "-a_nodata",
+        "none",
+        "-srcwin",
+        "4096",
+        "4096",
+        "512",
+        "512",
+        "${RUN_ROOT}/work/levels/4.tif",
+        "${SAMPLE_ROOT}/png-4-8-8/window.vrt"
+      ],
+      "seconds": 0.03169831199920736,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_retile.py",
+        "-q",
+        "-of",
+        "PNG",
+        "-ot",
+        "Byte",
+        "-ps",
+        "512",
+        "512",
+        "-overlap",
+        "0",
+        "-co",
+        "ZLEVEL=6",
+        "-useDirForEachRow",
+        "-targetDir",
+        "${SAMPLE_ROOT}/png-4-8-8/tiles",
+        "${SAMPLE_ROOT}/png-4-8-8/window.vrt"
+      ],
+      "seconds": 0.0747383149991947,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${SAMPLE_ROOT}/png-4-8-8/tiles/0/1/window_1_1.png",
+        "${SAMPLE_ROOT}/png-4-8-8/actual.pgm"
+      ],
+      "seconds": 0.022929984001166304,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${RUN_ROOT}/output/imagery/4/8/8.png",
+        "${SAMPLE_ROOT}/png-4-8-8/expected.pgm"
+      ],
+      "seconds": 0.0230794330000208,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "VRT",
+        "-a_nodata",
+        "none",
+        "-srcwin",
+        "0",
+        "0",
+        "512",
+        "512",
+        "${RUN_ROOT}/work/levels/8.tif",
+        "${SAMPLE_ROOT}/png-8-0-0/window.vrt"
+      ],
+      "seconds": 0.03181694600061746,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_retile.py",
+        "-q",
+        "-of",
+        "PNG",
+        "-ot",
+        "Byte",
+        "-ps",
+        "512",
+        "512",
+        "-overlap",
+        "0",
+        "-co",
+        "ZLEVEL=6",
+        "-useDirForEachRow",
+        "-targetDir",
+        "${SAMPLE_ROOT}/png-8-0-0/tiles",
+        "${SAMPLE_ROOT}/png-8-0-0/window.vrt"
+      ],
+      "seconds": 0.06261419399925217,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${SAMPLE_ROOT}/png-8-0-0/tiles/0/1/window_1_1.png",
+        "${SAMPLE_ROOT}/png-8-0-0/actual.pgm"
+      ],
+      "seconds": 0.022242388000449864,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${RUN_ROOT}/output/imagery/8/0/0.png",
+        "${SAMPLE_ROOT}/png-8-0-0/expected.pgm"
+      ],
+      "seconds": 0.02224404700064042,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "VRT",
+        "-a_nodata",
+        "none",
+        "-srcwin",
+        "65536",
+        "65536",
+        "512",
+        "512",
+        "${RUN_ROOT}/work/levels/8.tif",
+        "${SAMPLE_ROOT}/png-8-128-128/window.vrt"
+      ],
+      "seconds": 0.03190907399948628,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_retile.py",
+        "-q",
+        "-of",
+        "PNG",
+        "-ot",
+        "Byte",
+        "-ps",
+        "512",
+        "512",
+        "-overlap",
+        "0",
+        "-co",
+        "ZLEVEL=6",
+        "-useDirForEachRow",
+        "-targetDir",
+        "${SAMPLE_ROOT}/png-8-128-128/tiles",
+        "${SAMPLE_ROOT}/png-8-128-128/window.vrt"
+      ],
+      "seconds": 0.08529570999962743,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${SAMPLE_ROOT}/png-8-128-128/tiles/0/1/window_1_1.png",
+        "${SAMPLE_ROOT}/png-8-128-128/actual.pgm"
+      ],
+      "seconds": 0.022768770999391563,
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${RUN_ROOT}/output/imagery/8/128/128.png",
+        "${SAMPLE_ROOT}/png-8-128-128/expected.pgm"
+      ],
+      "seconds": 0.02278693799962639,
+      "stderr": ""
+    }
+  ],
+  "finished_at": "2026-10-11T14:09:11.558742+00:00",
+  "format_version": 1,
+  "full_independent_rebuild_performed": false,
+  "png_emission": [
+    {
+      "actual_png_sha256": "3b20429e50bfba6abb2bb3511d85e4c8dcef7d75e4b1ce8ed7006788033e7f91",
+      "expected_png_sha256": "3b20429e50bfba6abb2bb3511d85e4c8dcef7d75e4b1ce8ed7006788033e7f91",
+      "pixels_different": 0,
+      "png_bytes_equal": true,
+      "tile": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "actual_png_sha256": "ff2c5d44e3f33300fe5a6f92a3d850952c1586f09f80f1507109c8e08ae56a07",
+      "expected_png_sha256": "ff2c5d44e3f33300fe5a6f92a3d850952c1586f09f80f1507109c8e08ae56a07",
+      "pixels_different": 0,
+      "png_bytes_equal": true,
+      "tile": [
+        4,
+        8,
+        8
+      ]
+    },
+    {
+      "actual_png_sha256": "a823aa81c5fc26f850b61e385e4428b30e44674a5f5d7e77f645f51842fde069",
+      "expected_png_sha256": "a823aa81c5fc26f850b61e385e4428b30e44674a5f5d7e77f645f51842fde069",
+      "pixels_different": 0,
+      "png_bytes_equal": true,
+      "tile": [
+        8,
+        0,
+        0
+      ]
+    },
+    {
+      "actual_png_sha256": "bcf27c73043d4ef3e9bc90b12d4c8b5a5a9bda86ddf4bf99296d619c6484d4f1",
+      "expected_png_sha256": "bcf27c73043d4ef3e9bc90b12d4c8b5a5a9bda86ddf4bf99296d619c6484d4f1",
+      "pixels_different": 0,
+      "png_bytes_equal": true,
+      "tile": [
+        8,
+        128,
+        128
+      ]
+    }
+  ],
+  "producer_commit": "deca93d4872bbbb3c75ccfa4083c9e865f331d86",
+  "product_identity_sha256": "63733f3a6aa9bb6ebd437a5e6132474ac7949fdccfc5daddc2e5234b1db01393",
+  "product_json_sha256": "949c8fa57b2a31c7f1eeb52a70be4b91d6facce98216c4997c229d0373c7afc5",
+  "pyramid_averaging": [
+    {
+      "actual_pixels_sha256": "8f7cbaccc945469c2fa2dfe63e039e07121a26fac70a679ef29fdeccc3e4ef7c",
+      "base_window": [
+        63488,
+        63488,
+        4096,
+        4096
+      ],
+      "expected_pixels_sha256": "8f7cbaccc945469c2fa2dfe63e039e07121a26fac70a679ef29fdeccc3e4ef7c",
+      "level_window": [
+        248,
+        248,
+        16,
+        16
+      ],
+      "pixels_compared": 256,
+      "pixels_different": 0,
+      "zoom": 0
+    },
+    {
+      "actual_pixels_sha256": "23b4c8f567502d72e70b678ae0e8234e6db2e6342198e091f321358c28d5c2b9",
+      "base_window": [
+        64512,
+        64512,
+        2048,
+        2048
+      ],
+      "expected_pixels_sha256": "23b4c8f567502d72e70b678ae0e8234e6db2e6342198e091f321358c28d5c2b9",
+      "level_window": [
+        504,
+        504,
+        16,
+        16
+      ],
+      "pixels_compared": 256,
+      "pixels_different": 0,
+      "zoom": 1
+    },
+    {
+      "actual_pixels_sha256": "8901ab2a39b756c6b9011481426ceed68a0727b63a888e22b6de545d0026e20c",
+      "base_window": [
+        65024,
+        65024,
+        1024,
+        1024
+      ],
+      "expected_pixels_sha256": "8901ab2a39b756c6b9011481426ceed68a0727b63a888e22b6de545d0026e20c",
+      "level_window": [
+        1016,
+        1016,
+        16,
+        16
+      ],
+      "pixels_compared": 256,
+      "pixels_different": 0,
+      "zoom": 2
+    },
+    {
+      "actual_pixels_sha256": "262034abfb1dabb66e07cb2b999238b698d3eca74be732163c7a9a8102035147",
+      "base_window": [
+        65280,
+        65280,
+        512,
+        512
+      ],
+      "expected_pixels_sha256": "262034abfb1dabb66e07cb2b999238b698d3eca74be732163c7a9a8102035147",
+      "level_window": [
+        2040,
+        2040,
+        16,
+        16
+      ],
+      "pixels_compared": 256,
+      "pixels_different": 0,
+      "zoom": 3
+    },
+    {
+      "actual_pixels_sha256": "c7d2be41398a441e06d26cd107fddb4e00dfc6120534084a521c22ca3fa92472",
+      "base_window": [
+        65408,
+        65408,
+        256,
+        256
+      ],
+      "expected_pixels_sha256": "c7d2be41398a441e06d26cd107fddb4e00dfc6120534084a521c22ca3fa92472",
+      "level_window": [
+        4088,
+        4088,
+        16,
+        16
+      ],
+      "pixels_compared": 256,
+      "pixels_different": 0,
+      "zoom": 4
+    },
+    {
+      "actual_pixels_sha256": "fb1a5e57e21e82ccb9ec0ffd47024c03189635849f11caf1abb5410df37c1490",
+      "base_window": [
+        65472,
+        65472,
+        128,
+        128
+      ],
+      "expected_pixels_sha256": "fb1a5e57e21e82ccb9ec0ffd47024c03189635849f11caf1abb5410df37c1490",
+      "level_window": [
+        8184,
+        8184,
+        16,
+        16
+      ],
+      "pixels_compared": 256,
+      "pixels_different": 0,
+      "zoom": 5
+    },
+    {
+      "actual_pixels_sha256": "99a90eab95a17b97b8dea5ec11e07b587bd55fcf4496a1c6d4001c1f0b976968",
+      "base_window": [
+        65504,
+        65504,
+        64,
+        64
+      ],
+      "expected_pixels_sha256": "99a90eab95a17b97b8dea5ec11e07b587bd55fcf4496a1c6d4001c1f0b976968",
+      "level_window": [
+        16376,
+        16376,
+        16,
+        16
+      ],
+      "pixels_compared": 256,
+      "pixels_different": 0,
+      "zoom": 6
+    },
+    {
+      "actual_pixels_sha256": "ec22951a2a9f6ff2451f57a5065b3b7bd06a36ad273382516429bc39d5ce66a2",
+      "base_window": [
+        65520,
+        65520,
+        32,
+        32
+      ],
+      "expected_pixels_sha256": "ec22951a2a9f6ff2451f57a5065b3b7bd06a36ad273382516429bc39d5ce66a2",
+      "level_window": [
+        32760,
+        32760,
+        16,
+        16
+      ],
+      "pixels_compared": 256,
+      "pixels_different": 0,
+      "zoom": 7
+    }
+  ],
+  "runtime": {
+    "gdal": "GDAL 3.4.1, released 2021/12/27",
+    "gdal_retile_runtime": "system Python from its installed wrapper; separate from sampler Python",
+    "proj": "Rel. 8.2.1, January 1st, 2022",
+    "python": "3.14.3",
+    "uv": "uv 0.10.9"
+  },
+  "sampler_commit": "049176767d26d2e9d99ce151d69f568dca9f2b58",
+  "sampler_repository": "https://github.com/Found-in-Space/catalogs",
+  "scope": "Representative same-host process checks. Exact matches are observations, not regeneration requirements. No full independent rebuild is claimed.",
+  "source_to_base_and_direct_lower_levels_checked": true,
+  "started_at": "2026-10-11T14:09:09.022609+00:00"
+}

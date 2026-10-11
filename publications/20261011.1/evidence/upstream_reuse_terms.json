@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "Access Constraints": "public domain",
+    "Access Scope": "PDS",
+    "Edition": "June 2013",
+    "Use Constraints": "Please cite authors"
+  },
+  "format_version": 1,
+  "imagery_reuse": "public-domain",
+  "required_attribution": "NASA/GSFC/Arizona State University; USGS Astrogeology",
+  "retrieved_html_sha256": "cc066b8ad414270a85e8ed00be2e6caa1e0023218efd3aa989594f5e7c87c597",
+  "source_page": "https://astrogeology.usgs.gov/search/map/moon_lro_lroc_wac_global_morphology_mosaic_100m",
+  "verified_at": "2026-10-11T14:19:43.720187+00:00"
+}

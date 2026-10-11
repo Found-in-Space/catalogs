@@ -49,7 +49,7 @@ validation flag, stage state, or product identity is hand-edited.
 ## Preparation validation
 
 Assembler repository: `https://github.com/Found-in-Space/catalogs`  
-Assembler commit: `0cebfd1ffaf914298a1b0aa2eeae98bd22cb8c21`
+Assembler commit: `049176767d26d2e9d99ce151d69f568dca9f2b58`
 
 The assembler runs from a clean checkout of its pushed commit with Python's
 standard library. It imports no local producer or pipeline package and uses

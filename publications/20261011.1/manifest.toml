@@ -32,27 +32,30 @@ landing_page = "https://astrogeology.usgs.gov/search/map/moon_lro_lroc_wac_globa
 filename = "Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif"
 sha256 = "87159ead1888ae31bb647e957ec60943022b707ec804cb5353a304575936fd55"
 size_bytes = 5959263751
-reuse_terms_status = "pending-product-specific-confirmation"
+reuse_terms_status = "public-domain; cite-authors; verified-primary-USGS-product-metadata"
 
 [provenance]
 assembly_repository = "https://github.com/Found-in-Space/catalogs"
-assembly_commit = "0cebfd1ffaf914298a1b0aa2eeae98bd22cb8c21"
+assembly_commit = "049176767d26d2e9d99ce151d69f568dca9f2b58"
 assembly_python_version = "3.14.3"
 assembly_imports_producer = false
 build_commit = "56fd7a789cf31eea613d2f770a1042846090d587"
 tile_emission_and_validation_commit = "deca93d4872bbbb3c75ccfa4083c9e865f331d86"
 intended_producer_repository = "https://github.com/Found-in-Space/pas-de-geant-texture-pipeline"
-producer_public_access_status = "not-verified"
+producer_public_access_status = "verified-anonymous-access-to-all-recorded-commits"
 historical_python_version_status = "not-recorded"
 gdal = "GDAL 3.4.1, released 2021/12/27"
 proj = "Rel. 8.2.1, January 1st, 2022"
 toolchain_distribution_status = "not-pinned"
+reproducibility_standard = "recorded-process-and-representative-display-checks"
+byte_identical_regeneration_required = false
+full_independent_rebuild_performed = false
 export_inventory = "evidence/export_inventory.json"
 readiness = "evidence/publication_readiness.json"
 
 [license]
 found_in_space_original_metadata = "CC-BY-4.0"
-upstream_imagery = "pending-product-specific-confirmation"
+upstream_imagery = "public-domain; cite-authors"
 producer_software = "MIT"
 
 [[levels]]

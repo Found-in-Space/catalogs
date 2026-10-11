@@ -36,7 +36,7 @@ repeat the upstream camera calibration, photometric modelling, or mosaicking.
 
 - Intended producer repository (public availability is pending verification):
   https://github.com/Found-in-Space/pas-de-geant-texture-pipeline
-- Publication assembler: https://github.com/Found-in-Space/catalogs/tree/0cebfd1ffaf914298a1b0aa2eeae98bd22cb8c21
+- Publication assembler: https://github.com/Found-in-Space/catalogs/tree/049176767d26d2e9d99ce151d69f568dca9f2b58
 - GDAL: https://gdal.org/
 - PROJ: https://proj.org/
 - USGS copyright guidance: https://www.usgs.gov/faqs/are-usgs-reportspublications-copyrighted

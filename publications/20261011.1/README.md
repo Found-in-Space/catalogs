@@ -2,7 +2,9 @@
 
 Release: `20261011.1`  
 Series: `fis.textures.moon.lroc-wac-global-morphology-100m`  
-Status: draft publication candidate; external payload is not yet published.
+Status: draft catalog release awaiting viewer acceptance and DOI deposit.
+
+Planned; no hosting receipt has been supplied.
 
 This is the first proposed release of an evolving series of lunar display
 imagery derived from the LROC WAC global morphology mosaic distributed by USGS.
@@ -14,8 +16,14 @@ The payload has **87,381 tiles and 8,160,721,984 bytes**. The producer
 validated all PNGs and reconstructed every level raster exactly; preparation
 also rehashed the source and every tile. These checks authenticate the existing
 candidate. They do not establish an independently reproduced build or consumer
-acceptance. The remaining requirements are recorded in
+acceptance. Representative source reprojection, direct-from-base averaging, and tile emission checks are recorded in evidence/representative_checks.json. The remaining requirements are recorded in
 `evidence/publication_readiness.json` and `PUBLISHING.md`.
+
+Reproducibility means a documented process with exact source, project, code,
+and uv lockfiles, recorded GDAL/PROJ versions, and representative spatial and
+display checks. Regeneration need not produce identical pixels or PNG bytes;
+the existing payload hashes identify the released files and protect transfers.
+A full independent pyramid rebuild is not a publication requirement.
 
 ## Tile contract and interpretation
 
@@ -84,10 +92,9 @@ using `sha256sum --check` with that root as the working directory.
 
 ## Hosting and citation
 
-The planned prefix is `textures/moon/lroc-wac-global-100m/20261011.1/` in S3 bucket `foundinspace`, served through
-`data.foundin.space`. These are intended locations, not verified download links.
-Keep their status provisional until a generated upload receipt confirms the
-objects and HTTP delivery metadata.
+The immutable prefix is `textures/moon/lroc-wac-global-100m/20261011.1/` in S3 bucket `foundinspace`, served through
+`data.foundin.space`. Planned; no hosting receipt has been supplied.
+Verified download links will be supplied after hosting checks pass.
 
 The initial Zenodo deposit starts one version lineage for `fis.textures.moon.lroc-wac-global-morphology-100m`.
 Later substantive changes use **New version** in that lineage. Cite the

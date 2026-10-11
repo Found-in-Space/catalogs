@@ -400,6 +400,7 @@ audit = [
     { name = "scipy" },
 ]
 dev = [
+    { name = "boto3" },
     { name = "pytest" },
 ]
 publication = [
@@ -417,7 +418,10 @@ audit = [
     { name = "matplotlib", specifier = ">=3.10.9" },
     { name = "scipy", specifier = ">=1.17.1" },
 ]
-dev = [{ name = "pytest", specifier = ">=8" }]
+dev = [
+    { name = "boto3", specifier = ">=1.43.111" },
+    { name = "pytest", specifier = ">=8" },
+]
 publication = [{ name = "boto3", specifier = ">=1.43.111" }]
 
 [[package]]

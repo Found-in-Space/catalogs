@@ -1,5 +1,5 @@
 {
-  "assembly_commit": "0cebfd1ffaf914298a1b0aa2eeae98bd22cb8c21",
+  "assembly_commit": "049176767d26d2e9d99ce151d69f568dca9f2b58",
   "format_version": 1,
   "maximum_pending_tile_hashes": 8,
   "pixel_reconstruction": "authenticated-producer-report; not rerun by assembler",
@@ -11,5 +11,5 @@
   "tile_bytes": 8160721984,
   "tile_count": 87381,
   "tile_hash_workers": 4,
-  "verified_at": "2026-10-11T12:49:37.667971+00:00"
+  "verified_at": "2026-10-11T14:19:41.857822+00:00"
 }

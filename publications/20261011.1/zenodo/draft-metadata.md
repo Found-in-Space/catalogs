@@ -14,8 +14,8 @@ No draft has been created and no DOI has been reserved by this preparation.
 - ORCID: **0009-0009-4500-4316**
 - Community: **Found in Space**
 - Metadata-deposit licence: **CC BY 4.0** for Found in Space original material.
-  Copied producer definitions remain MIT. Confirm image reuse terms separately
-  before distributing the externally hosted tile payload.
+  Copied producer definitions remain MIT. The exact USGS source product
+  metadata identifies the upstream imagery as public domain; cite its authors.
 - Version DOI and Concept DOI: pending initial deposit/publication.
 
 Creator details follow earlier Found in Space catalog releases and should be
@@ -40,6 +40,11 @@ history and dependency files, processing states and commands, complete producer
 pixel validation, and per-tile SHA-256 manifests. The image files are hosted
 externally and are not included in the metadata archive. Insert verified
 immutable payload and producer-code links after publication prerequisites pass.
+
+Planned; no hosting receipt has been supplied.
+Verified download links will be supplied after hosting checks pass.
+Representative source reprojection, direct-from-base averaging, and tile emission checks are recorded in evidence/representative_checks.json. The recorded process and representative display checks support
+reuse without requiring byte-identical regeneration or a full pyramid rebuild.
 
 The imagery is intended for display and interactive exploration. Reprojection
 and pyramid construction do not create new observed detail. The payload is not
