@@ -27,6 +27,9 @@ audit = [
 dev = [
     "pytest>=8",
 ]
+publication = [
+    "boto3>=1.43.111",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
