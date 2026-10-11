@@ -607,7 +607,10 @@ def prepare(
                 )
         for row in levels:
             lines.extend(["", "[[levels]]"])
-            lines.extend(f"{key} = {json.dumps(value)}" for key, value in row.items())
+            publication_row = {**row, "manifest": f"payload/{row['manifest']}"}
+            lines.extend(
+                f"{key} = {json.dumps(value)}" for key, value in publication_row.items()
+            )
         for commit, identity in sorted(producers.items()):
             lines.extend(
                 [
@@ -622,7 +625,12 @@ def prepare(
         (staging / "manifest.toml").write_text(
             "\n".join(lines) + "\n", encoding="utf-8"
         )
-        tomllib.loads((staging / "manifest.toml").read_text())
+        published_manifest = tomllib.loads((staging / "manifest.toml").read_text())
+        for level in published_manifest["levels"]:
+            require(
+                sha256(staging / level["manifest"]) == level["sha256"],
+                "Publication references an unauthenticated tile manifest",
+            )
         regenerate_checksums(staging)
         staging.rename(destination)
         return {
