@@ -1,0 +1,131 @@
+{
+  "checked_at": "2026-10-02T14:25:59Z",
+  "estimate": {
+    "available_bytes": 148766433280,
+    "disk_budget_satisfied": true,
+    "maximum_dimension": 131072,
+    "minimum_working_budget_bytes": 40086274048,
+    "tile_count": 87381,
+    "uncompressed_base_bytes": 17179869184,
+    "uncompressed_pyramid_bytes": 22906404864
+  },
+  "format_version": 1,
+  "producer": {
+    "code_tree_sha256": "b195490f9609eee304c8f6644c85115c74f6f9b770915ad9b94039ec32b3c1ee",
+    "git_dirty": false,
+    "git_sha": "deca93d4872bbbb3c75ccfa4083c9e865f331d86",
+    "package_version": "0.1.0"
+  },
+  "product_id": "moon-lroc-wac-global-morphology-100m-v1",
+  "project": {
+    "composite": {
+      "missing_pixel": 0,
+      "policy": "priority"
+    },
+    "format_version": 1,
+    "product": {
+      "bounds": [
+        -180.0,
+        -90.0,
+        180.0,
+        90.0
+      ],
+      "channels": "grayscale",
+      "format": "png",
+      "kind": "display-texture",
+      "maximum_zoom": 8,
+      "opaque": true,
+      "path_template": "imagery/{z}/{x}/{y}.png",
+      "pixel_type": "uint8",
+      "pyramid_resampling": "average",
+      "reprojection_resampling": "bilinear",
+      "tile_size": 512
+    },
+    "product_id": "moon-lroc-wac-global-morphology-100m-v1",
+    "sources": [
+      {
+        "acquisition": {
+          "citation": "LROC Team; Arizona State University; USGS Astrogeology Science Center.",
+          "expected": {
+            "band_count": 1,
+            "data_type": "Byte",
+            "geo_transform": [
+              -5458203.0763469,
+              100.0,
+              0.0,
+              2729101.53817345,
+              0.0,
+              -100.0
+            ],
+            "height": 54582,
+            "mask_flags": [
+              "ALL_VALID"
+            ],
+            "nodata": 0.0,
+            "offset": -0.003952569169961,
+            "scale": 1.00395256917,
+            "sha256": "87159ead1888ae31bb647e957ec60943022b707ec804cb5353a304575936fd55",
+            "size_bytes": 5959263751,
+            "width": 109164
+          },
+          "filename": "Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif",
+          "format_version": 1,
+          "landing_page": "https://astrogeology.usgs.gov/search/map/moon_lro_lroc_wac_global_morphology_mosaic_100m",
+          "reported": {
+            "approximate_size": "5.5 GB",
+            "band_count": 1,
+            "data_type": "Byte",
+            "height": 54582,
+            "projection": "Simple Cylindrical; planetocentric latitude; positive-east longitude",
+            "width": 109164
+          },
+          "source_crs": "../../../../resources/crs/moon-simple-cylindrical-1737400.wkt",
+          "source_id": "lroc-wac-global-morphology-100m-june-2013",
+          "status": "admitted",
+          "title": "Moon LRO LROC WAC Global Morphology Mosaic 100m",
+          "url": "https://planetarymaps.usgs.gov/mosaic/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif"
+        },
+        "id": "lroc-wac-global-morphology-100m-june-2013",
+        "priority": 100
+      }
+    ],
+    "target": {
+      "crs": "../../../resources/crs/moon-geographic-1737400.wkt",
+      "id": "moon",
+      "latitude_range": [
+        -90.0,
+        90.0
+      ],
+      "longitude_range": [
+        -180.0,
+        180.0
+      ]
+    }
+  },
+  "project_identity_sha256": "8561f23f5ab87f97c81989ea8a28618e886ad618c5b169b984d7fd756f8eb186",
+  "ready_for_processing": true,
+  "release_eligible": true,
+  "roots": {
+    "evidence": "${RUN_ROOT}/evidence",
+    "output": "${RUN_ROOT}/output",
+    "source": "${RUN_ROOT}/source",
+    "work": "${RUN_ROOT}/work"
+  },
+  "sources": [
+    {
+      "admitted": true,
+      "contract_complete": true,
+      "exists": true,
+      "id": "lroc-wac-global-morphology-100m-june-2013",
+      "identity_matches": true,
+      "path": "${RUN_ROOT}/source/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif",
+      "sha256": "87159ead1888ae31bb647e957ec60943022b707ec804cb5353a304575936fd55",
+      "size_bytes": 5959263751
+    }
+  ],
+  "target_crs_sha256": "c2fd8201879986f43461883788b0850a63619ed900271706dad09353860c51cf",
+  "tool_versions": {
+    "gdal": "GDAL 3.4.1, released 2021/12/27",
+    "proj": "Rel. 8.2.1, January 1st, 2022"
+  }
+}

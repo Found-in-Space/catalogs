@@ -1,0 +1,137 @@
+format_version = 1
+release = "20261011.1"
+series_id = "fis.textures.moon.lroc-wac-global-morphology-100m"
+title = "Found in Space lunar display textures: LROC WAC global morphology 100 m"
+status = "draft"
+publication_model = "evolving-versioned-series"
+
+[lifecycle]
+release_snapshot = "immutable"
+zenodo_relationship = "initial-record"
+later_versions = "zenodo-new-version"
+doi_status = "not-reserved"
+
+[payload]
+product_id = "moon-lroc-wac-global-morphology-100m-v1"
+product_identity_sha256 = "63733f3a6aa9bb6ebd437a5e6132474ac7949fdccfc5daddc2e5234b1db01393"
+product_json = "payload/product.json"
+product_json_sha256 = "949c8fa57b2a31c7f1eeb52a70be4b91d6facce98216c4997c229d0373c7afc5"
+manifest_set_sha256 = "e591f87a0e2655dfc23a623bdabeb64a7f07bf79e6b6a09c86b6fdc37a10a928"
+tile_count = 87381
+tile_bytes = 8160721984
+tiles_in_git_or_metadata_deposit = false
+storage_status = "planned-not-uploaded"
+intended_s3_bucket = "foundinspace"
+intended_s3_prefix = "textures/moon/lroc-wac-global-100m/20261011.1/"
+intended_cdn_base_url = "https://data.foundin.space/textures/moon/lroc-wac-global-100m/20261011.1/"
+content_type = "image/png"
+cache_control = "public, max-age=31536000, immutable"
+
+[source]
+landing_page = "https://astrogeology.usgs.gov/search/map/moon_lro_lroc_wac_global_morphology_mosaic_100m"
+filename = "Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif"
+sha256 = "87159ead1888ae31bb647e957ec60943022b707ec804cb5353a304575936fd55"
+size_bytes = 5959263751
+reuse_terms_status = "pending-product-specific-confirmation"
+
+[provenance]
+assembly_repository = "https://github.com/Found-in-Space/catalogs"
+assembly_commit = "0cebfd1ffaf914298a1b0aa2eeae98bd22cb8c21"
+assembly_python_version = "3.14.3"
+assembly_imports_producer = false
+build_commit = "56fd7a789cf31eea613d2f770a1042846090d587"
+tile_emission_and_validation_commit = "deca93d4872bbbb3c75ccfa4083c9e865f331d86"
+intended_producer_repository = "https://github.com/Found-in-Space/pas-de-geant-texture-pipeline"
+producer_public_access_status = "not-verified"
+historical_python_version_status = "not-recorded"
+gdal = "GDAL 3.4.1, released 2021/12/27"
+proj = "Rel. 8.2.1, January 1st, 2022"
+toolchain_distribution_status = "not-pinned"
+export_inventory = "evidence/export_inventory.json"
+readiness = "evidence/publication_readiness.json"
+
+[license]
+found_in_space_original_metadata = "CC-BY-4.0"
+upstream_imagery = "pending-product-specific-confirmation"
+producer_software = "MIT"
+
+[[levels]]
+zoom = 0
+count = 1
+bytes = 179971
+manifest = "payload/manifests/tiles-z0.sha256"
+sha256 = "bd4aa5b36c25c23540a9edc72c3b60561e6945beed3bccb779d2a42f933a9f78"
+
+[[levels]]
+zoom = 1
+count = 4
+bytes = 718859
+manifest = "payload/manifests/tiles-z1.sha256"
+sha256 = "a7d6b70a436d6a55b270a350d7fc2763e0941079e48f965f48686693bc009f31"
+
+[[levels]]
+zoom = 2
+count = 16
+bytes = 2792544
+manifest = "payload/manifests/tiles-z2.sha256"
+sha256 = "a63bd65d23828c7ae2c4e558fdc251a3def5a5ab17f5df066c518cd43e46b4b0"
+
+[[levels]]
+zoom = 3
+count = 64
+bytes = 10711536
+manifest = "payload/manifests/tiles-z3.sha256"
+sha256 = "52cca17dcd3cba07892d648ad8328bc39b50292c1d9608a0f1c84756bf96045b"
+
+[[levels]]
+zoom = 4
+count = 256
+bytes = 40199077
+manifest = "payload/manifests/tiles-z4.sha256"
+sha256 = "3acae00be7a541f66b95dcfc929e9690cceecff0baf1d735f8a2730759529b48"
+
+[[levels]]
+zoom = 5
+count = 1024
+bytes = 147182201
+manifest = "payload/manifests/tiles-z5.sha256"
+sha256 = "e0b24cdf794ff5ec2902216ba806b0c956ae7690644c0aa5346d6b8a57163b8a"
+
+[[levels]]
+zoom = 6
+count = 4096
+bytes = 524040407
+manifest = "payload/manifests/tiles-z6.sha256"
+sha256 = "9fda7f4f41cb15b722a430e33a8579c5a2a7e58d3f44636669d9db8d2865a702"
+
+[[levels]]
+zoom = 7
+count = 16384
+bytes = 1788161094
+manifest = "payload/manifests/tiles-z7.sha256"
+sha256 = "b7566d05b9e47c6a5af7109e1814d7a998bbc55011e36f42ea141d07d5f41426"
+
+[[levels]]
+zoom = 8
+count = 65536
+bytes = 5646736295
+manifest = "payload/manifests/tiles-z8.sha256"
+sha256 = "4ce1e8c93255950be856569e41b5489ee8aa80a444946c5aa3adac9b25ed019d"
+
+[[producer_commits]]
+git_sha = "1f657ce91eb795b2af7ec6169bdb2a61637605ac"
+code_tree_sha256 = "d8920ac966ab675e21086af194d61c354ce03b636b3833f172b9c103de335fdf"
+git_dirty = false
+package_version = "0.1.0"
+
+[[producer_commits]]
+git_sha = "56fd7a789cf31eea613d2f770a1042846090d587"
+code_tree_sha256 = "d8920ac966ab675e21086af194d61c354ce03b636b3833f172b9c103de335fdf"
+git_dirty = false
+package_version = "0.1.0"
+
+[[producer_commits]]
+git_sha = "deca93d4872bbbb3c75ccfa4083c9e865f331d86"
+code_tree_sha256 = "b195490f9609eee304c8f6644c85115c74f6f9b770915ad9b94039ec32b3c1ee"
+git_dirty = false
+package_version = "0.1.0"

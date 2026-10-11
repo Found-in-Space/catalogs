@@ -1,0 +1,20 @@
+{
+  "completed": {
+    "admitted_source_rehashed": true,
+    "every_tile_rehashed": true,
+    "portable_evidence_exported": true,
+    "producer_pixel_validation_recorded": true,
+    "recorded_producer_trees_authenticated": true
+  },
+  "format_version": 1,
+  "pending": {
+    "consumer_acceptance": "Record viewer acceptance at poles, antimeridian, tile joins, and zoom transitions.",
+    "historical_runtime": "Historical Python version is not recorded; do not substitute the assembly interpreter version.",
+    "immutable_hosting": "Upload this exact product and verify remote checksums, object metadata, CDN delivery, and CORS; retain a generated receipt.",
+    "pinned_gdal_proj_environment": "Recorded GDAL/PROJ versions do not pin a distribution or container. Establish a replayable environment and verify reproduction before finalizing this payload.",
+    "public_producer_commits": "Publish and verify every recorded producer commit; no producer remote is configured in this preparation checkout.",
+    "upstream_reuse_terms": "Confirm and record product-specific imagery reuse terms; a USGS hosting URL alone does not establish copyright status.",
+    "zenodo_deposit": "Reserve the initial Version DOI, confirm metadata and actual publication date, and assemble the final deposit from a clean public catalogs commit."
+  },
+  "publication_ready": false
+}

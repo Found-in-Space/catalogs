@@ -1,0 +1,33 @@
+Found in Space original metadata
+===============================
+
+Copyright (c) 2026 Found in Space contributors.
+
+Original publication prose, organisation, and publication metadata authored by
+Found in Space are licensed under Creative Commons Attribution 4.0 International:
+https://creativecommons.org/licenses/by/4.0/
+
+Suggested attribution:
+Found in Space, "Found in Space lunar display textures: LROC WAC global morphology 100 m", release 20261011.1 (2026).
+
+Upstream imagery and software
+=============================
+
+This licence does not assert ownership of the LROC WAC imagery or grant new
+rights in upstream materials. The product-specific imagery reuse terms still
+require confirmation before distributing this candidate's image payload.
+See NOTICE.md and REFERENCES.md. USGS hosting by itself is not a determination
+that a third-party work is in the public domain.
+
+Producer project definitions and dependency declarations copied from its
+recorded commits retain their upstream MIT licence. See
+reproduction/producer/LICENSE. Dependency packages retain their own licences.
+The original facts, processing receipts, checksums, and scientific citations
+do not transfer ownership of the underlying imagery or cited publications.
+
+No warranty
+===========
+
+The original Found in Space material is provided without warranties to the
+extent permitted by the applicable licence. These display textures are not
+an elevation or calibrated quantitative photometry product.
