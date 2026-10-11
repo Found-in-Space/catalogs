@@ -14,6 +14,8 @@ import json
 import re
 import subprocess
 import sys
+import threading
+import time
 from collections import deque
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
@@ -26,6 +28,43 @@ from botocore.exceptions import ClientError
 
 CACHE_CONTROL = "public, max-age=31536000, immutable"
 TILE_PATH = re.compile(r"imagery/(\d+)/(\d+)/(\d+)\.png\Z")
+
+
+class BandwidthLimiter:
+    """Pace all upload streams against one shared byte budget."""
+
+    def __init__(
+        self, bytes_per_second: float, *, clock=time.monotonic, sleep=time.sleep
+    ):
+        require(bytes_per_second > 0, "Upload bandwidth must be positive")
+        self.rate = bytes_per_second
+        self.clock = clock
+        self.sleep = sleep
+        self.next_read_at = clock()
+        self.lock = threading.Lock()
+
+    def wait(self, size: int) -> None:
+        if not size:
+            return
+        with self.lock:
+            now = self.clock()
+            self.next_read_at = max(now, self.next_read_at) + size / self.rate
+            delay = self.next_read_at - now
+        self.sleep(delay)
+
+
+class RateLimitedReader:
+    def __init__(self, stream, limiter: BandwidthLimiter):
+        self.stream = stream
+        self.limiter = limiter
+
+    def read(self, size=-1):
+        content = self.stream.read(size)
+        self.limiter.wait(len(content))
+        return content
+
+    def __getattr__(self, name):
+        return getattr(self.stream, name)
 
 
 def digest(path: Path) -> str:
@@ -138,7 +177,14 @@ def check_head(head: dict, row: dict) -> None:
     )
 
 
-def publish_object(client, output: Path, bucket: str, prefix: str, row: dict) -> str:
+def publish_object(
+    client,
+    output: Path,
+    bucket: str,
+    prefix: str,
+    row: dict,
+    limiter: BandwidthLimiter | None = None,
+) -> str:
     path = output / row["path"]
     require(digest(path) == row["sha256"], f"Local checksum changed: {row['path']}")
     key = prefix + row["path"]
@@ -155,7 +201,7 @@ def publish_object(client, output: Path, bucket: str, prefix: str, row: dict) ->
             client.put_object(
                 Bucket=bucket,
                 Key=key,
-                Body=stream,
+                Body=RateLimitedReader(stream, limiter) if limiter else stream,
                 ContentLength=row["bytes"],
                 ContentType=row["content_type"],
                 CacheControl=CACHE_CONTROL,
@@ -244,7 +290,13 @@ def verify_cdn(base: str, objects: list[dict]) -> list[dict]:
 
 
 def publish(
-    client, output: Path, bucket: str, prefix: str, objects: list[dict], workers: int
+    client,
+    output: Path,
+    bucket: str,
+    prefix: str,
+    objects: list[dict],
+    workers: int,
+    limiter: BandwidthLimiter | None = None,
 ) -> dict:
     counts = {"uploaded": 0, "existing": 0}
     # Keep queued work bounded; process the descriptor after every other object.
@@ -263,14 +315,16 @@ def publish(
 
         for row in objects[:-1]:
             pending.append(
-                pool.submit(publish_object, client, output, bucket, prefix, row)
+                pool.submit(
+                    publish_object, client, output, bucket, prefix, row, limiter
+                )
             )
             if len(pending) >= workers * 2:
                 finish_one()
         while pending:
             finish_one()
     verify_inventory(client, bucket, prefix, objects, allow_missing_descriptor=True)
-    counts[publish_object(client, output, bucket, prefix, objects[-1])] += 1
+    counts[publish_object(client, output, bucket, prefix, objects[-1], limiter)] += 1
     verify_inventory(client, bucket, prefix, objects)
     return counts
 
@@ -280,12 +334,19 @@ def main() -> None:
     parser.add_argument("--output-root", type=Path, required=True)
     parser.add_argument("--release", required=True)
     parser.add_argument("--profile")
-    parser.add_argument("--workers", type=int, default=16)
+    parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument(
+        "--max-upload-mibps",
+        type=float,
+        default=1.0,
+        help="Aggregate payload upload limit in MiB/s (default: 1)",
+    )
     parser.add_argument("--publish", action="store_true")
     parser.add_argument("--receipt", type=Path)
     args = parser.parse_args()
     require(bool(re.fullmatch(r"\d{8}\.[1-9]\d*", args.release)), "Invalid release")
     require(args.workers > 0, "Workers must be positive")
+    require(args.max_upload_mibps > 0, "Upload bandwidth must be positive")
     output = args.output_root.resolve()
     product, objects = plan(output)
     require(
@@ -341,7 +402,8 @@ def main() -> None:
         ),
     )
     started = datetime.now(UTC).isoformat()
-    counts = publish(client, output, bucket, prefix, objects, args.workers)
+    limiter = BandwidthLimiter(args.max_upload_mibps * 1024 * 1024)
+    counts = publish(client, output, bucket, prefix, objects, args.workers, limiter)
     cdn_checks = verify_cdn(cdn, objects)
     receipt = {
         "format_version": 1,
@@ -354,6 +416,7 @@ def main() -> None:
         "immutable_conditional_writes": True,
         "counts": counts,
         "workers": args.workers,
+        "maximum_upload_mib_per_second": args.max_upload_mibps,
         "cdn_checks": cdn_checks,
         "boto3_version": boto3.__version__,
     }

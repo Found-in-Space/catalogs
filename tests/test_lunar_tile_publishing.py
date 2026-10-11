@@ -2,6 +2,7 @@
 
 import base64
 import hashlib
+import io
 import runpy
 from pathlib import Path
 
@@ -132,3 +133,24 @@ def test_failed_tiles_cannot_promote_descriptor(tmp_path):
     with pytest.raises(ValueError, match="Local checksum changed"):
         TOOL["publish"](store, tmp_path, "bucket", "release/", items, 2)
     assert "release/product.json" not in store.puts
+
+
+def test_one_bandwidth_budget_is_shared_between_streams_and_retries():
+    elapsed = [0.0]
+    sleeps = []
+
+    def sleep(delay):
+        sleeps.append(delay)
+        elapsed[0] += delay
+
+    limiter = TOOL["BandwidthLimiter"](1024, clock=lambda: elapsed[0], sleep=sleep)
+    first = TOOL["RateLimitedReader"](io.BytesIO(b"a" * 1024), limiter)
+    second = TOOL["RateLimitedReader"](io.BytesIO(b"b" * 1024), limiter)
+    assert first.read(512) == b"a" * 512
+    assert second.read() == b"b" * 1024
+    first.seek(0)
+    assert first.read() == b"a" * 1024
+    assert first.tell() == 1024
+    assert first.read() == b""
+    assert elapsed[0] == 2.5
+    assert sum(sleeps) == 2.5
