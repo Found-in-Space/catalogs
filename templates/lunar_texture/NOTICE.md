@@ -3,8 +3,8 @@
 Release: `@RELEASE@`
 
 The upstream imagery is the LROC WAC global morphology mosaic distributed by
-USGS Astrogeology. Credit the LROC Team at Arizona State University, NASA's
-Lunar Reconnaissance Orbiter mission, and USGS Astrogeology Science Center.
+USGS Astrogeology. Credit NASA/GSFC/Arizona State University, the LROC Team,
+and USGS Astrogeology Science Center.
 Scientific attribution does not imply endorsement of Found in Space.
 
 Found in Space contributes reprojection, geographic display tiling, the
@@ -22,11 +22,10 @@ lower levels are area averages of the maximum-resolution base, and output
 values are unsigned 8-bit samples. Consumers should preserve the addressing,
 coordinate, resampling, and missing-coverage conventions when describing reuse.
 
-Upstream product-specific reuse terms are not established by this candidate.
-Before image distribution, record the applicable terms and their primary-source
-evidence. General USGS copyright guidance explicitly distinguishes USGS works
-from third-party images hosted on its site:
-https://www.usgs.gov/faqs/are-usgs-reportspublications-copyrighted
+The exact June 2013 USGS product metadata identifies the imagery as public
+domain and asks users to cite the authors. The retrieved page identity,
+observation date, and relevant fields are in evidence/upstream_reuse_terms.json:
+https://astrogeology.usgs.gov/search/map/moon_lro_lroc_wac_global_morphology_mosaic_100m
 
 Found in Space original publication metadata is CC BY 4.0; copied producer
 definitions remain MIT. Neither licence silently relicenses source imagery.

@@ -11,10 +11,11 @@ publish the tile payload or start a Zenodo DOI lineage.
 1. Make every producer commit enumerated in `manifest.toml` publicly retrievable
    and verify its exact SHA. Preserve the historical acquisition, raster-build,
    and tile-emission revisions rather than attributing all stages to the last one.
-2. Establish a pinned GDAL/PROJ distribution or container and a recorded Python
-   version for a controlled replay. The current evidence has version strings,
-   but no historical runtime/distribution pin. An independent replay is still
-   required before claiming full build reproducibility.
+2. Preserve the source, project, public code, and matching uv lockfiles; record
+   Python and GDAL/PROJ versions. Document representative source reprojection,
+   geometry, pyramid, and visual checks. These are display textures: identical
+   regenerated pixels or PNG bytes, a hermetic system image, and a full pyramid
+   rebuild are not publication requirements.
 3. Confirm the upstream product's image reuse terms from a primary source and
    record them in the licence, notice, manifest, and Zenodo metadata.
 4. Record consumer acceptance at poles, the antimeridian, tile boundaries, and
@@ -35,8 +36,8 @@ expansion.
 
 Use a clean checkout of the publicly available producer at each recorded SHA,
 its corresponding `uv.lock`, and `UV_CACHE_DIR=.cache/uv uv sync --frozen
---no-editable`. Before processing, settle the external GDAL/PROJ environment
-and capture the interpreter and package installation provenance.
+--no-editable`. Record the external GDAL/PROJ versions and interpreter used for
+any new checks; unknown historical interpreter details remain disclosed.
 
 - Acquisition: commit `1f657ce91eb795b2af7ec6169bdb2a61637605ac`, command
   `download` with that revision's source specification and `--source-root`.
@@ -49,8 +50,20 @@ and capture the interpreter and package installation provenance.
 Run producer entrypoints as `UV_CACHE_DIR=.cache/uv uv run
 pas-de-geant-textures <command>`. Preserve the resulting project, source
 receipt, source inspection, lockfiles, software provenance, stage states,
-pixel validation, and per-tile manifests. An end-to-end rebuild must compare
-the new tile hashes with the candidate's per-level manifests.
+pixel validation, and per-tile manifests. Published-file checksums protect
+payload identity and transfer integrity; a fresh build need not match them.
+
+Representative checks can be recorded using the public catalogs script:
+
+```bash
+uv run --frozen --no-editable scripts/check_lunar_samples.py \
+  --run-root /path/to/controlled-run \
+  --producer-root /path/to/clean-public-producer \
+  --scratch-root /path/to/new-sample-work \
+  --report /path/to/representative_checks.json
+```
+
+Pass that generated report to the assembler with `--sample-report`.
 
 ## Immutable S3 and CDN payload
 

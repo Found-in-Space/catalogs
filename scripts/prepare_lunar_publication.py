@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import html
 import json
 import re
 import shutil
@@ -19,6 +20,7 @@ from collections import deque
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from pathlib import Path
+from urllib.request import Request, urlopen
 
 SERIES = "fis.textures.moon.lroc-wac-global-morphology-100m"
 TITLE = "Found in Space lunar display textures: LROC WAC global morphology 100 m"
@@ -57,6 +59,69 @@ def require(condition: bool, message: str) -> None:
 
 def read_json(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def public_evidence(commits: list[str]) -> tuple[dict, dict]:
+    verified = []
+    for commit in commits:
+        url = f"https://api.github.com/repos/Found-in-Space/pas-de-geant-texture-pipeline/commits/{commit}"
+        with urlopen(
+            Request(url, headers={"User-Agent": "Found-in-Space-publication"}),
+            timeout=60,
+        ) as response:
+            body = response.read()
+            require(json.loads(body)["sha"] == commit, "Public producer commit differs")
+            verified.append(
+                {"git_sha": commit, "url": url, "http_status": response.status}
+            )
+    with urlopen(
+        Request(SOURCE_PAGE, headers={"User-Agent": "Found-in-Space-publication"}),
+        timeout=60,
+    ) as response:
+        body = response.read()
+    fields = {}
+
+    def clean(text):
+        return " ".join(html.unescape(re.sub(r"<[^>]*>", "", text)).split())
+
+    for name, value in re.findall(
+        r"<dt[^>]*>(.*?)</dt>\s*<dd[^>]*>(.*?)</dd>", body.decode(), re.S
+    ):
+        fields[clean(name)] = clean(value)
+    require(
+        fields.get("Access Constraints", "").lower() == "public domain",
+        "Product rights evidence changed",
+    )
+    require(
+        fields.get("Use Constraints", "").lower() == "please cite authors",
+        "Product attribution terms changed",
+    )
+    at = datetime.now(UTC).isoformat()
+    return (
+        {
+            "format_version": 1,
+            "verified_at": at,
+            "anonymous_public_access": True,
+            "commits": verified,
+        },
+        {
+            "format_version": 1,
+            "verified_at": at,
+            "source_page": SOURCE_PAGE,
+            "retrieved_html_sha256": hashlib.sha256(body).hexdigest(),
+            "fields": {
+                name: fields[name]
+                for name in (
+                    "Access Constraints",
+                    "Use Constraints",
+                    "Access Scope",
+                    "Edition",
+                )
+            },
+            "imagery_reuse": "public-domain",
+            "required_attribution": "NASA/GSFC/Arizona State University; USGS Astrogeology",
+        },
+    )
 
 
 def write_json(path: Path, value) -> None:
@@ -102,6 +167,9 @@ def portable(value, run_root: Path, producer_root: Path):
                     "astrogeology.usgs.gov",
                     "planetarymaps.usgs.gov",
                     "asc-pds-services.s3.us-west-2.amazonaws.com",
+                    "github.com",
+                    "api.github.com",
+                    "data.foundin.space",
                 },
                 "Unreviewed evidence URL",
             )
@@ -259,7 +327,13 @@ def regenerate_checksums(release: Path) -> None:
 
 
 def prepare(
-    *, run_root: Path, producer_root: Path, release: str, destination: Path
+    *,
+    run_root: Path,
+    producer_root: Path,
+    release: str,
+    destination: Path,
+    sample_report: Path | None = None,
+    hosting_receipt: Path | None = None,
 ) -> dict:
     repository = Path(__file__).resolve().parents[1]
     require(re.fullmatch(r"\d{8}\.[1-9]\d*", release) is not None, "Invalid release ID")
@@ -488,6 +562,88 @@ def prepare(
             },
         )
         prefix = f"textures/moon/lroc-wac-global-100m/{release}/"
+        public_code, rights = public_evidence(sorted(producers))
+        write_json(staging / "evidence/public_producer_commits.json", public_code)
+        write_json(staging / "evidence/upstream_reuse_terms.json", rights)
+        if sample_report:
+            samples = read_json(sample_report)
+            require(
+                samples["product_identity_sha256"]
+                == product["product_identity_sha256"],
+                "Sample report belongs to another product",
+            )
+            require(
+                samples["product_json_sha256"] == sha256(output / "product.json"),
+                "Sample descriptor differs",
+            )
+            require(
+                samples["source_to_base_and_direct_lower_levels_checked"] is True,
+                "Sample process checks incomplete",
+            )
+            require(
+                samples["byte_identical_regeneration_required"] is False,
+                "Unexpected display-texture reproducibility standard",
+            )
+            write_json(
+                staging / "evidence/representative_checks.json",
+                portable(samples, run_root, producer_root),
+            )
+        if hosting_receipt:
+            hosting = read_json(hosting_receipt)
+            require(
+                hosting["product_identity_sha256"]
+                == product["product_identity_sha256"],
+                "Hosting receipt belongs to another product",
+            )
+            require(
+                hosting["product_json_sha256"] == sha256(output / "product.json"),
+                "Hosted descriptor differs",
+            )
+            require(
+                hosting["manifest_set_sha256"] == product["manifest_set_sha256"],
+                "Hosted manifest set differs",
+            )
+            require(
+                hosting["bucket"] == "foundinspace" and hosting["prefix"] == prefix,
+                "Unexpected hosting destination",
+            )
+            require(
+                hosting["object_count"]
+                == product["tiles"]["total_count"] + len(levels) + 1,
+                "Hosted object count differs",
+            )
+            expected_bytes = (
+                product["tiles"]["total_bytes"]
+                + sum((output / level["manifest"]).stat().st_size for level in levels)
+                + (output / "product.json").stat().st_size
+            )
+            require(
+                hosting["total_bytes"] == expected_bytes, "Hosted byte count differs"
+            )
+            require(
+                all(
+                    hosting[name] is True
+                    for name in (
+                        "all_remote_sha256_sizes_and_metadata_verified",
+                        "exact_remote_inventory_verified",
+                        "descriptor_published_last",
+                        "immutable_conditional_writes",
+                    )
+                ),
+                "Hosting verification incomplete",
+            )
+            require(
+                len(hosting["cdn_checks"]) >= 5
+                and all(
+                    row["status"] == 200 and row["cors"] == "*"
+                    for row in hosting["cdn_checks"]
+                ),
+                "CDN verification incomplete",
+            )
+            write_json(
+                staging / "evidence/hosting_receipt.json",
+                portable(hosting, run_root, producer_root),
+            )
         readiness = {
             "format_version": 1,
             "publication_ready": False,
@@ -497,17 +653,30 @@ def prepare(
                 "every_tile_rehashed": True,
                 "producer_pixel_validation_recorded": True,
                 "portable_evidence_exported": True,
+                "public_producer_commits": True,
+                "upstream_reuse_terms": True,
+                "recorded_process_and_locked_python_dependencies": True,
+                "representative_checks_recorded": sample_report is not None,
+                "immutable_hosting": hosting_receipt is not None,
             },
             "pending": {
-                "public_producer_commits": "Publish and verify every recorded producer commit; no producer remote is configured in this preparation checkout.",
-                "historical_runtime": "Historical Python version is not recorded; do not substitute the assembly interpreter version.",
-                "pinned_gdal_proj_environment": "Recorded GDAL/PROJ versions do not pin a distribution or container. Establish a replayable environment and verify reproduction before finalizing this payload.",
-                "upstream_reuse_terms": "Confirm and record product-specific imagery reuse terms; a USGS hosting URL alone does not establish copyright status.",
                 "consumer_acceptance": "Record viewer acceptance at poles, antimeridian, tile joins, and zoom transitions.",
-                "immutable_hosting": "Upload this exact product and verify remote checksums, object metadata, CDN delivery, and CORS; retain a generated receipt.",
                 "zenodo_deposit": "Reserve the initial Version DOI, confirm metadata and actual publication date, and assemble the final deposit from a clean public catalogs commit.",
             },
+            "reproducibility_standard": "recorded-process-and-representative-display-checks; byte-identical-regeneration-not-required",
+            "limitations": {
+                "historical_python_patch": "not recorded; verification interpreter is recorded separately",
+                "full_independent_rebuild": "not performed; not a publication requirement for these display textures",
+            },
         }
+        if not sample_report:
+            readiness["pending"]["representative_checks"] = (
+                "Record representative source, grid, and pyramid checks without rebuilding the full product."
+            )
+        if not hosting_receipt:
+            readiness["pending"]["immutable_hosting"] = (
+                "Publish and verify the exact payload and retain its generated S3/CDN receipt."
+            )
         write_json(staging / "evidence/publication_readiness.json", readiness)
         substitutions = {
             "RELEASE": release,
@@ -521,6 +690,15 @@ def prepare(
             "TILE_BYTES": f"{product['tiles']['total_bytes']:,}",
             "BUILD_COMMIT": build_commit,
             "TILE_COMMIT": product["producer"]["git_sha"],
+            "HOSTING_STATUS": "Published and verified through S3 and the CDN; see evidence/hosting_receipt.json."
+            if hosting_receipt
+            else "Planned; no hosting receipt has been supplied.",
+            "CHECKS_STATUS": "Representative source reprojection, direct-from-base averaging, and tile emission checks are recorded in evidence/representative_checks.json."
+            if sample_report
+            else "Representative process checks are pending.",
+            "HOSTING_LINKS": f"[Product descriptor](https://data.foundin.space/{prefix}product.json) and [whole-globe tile](https://data.foundin.space/{prefix}imagery/0/0/0.png)."
+            if hosting_receipt
+            else "Verified download links will be supplied after hosting checks pass.",
             "LEVEL_TABLE": "\n".join(
                 f"| {row['zoom']} | {row['count']:,} | {row['bytes']:,} |"
                 for row in levels
@@ -559,7 +737,9 @@ def prepare(
                 "tile_count": product["tiles"]["total_count"],
                 "tile_bytes": product["tiles"]["total_bytes"],
                 "tiles_in_git_or_metadata_deposit": False,
-                "storage_status": "planned-not-uploaded",
+                "storage_status": "published-and-verified"
+                if hosting_receipt
+                else "planned-not-uploaded",
                 "intended_s3_bucket": "foundinspace",
                 "intended_s3_prefix": prefix,
                 "intended_cdn_base_url": f"https://data.foundin.space/{prefix}",
@@ -571,7 +751,7 @@ def prepare(
                 "filename": source_spec["filename"],
                 "sha256": expected["sha256"],
                 "size_bytes": expected["size_bytes"],
-                "reuse_terms_status": "pending-product-specific-confirmation",
+                "reuse_terms_status": "public-domain; cite-authors; verified-primary-USGS-product-metadata",
             },
             "provenance": {
                 "assembly_repository": "https://github.com/Found-in-Space/catalogs",
@@ -581,17 +761,20 @@ def prepare(
                 "build_commit": build_commit,
                 "tile_emission_and_validation_commit": product["producer"]["git_sha"],
                 "intended_producer_repository": PRODUCER_URL,
-                "producer_public_access_status": "not-verified",
+                "producer_public_access_status": "verified-anonymous-access-to-all-recorded-commits",
                 "historical_python_version_status": "not-recorded",
                 "gdal": product["tools"]["gdal"],
                 "proj": product["tools"]["proj"],
                 "toolchain_distribution_status": "not-pinned",
+                "reproducibility_standard": "recorded-process-and-representative-display-checks",
+                "byte_identical_regeneration_required": False,
+                "full_independent_rebuild_performed": False,
                 "export_inventory": "evidence/export_inventory.json",
                 "readiness": "evidence/publication_readiness.json",
             },
             "license": {
                 "found_in_space_original_metadata": "CC-BY-4.0",
-                "upstream_imagery": "pending-product-specific-confirmation",
+                "upstream_imagery": "public-domain; cite-authors",
                 "producer_software": "MIT",
             },
         }
@@ -651,6 +834,8 @@ def main() -> None:
     parser.add_argument("--producer-root", type=Path, required=True)
     parser.add_argument("--release", required=True)
     parser.add_argument("--destination", type=Path, required=True)
+    parser.add_argument("--sample-report", type=Path)
+    parser.add_argument("--hosting-receipt", type=Path)
     arguments = parser.parse_args()
     print(
         json.dumps(
@@ -659,6 +844,8 @@ def main() -> None:
                 producer_root=arguments.producer_root.resolve(),
                 release=arguments.release,
                 destination=arguments.destination.resolve(),
+                sample_report=arguments.sample_report,
+                hosting_receipt=arguments.hosting_receipt,
             ),
             indent=2,
         )
