@@ -2,7 +2,7 @@
   "completed": {
     "admitted_source_rehashed": true,
     "every_tile_rehashed": true,
-    "immutable_hosting": false,
+    "immutable_hosting": true,
     "portable_evidence_exported": true,
     "producer_pixel_validation_recorded": true,
     "public_producer_commits": true,
@@ -18,7 +18,6 @@
   },
   "pending": {
     "consumer_acceptance": "Record viewer acceptance at poles, antimeridian, tile joins, and zoom transitions.",
-    "immutable_hosting": "Publish and verify the exact payload and retain its generated S3/CDN receipt.",
     "zenodo_deposit": "Reserve the initial Version DOI, confirm metadata and actual publication date, and assemble the final deposit from a clean public catalogs commit."
   },
   "publication_ready": false,

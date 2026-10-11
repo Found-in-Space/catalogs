@@ -8,7 +8,7 @@
   "format_version": 1,
   "imagery_reuse": "public-domain",
   "required_attribution": "NASA/GSFC/Arizona State University; USGS Astrogeology",
-  "retrieved_html_sha256": "cc066b8ad414270a85e8ed00be2e6caa1e0023218efd3aa989594f5e7c87c597",
+  "retrieved_html_sha256": "aee4e96fcb72d96e406b1d20a2b2c24c40797a29aea10a1864f0c2409cdd22f1",
   "source_page": "https://astrogeology.usgs.gov/search/map/moon_lro_lroc_wac_global_morphology_mosaic_100m",
-  "verified_at": "2026-10-11T14:19:43.720187+00:00"
+  "verified_at": "2026-10-11T17:43:34.258674+00:00"
 }

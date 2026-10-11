@@ -4,7 +4,7 @@ Release: `20261011.1`
 Series: `fis.textures.moon.lroc-wac-global-morphology-100m`  
 Status: draft catalog release awaiting viewer acceptance and DOI deposit.
 
-Planned; no hosting receipt has been supplied.
+Published and verified through S3 and the CDN; see evidence/hosting_receipt.json.
 
 This is the first proposed release of an evolving series of lunar display
 imagery derived from the LROC WAC global morphology mosaic distributed by USGS.
@@ -93,8 +93,8 @@ using `sha256sum --check` with that root as the working directory.
 ## Hosting and citation
 
 The immutable prefix is `textures/moon/lroc-wac-global-100m/20261011.1/` in S3 bucket `foundinspace`, served through
-`data.foundin.space`. Planned; no hosting receipt has been supplied.
-Verified download links will be supplied after hosting checks pass.
+`data.foundin.space`. Published and verified through S3 and the CDN; see evidence/hosting_receipt.json.
+[Product descriptor](https://data.foundin.space/textures/moon/lroc-wac-global-100m/20261011.1/product.json) and [whole-globe tile](https://data.foundin.space/textures/moon/lroc-wac-global-100m/20261011.1/imagery/0/0/0.png).
 
 The initial Zenodo deposit starts one version lineage for `fis.textures.moon.lroc-wac-global-morphology-100m`.
 Later substantive changes use **New version** in that lineage. Cite the

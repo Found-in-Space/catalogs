@@ -41,8 +41,8 @@ pixel validation, and per-tile SHA-256 manifests. The image files are hosted
 externally and are not included in the metadata archive. Insert verified
 immutable payload and producer-code links after publication prerequisites pass.
 
-Planned; no hosting receipt has been supplied.
-Verified download links will be supplied after hosting checks pass.
+Published and verified through S3 and the CDN; see evidence/hosting_receipt.json.
+[Product descriptor](https://data.foundin.space/textures/moon/lroc-wac-global-100m/20261011.1/product.json) and [whole-globe tile](https://data.foundin.space/textures/moon/lroc-wac-global-100m/20261011.1/imagery/0/0/0.png).
 Representative source reprojection, direct-from-base averaging, and tile emission checks are recorded in evidence/representative_checks.json. The recorded process and representative display checks support
 reuse without requiring byte-identical regeneration or a full pyramid rebuild.
 

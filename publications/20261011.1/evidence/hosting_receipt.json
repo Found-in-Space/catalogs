@@ -1,0 +1,99 @@
+{
+  "all_remote_sha256_sizes_and_metadata_verified": true,
+  "boto3_version": "1.43.111",
+  "bucket": "foundinspace",
+  "cdn_base_url": "https://data.foundin.space/textures/moon/lroc-wac-global-100m/20261011.1/",
+  "cdn_checks": [
+    {
+      "bytes": 179971,
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/png",
+      "cors": "*",
+      "path": "imagery/0/0/0.png",
+      "sha256": "3b20429e50bfba6abb2bb3511d85e4c8dcef7d75e4b1ce8ed7006788033e7f91",
+      "status": 200,
+      "url": "https://data.foundin.space/textures/moon/lroc-wac-global-100m/20261011.1/imagery/0/0/0.png"
+    },
+    {
+      "bytes": 149785,
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/png",
+      "cors": "*",
+      "path": "imagery/4/8/8.png",
+      "sha256": "ff2c5d44e3f33300fe5a6f92a3d850952c1586f09f80f1507109c8e08ae56a07",
+      "status": 200,
+      "url": "https://data.foundin.space/textures/moon/lroc-wac-global-100m/20261011.1/imagery/4/8/8.png"
+    },
+    {
+      "bytes": 11309,
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/png",
+      "cors": "*",
+      "path": "imagery/8/0/0.png",
+      "sha256": "a823aa81c5fc26f850b61e385e4428b30e44674a5f5d7e77f645f51842fde069",
+      "status": 200,
+      "url": "https://data.foundin.space/textures/moon/lroc-wac-global-100m/20261011.1/imagery/8/0/0.png"
+    },
+    {
+      "bytes": 90407,
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/png",
+      "cors": "*",
+      "path": "imagery/8/127/42.png",
+      "sha256": "fe5ca990cc20f794960f35f1103337a51967871d6cf8520e98e438d397b94f4c",
+      "status": 200,
+      "url": "https://data.foundin.space/textures/moon/lroc-wac-global-100m/20261011.1/imagery/8/127/42.png"
+    },
+    {
+      "bytes": 92704,
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/png",
+      "cors": "*",
+      "path": "imagery/8/128/128.png",
+      "sha256": "bcf27c73043d4ef3e9bc90b12d4c8b5a5a9bda86ddf4bf99296d619c6484d4f1",
+      "status": 200,
+      "url": "https://data.foundin.space/textures/moon/lroc-wac-global-100m/20261011.1/imagery/8/128/128.png"
+    },
+    {
+      "bytes": 10371,
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "image/png",
+      "cors": "*",
+      "path": "imagery/8/255/255.png",
+      "sha256": "b9aee2b257e4d54fd8c7459b56138224c0cfd7e819d3c971fc4258e5e4a3dd29",
+      "status": 200,
+      "url": "https://data.foundin.space/textures/moon/lroc-wac-global-100m/20261011.1/imagery/8/255/255.png"
+    },
+    {
+      "bytes": 5062,
+      "cache_control": "public, max-age=31536000, immutable",
+      "content_type": "application/json",
+      "cors": "*",
+      "path": "product.json",
+      "sha256": "949c8fa57b2a31c7f1eeb52a70be4b91d6facce98216c4997c229d0373c7afc5",
+      "status": 200,
+      "url": "https://data.foundin.space/textures/moon/lroc-wac-global-100m/20261011.1/product.json"
+    }
+  ],
+  "completed_at": "2026-10-11T17:38:54.405059+00:00",
+  "counts": {
+    "existing": 16488,
+    "uploaded": 70903
+  },
+  "descriptor_published_last": true,
+  "exact_remote_inventory_verified": true,
+  "format_version": 1,
+  "immutable_conditional_writes": true,
+  "manifest_set_sha256": "e591f87a0e2655dfc23a623bdabeb64a7f07bf79e6b6a09c86b6fdc37a10a928",
+  "maximum_upload_mib_per_second": 1.0,
+  "object_count": 87391,
+  "prefix": "textures/moon/lroc-wac-global-100m/20261011.1/",
+  "product_identity_sha256": "63733f3a6aa9bb6ebd437a5e6132474ac7949fdccfc5daddc2e5234b1db01393",
+  "product_json_sha256": "949c8fa57b2a31c7f1eeb52a70be4b91d6facce98216c4997c229d0373c7afc5",
+  "publisher_commit": "45853ffda8cbb2b940004880658735b89c87641c",
+  "publisher_repository": "https://github.com/Found-in-Space/catalogs",
+  "python_version": "3.14.3",
+  "started_at": "2026-10-11T14:06:42.073590+00:00",
+  "total_bytes": 8168318762,
+  "workers": 4
+}
