@@ -102,6 +102,7 @@ def test_portable_paths_keep_distinct_roles_and_embedded_stdout():
         ],
         "stdout": "Processing /data/runs/moon/source/input.tif [1/1] : complete\n",
         "crs": "/data/work/producer/resources/crs/moon.wkt",
+        "temporary": "/data/runs/moon/work/tmp/export.pgm",
         "url": "https://planetarymaps.usgs.gov/mosaic/input.tif",
     }
     result = TOOL["portable"](evidence, run, producer)
@@ -113,6 +114,7 @@ def test_portable_paths_keep_distinct_roles_and_embedded_stdout():
         result["stdout"] == "Processing ${RUN_ROOT}/source/input.tif [1/1] : complete\n"
     )
     assert result["crs"] == "${PRODUCER_ROOT}/resources/crs/moon.wkt"
+    assert result["temporary"] == "${RUN_ROOT}/work/tmp/export.pgm"
     assert result["url"] == evidence["url"]
     assert evidence["commands"][1] == "/data/runs/moon/source/input.tif"
 
@@ -136,6 +138,7 @@ def test_complete_log_text_keeps_failed_attempt_and_public_url():
     "value",
     [
         "/home/person/private",
+        "Processing /tmp/private/source.tif",
         "https://secret.example/data",
         "https://user:password@planetarymaps.usgs.gov/mosaic/file.tif",
         "https://planetarymaps.usgs.gov/mosaic/file.tif?token=secret",

@@ -82,7 +82,8 @@ def portable(value, run_root: Path, producer_root: Path):
             value = value.replace(str(root), token)
         require(not value.startswith("/"), f"Unmapped absolute path: {value}")
         require(
-            not re.search(r"/(?:data|home|tmp|Users)/", value), "Embedded local path"
+            not re.search(r"(?<![\w}/])/(?:data|home|tmp|Users)/", value),
+            "Embedded local path",
         )
         for token in re.findall(r"https?://[^\s\"<>]+", value):
             from urllib.parse import urlsplit
@@ -317,6 +318,10 @@ def prepare(
             "format_version": 1,
             "text": path.read_text(encoding="utf-8"),
         }
+    portable_records = {
+        relative: portable(value, run_root, producer_root)
+        for relative, value in records.items()
+    }
     required = {
         "work/state/build-base.json",
         "work/state/emit-tiles.json",
@@ -413,8 +418,7 @@ def prepare(
     )
     try:
         exports = []
-        for relative, value in records.items():
-            portable_value = portable(value, run_root, producer_root)
+        for relative, portable_value in portable_records.items():
             exported_role = relative.removeprefix("evidence/")
             target = staging / "evidence" / exported_role
             write_json(target, portable_value)
