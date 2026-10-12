@@ -1,0 +1,321 @@
+{
+  "command": [
+    "gdalwarp",
+    "-overwrite",
+    "-of",
+    "GTiff",
+    "-ot",
+    "Byte",
+    "-s_srs",
+    "${PRODUCER_ROOT}/projects/moon/lroc-wac-global-100m/sources/../../../../resources/crs/moon-simple-cylindrical-1737400.wkt",
+    "-t_srs",
+    "${PRODUCER_ROOT}/projects/moon/lroc-wac-global-100m/../../../resources/crs/moon-geographic-1737400.wkt",
+    "-te_srs",
+    "${PRODUCER_ROOT}/projects/moon/lroc-wac-global-100m/../../../resources/crs/moon-geographic-1737400.wkt",
+    "-te",
+    "-180.0",
+    "-90.0",
+    "180.0",
+    "90.0",
+    "-ts",
+    "131072",
+    "131072",
+    "-r",
+    "bilinear",
+    "-dstnodata",
+    "0",
+    "-wm",
+    "1024",
+    "-wo",
+    "NUM_THREADS=4",
+    "-co",
+    "BIGTIFF=YES",
+    "-co",
+    "TILED=YES",
+    "-co",
+    "BLOCKXSIZE=512",
+    "-co",
+    "BLOCKYSIZE=512",
+    "-co",
+    "COMPRESS=DEFLATE",
+    "-co",
+    "PREDICTOR=2",
+    "-srcnodata",
+    "0.0",
+    "${RUN_ROOT}/source/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif",
+    "${RUN_ROOT}/work/levels/.8.tif.0b5bb39b547f40cca41fd8c11aff11a4.tmp"
+  ],
+  "completed_at": "2026-10-02T13:52:53Z",
+  "elapsed_seconds": 678.7422670550004,
+  "format_version": 1,
+  "identity": {
+    "producer": {
+      "code_tree_sha256": "d8920ac966ab675e21086af194d61c354ce03b636b3833f172b9c103de335fdf",
+      "git_dirty": false,
+      "git_sha": "56fd7a789cf31eea613d2f770a1042846090d587",
+      "package_version": "0.1.0"
+    },
+    "project": {
+      "composite": {
+        "missing_pixel": 0,
+        "policy": "priority"
+      },
+      "format_version": 1,
+      "product": {
+        "bounds": [
+          -180.0,
+          -90.0,
+          180.0,
+          90.0
+        ],
+        "channels": "grayscale",
+        "format": "png",
+        "kind": "display-texture",
+        "maximum_zoom": 8,
+        "opaque": true,
+        "path_template": "imagery/{z}/{x}/{y}.png",
+        "pixel_type": "uint8",
+        "pyramid_resampling": "average",
+        "reprojection_resampling": "bilinear",
+        "tile_size": 512
+      },
+      "product_id": "moon-lroc-wac-global-morphology-100m-v1",
+      "sources": [
+        {
+          "acquisition": {
+            "citation": "LROC Team; Arizona State University; USGS Astrogeology Science Center.",
+            "expected": {
+              "band_count": 1,
+              "data_type": "Byte",
+              "geo_transform": [
+                -5458203.0763469,
+                100.0,
+                0.0,
+                2729101.53817345,
+                0.0,
+                -100.0
+              ],
+              "height": 54582,
+              "mask_flags": [
+                "ALL_VALID"
+              ],
+              "nodata": 0.0,
+              "offset": -0.003952569169961,
+              "scale": 1.00395256917,
+              "sha256": "87159ead1888ae31bb647e957ec60943022b707ec804cb5353a304575936fd55",
+              "size_bytes": 5959263751,
+              "width": 109164
+            },
+            "filename": "Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif",
+            "format_version": 1,
+            "landing_page": "https://astrogeology.usgs.gov/search/map/moon_lro_lroc_wac_global_morphology_mosaic_100m",
+            "reported": {
+              "approximate_size": "5.5 GB",
+              "band_count": 1,
+              "data_type": "Byte",
+              "height": 54582,
+              "projection": "Simple Cylindrical; planetocentric latitude; positive-east longitude",
+              "width": 109164
+            },
+            "source_crs": "../../../../resources/crs/moon-simple-cylindrical-1737400.wkt",
+            "source_id": "lroc-wac-global-morphology-100m-june-2013",
+            "status": "admitted",
+            "title": "Moon LRO LROC WAC Global Morphology Mosaic 100m",
+            "url": "https://planetarymaps.usgs.gov/mosaic/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif"
+          },
+          "id": "lroc-wac-global-morphology-100m-june-2013",
+          "priority": 100
+        }
+      ],
+      "target": {
+        "crs": "../../../resources/crs/moon-geographic-1737400.wkt",
+        "id": "moon",
+        "latitude_range": [
+          -90.0,
+          90.0
+        ],
+        "longitude_range": [
+          -180.0,
+          180.0
+        ]
+      }
+    },
+    "source_crs_sha256": "c94ad4845ec109791b0cb9e79b1480b9b6add7b2dc9cab0d89e33f19eed66616",
+    "source_inspect_command": [
+      "gdalinfo",
+      "-json",
+      "${RUN_ROOT}/source/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif"
+    ],
+    "source_observed": {
+      "band_count": 1,
+      "data_types": [
+        "Byte"
+      ],
+      "declared_source_crs_proj4": "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +R=1737400 +units=m +no_defs",
+      "geo_transform": [
+        -5458203.0763469,
+        100.0,
+        0.0,
+        2729101.53817345,
+        0.0,
+        -100.0
+      ],
+      "height": 54582,
+      "mask_flags": [
+        [
+          "ALL_VALID"
+        ]
+      ],
+      "nodata_values": [
+        0.0
+      ],
+      "offsets": [
+        -0.003952569169961
+      ],
+      "scales": [
+        1.00395256917
+      ],
+      "source_crs_proj4": "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +R=1737400 +units=m +no_defs",
+      "width": 109164
+    },
+    "source_sha256": "87159ead1888ae31bb647e957ec60943022b707ec804cb5353a304575936fd55",
+    "source_spatial_reference_commands": [
+      [
+        "gdalsrsinfo",
+        "-o",
+        "proj4",
+        "${PRODUCER_ROOT}/projects/moon/lroc-wac-global-100m/sources/../../../../resources/crs/moon-simple-cylindrical-1737400.wkt"
+      ],
+      [
+        "gdalsrsinfo",
+        "-o",
+        "proj4",
+        "${RUN_ROOT}/source/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif"
+      ]
+    ],
+    "target_crs_sha256": "c2fd8201879986f43461883788b0850a63619ed900271706dad09353860c51cf",
+    "threads": 4,
+    "tools": {
+      "gdal": "GDAL 3.4.1, released 2021/12/27",
+      "proj": "Rel. 8.2.1, January 1st, 2022"
+    },
+    "warp_memory_mb": 1024
+  },
+  "identity_sha256": "17d45db44e3f014429dc584d84f0517139544b07011843c42da10e0299b3332c",
+  "inspect_command": [
+    "gdalinfo",
+    "-json",
+    "${RUN_ROOT}/work/levels/.8.tif.0b5bb39b547f40cca41fd8c11aff11a4.tmp"
+  ],
+  "output": {
+    "gdalinfo": {
+      "bands": [
+        {
+          "band": 1,
+          "block": [
+            512,
+            512
+          ],
+          "colorInterpretation": "Gray",
+          "metadata": {},
+          "noDataValue": 0.0,
+          "offset": -0.003952569169961,
+          "scale": 1.00395256917,
+          "type": "Byte"
+        }
+      ],
+      "coordinateSystem": {
+        "dataAxisToSRSAxisMapping": [
+          2,
+          1
+        ],
+        "wkt": "GEOGCRS[\"Moon geographic (sphere, 1737400 m)\",\n    DATUM[\"Moon_spherical_datum\",\n        ELLIPSOID[\"Moon sphere\",1737400,0,\n            LENGTHUNIT[\"metre\",1,\n                ID[\"EPSG\",9001]]]],\n    PRIMEM[\"Reference meridian\",0,\n        ANGLEUNIT[\"degree\",0.0174532925199433,\n            ID[\"EPSG\",9122]]],\n    CS[ellipsoidal,2],\n        AXIS[\"latitude\",north,\n            ORDER[1],\n            ANGLEUNIT[\"degree\",0.0174532925199433,\n                ID[\"EPSG\",9122]]],\n        AXIS[\"longitude\",east,\n            ORDER[2],\n            ANGLEUNIT[\"degree\",0.0174532925199433,\n                ID[\"EPSG\",9122]]]]"
+      },
+      "cornerCoordinates": {
+        "center": [
+          0.0,
+          0.0
+        ],
+        "lowerLeft": [
+          -180.0,
+          -90.0
+        ],
+        "lowerRight": [
+          180.0,
+          -90.0
+        ],
+        "upperLeft": [
+          -180.0,
+          90.0
+        ],
+        "upperRight": [
+          180.0,
+          90.0
+        ]
+      },
+      "description": "${RUN_ROOT}/work/levels/.8.tif.0b5bb39b547f40cca41fd8c11aff11a4.tmp",
+      "driverLongName": "GeoTIFF",
+      "driverShortName": "GTiff",
+      "extent": {
+        "coordinates": [
+          [
+            [
+              -180.0,
+              90.0
+            ],
+            [
+              -180.0,
+              -90.0
+            ],
+            [
+              180.0,
+              -90.0
+            ],
+            [
+              180.0,
+              90.0
+            ],
+            [
+              -180.0,
+              90.0
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "files": [
+        "${RUN_ROOT}/work/levels/.8.tif.0b5bb39b547f40cca41fd8c11aff11a4.tmp"
+      ],
+      "geoTransform": [
+        -180.0,
+        0.00274658203125,
+        0.0,
+        90.0,
+        0.0,
+        -0.001373291015625
+      ],
+      "metadata": {
+        "": {
+          "AREA_OR_POINT": "Area"
+        },
+        "IMAGE_STRUCTURE": {
+          "COMPRESSION": "DEFLATE",
+          "INTERLEAVE": "BAND",
+          "PREDICTOR": "2"
+        }
+      },
+      "size": [
+        131072,
+        131072
+      ]
+    },
+    "path": "${RUN_ROOT}/work/levels/8.tif",
+    "sha256": "aa7f6d78a5d5e6c9454889558a9f55aa47c30a9616b48f7132a1eae4a98bc1a1",
+    "size_bytes": 7113790774
+  },
+  "stage": "build-base",
+  "started_at": "2026-10-02T13:41:35Z",
+  "status": "complete",
+  "stderr": "",
+  "stdout": "Creating output file that is 131072P x 131072L.\nProcessing ${RUN_ROOT}/source/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif [1/1] : 0...10...20...30...40...50...60...70...80...90...100 - done.\n"
+}

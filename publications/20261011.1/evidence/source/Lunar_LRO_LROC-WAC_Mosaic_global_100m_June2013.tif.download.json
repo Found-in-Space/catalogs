@@ -1,0 +1,27 @@
+{
+  "completed_at": "2026-10-02T13:30:26Z",
+  "contract_verified": false,
+  "filename": "Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif",
+  "final_url": "https://asc-pds-services.s3.us-west-2.amazonaws.com/mosaic/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif",
+  "format_version": 1,
+  "producer": {
+    "code_tree_sha256": "d8920ac966ab675e21086af194d61c354ce03b636b3833f172b9c103de335fdf",
+    "git_dirty": false,
+    "git_sha": "1f657ce91eb795b2af7ec6169bdb2a61637605ac",
+    "package_version": "0.1.0"
+  },
+  "requested_url": "https://planetarymaps.usgs.gov/mosaic/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif",
+  "response_headers": {
+    "accept-ranges": "bytes",
+    "content-length": "4692583943",
+    "content-range": "bytes 1266679808-5959263750/5959263751",
+    "content-type": "image/tiff",
+    "etag": "\"47d026c2618ee60e92eda4f2e0e5347b-711\"",
+    "last-modified": "Tue, 08 Nov 2022 23:37:48 GMT"
+  },
+  "resumed_from_bytes": 1266679808,
+  "sha256": "87159ead1888ae31bb647e957ec60943022b707ec804cb5353a304575936fd55",
+  "size_bytes": 5959263751,
+  "source_id": "lroc-wac-global-morphology-100m-june-2013",
+  "source_status": "candidate"
+}

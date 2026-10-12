@@ -37,6 +37,7 @@ Status: public repository with initial catalog publication work in progress.
 - [Naming conventions](docs/naming.md)
 - [First publications](docs/first-publications.md)
 - [Release process](docs/release-process.md)
+- [Lunar texture publication preparation](docs/lunar-texture-publication.md)
 
 ## Related Repositories
 

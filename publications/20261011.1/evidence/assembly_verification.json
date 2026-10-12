@@ -1,0 +1,15 @@
+{
+  "assembly_commit": "049176767d26d2e9d99ce151d69f568dca9f2b58",
+  "format_version": 1,
+  "maximum_pending_tile_hashes": 8,
+  "pixel_reconstruction": "authenticated-producer-report; not rerun by assembler",
+  "producer_code_trees_recomputed_from_recorded_commits": true,
+  "project_and_product_identities_recomputed": true,
+  "source_and_all_tile_bytes_rehashed": true,
+  "source_bytes": 5959263751,
+  "source_sha256": "87159ead1888ae31bb647e957ec60943022b707ec804cb5353a304575936fd55",
+  "tile_bytes": 8160721984,
+  "tile_count": 87381,
+  "tile_hash_workers": 4,
+  "verified_at": "2026-10-11T17:43:32.352584+00:00"
+}

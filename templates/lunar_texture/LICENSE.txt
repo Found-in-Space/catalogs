@@ -1,0 +1,33 @@
+Found in Space original metadata
+===============================
+
+Copyright (c) 2026 Found in Space contributors.
+
+Original publication prose, organisation, and publication metadata authored by
+Found in Space are licensed under Creative Commons Attribution 4.0 International:
+https://creativecommons.org/licenses/by/4.0/
+
+Suggested attribution:
+Found in Space, "@TITLE@", release @RELEASE@ (2026).
+
+Upstream imagery and software
+=============================
+
+This licence does not assert ownership of the LROC WAC imagery or grant new
+rights in upstream materials. The exact USGS June 2013 product metadata
+identifies the upstream imagery as public domain and asks users to cite the
+authors. See evidence/upstream_reuse_terms.json, NOTICE.md, and REFERENCES.md
+for the product-specific primary evidence and attribution.
+
+Producer project definitions and dependency declarations copied from its
+recorded commits retain their upstream MIT licence. See
+reproduction/producer/LICENSE. Dependency packages retain their own licences.
+The original facts, processing receipts, checksums, and scientific citations
+do not transfer ownership of the underlying imagery or cited publications.
+
+No warranty
+===========
+
+The original Found in Space material is provided without warranties to the
+extent permitted by the applicable licence. These display textures are not
+an elevation or calibrated quantitative photometry product.
