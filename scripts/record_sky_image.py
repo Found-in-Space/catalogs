@@ -18,11 +18,15 @@ def main():
     product = json.loads((args.payload / "product.json").read_text())
     receipt = json.loads(args.receipt.read_text())
     release = product["release"]
-    assert release == "20261017.1"
+    assert release in {"20261017.1", "20261017.2"}
     target = root / "publications" / release
+    assert not (target / "manifest.toml").exists(), "Published records are immutable; use a new release"
     image = product["output"]
     remote = {row["path"]: row for row in receipt["objects"]}
-    assert remote[image["path"]]["sha256"] == image["sha256"]
+    images = [image] + [product["polarCaps"][pole] for pole in ["north", "south"] if "polarCaps" in product]
+    for entry in images:
+        assert remote[entry["path"]]["sha256"] == entry["sha256"]
+        assert hashlib.sha256((args.payload / entry["path"]).read_bytes()).hexdigest() == entry["sha256"]
     for name in ["product.json", "checksums.sha256", "LICENSE.txt", "NOTICE.md"]:
         assert hashlib.sha256((args.payload / name).read_bytes()).hexdigest() == remote[name]["sha256"]
     shutil.copyfile(args.payload / "product.json", target / "product.json")
@@ -78,6 +82,26 @@ original_recipe_and_documentation = "MIT"
 notice = "NOTICE.md"
 terms = "LICENSE.txt"
 '''
+    if "polarCaps" in product:
+        caps = product["polarCaps"]
+        manifest += f'''
+[polar_caps]
+projection = {q(caps['projection'])}
+half_angle_degrees = {caps['halfAngleDegrees']}
+blend_start_declination_degrees = {caps['blendStartDeclinationDegrees']}
+blend_end_declination_degrees = {caps['blendEndDeclinationDegrees']}
+projection_sha256 = {q(prep['projectionSha256'])}
+'''
+        for pole in ["north", "south"]:
+            cap = caps[pole]
+            manifest += f'''
+[polar_caps.{pole}]
+url = {q(remote[cap['path']]['url'])}
+sha256 = {q(cap['sha256'])}
+bytes = {cap['bytes']}
+width = {cap['width']}
+height = {cap['height']}
+'''
     (target / "manifest.toml").write_text(manifest)
     (target / "run_log.md").write_text(f'''# Run log
 
@@ -114,6 +138,8 @@ than a hermetic dependency. The payload hash identifies the exact result.
 Output: `{image['path']}`, {image['bytes']} bytes, SHA-256
 `{image['sha256']}`. Conversion: {prep['transform']}; {prep['encoding']}.
 
+Additional images: {json.dumps(images[1:], sort_keys=True)}.
+
 The uploader checked every payload file locally, refused conflicting S3
 objects, used conditional writes, and verified all {len(receipt['objects'])} objects via S3
 SHA-256 and complete CDN responses. Content types, immutable caching and CORS
@@ -127,7 +153,7 @@ acceptance, or scientific value preservation is claimed.
     (target / "checksums.sha256").write_text("".join(
         f"{hashlib.sha256(path.read_bytes()).hexdigest()}  {path.relative_to(target).as_posix()}\n"
         for path in files))
-    print(json.dumps({"release": release, "publication_files": len(files), "payload_bytes": image["bytes"]}))
+    print(json.dumps({"release": release, "publication_files": len(files), "payload_bytes": sum(row["bytes"] for row in images)}))
 
 
 if __name__ == "__main__":
