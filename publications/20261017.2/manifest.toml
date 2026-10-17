@@ -1,0 +1,67 @@
+format_version = 1
+release = "20261017.2"
+title = "Deep Star Maps 2020 celestial display texture"
+status = "s3-hosted"
+publication_kind = "evolving-series"
+series_id = "fis.sky.deep-star-maps-2020-celestial"
+zenodo_status = "not-deposited"
+
+[scope]
+consumer_opt_in_required = true
+scientific_photometry = false
+runtime_code_included = false
+star_catalog_included = false
+
+[source]
+page = "https://svs.gsfc.nasa.gov/4851/"
+url = "https://svs.gsfc.nasa.gov/vis/a000000/a004800/a004851/starmap_2020_4k.exr"
+sha256 = "69b841cd048c2ef35543eb1c5819b322530e78aa4b0cab97ec1de3ef56a4ddcd"
+bytes = 35997085
+
+[producer]
+repository = "https://github.com/Found-in-Space/catalogs"
+commit = "fa6d0411e41c399fb05ef9eacaaa990d28d2f6f3"
+recipe = "publications/20261017.2/recipe/prepare.mjs"
+script_sha256 = "923131d575e436d2e1cfc7f372e324c63a3faaabb2e60e80d40bb1b14d91d2a5"
+lockfile_sha256 = "988094241938fbfe0c6baa19863252d617a3536007939965d09e23cc7a1e05f8"
+three = "0.170.0"
+node = "v24.16.0"
+ffmpeg = "ffmpeg version 4.4.2-0ubuntu0.22.04.1 Copyright (c) 2000-2021 the FFmpeg developers"
+
+[payload]
+url = "https://data.foundin.space/textures/sky/deep-star-maps-2020/20261017.2/deep-star-map-2020-4k.webp"
+sha256 = "ceabaafadf77dc9792cf2ad8e3d80d4c3cba069602bee035763fe9ddeefa4ab4"
+bytes = 2552346
+width = 4096
+height = 2048
+content_type = "image/webp"
+product = "product.json"
+checksums = "payload-checksums.sha256"
+hosting_evidence = "evidence/hosting.json"
+
+[license]
+image = "NASA SVS public-domain usage policy; retain NASA/ESA credits and upstream terms"
+original_recipe_and_documentation = "MIT"
+notice = "NOTICE.md"
+terms = "LICENSE.txt"
+
+[polar_caps]
+projection = "gnomonic"
+half_angle_degrees = 35
+blend_start_declination_degrees = 60
+blend_end_declination_degrees = 65
+projection_sha256 = "3940379135c0696458b1a6b14065728ed839eed4faa7bc9f9099f4beec14dcde"
+
+[polar_caps.north]
+url = "https://data.foundin.space/textures/sky/deep-star-maps-2020/20261017.2/deep-star-map-2020-north-1024.webp"
+sha256 = "6021227f1b295e7137afa74d003b5f4578214df0ec8aaf5242345a15f91e5784"
+bytes = 1232442
+width = 1024
+height = 1024
+
+[polar_caps.south]
+url = "https://data.foundin.space/textures/sky/deep-star-maps-2020/20261017.2/deep-star-map-2020-south-1024.webp"
+sha256 = "32ca31e4e20eb7b40fa49a0d6360d3c812f63b9e10ccd2eef177a045c13635ab"
+bytes = 1228818
+width = 1024
+height = 1024
