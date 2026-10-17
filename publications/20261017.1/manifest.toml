@@ -1,0 +1,46 @@
+format_version = 1
+release = "20261017.1"
+title = "Deep Star Maps 2020 celestial display texture"
+status = "s3-hosted"
+publication_kind = "evolving-series"
+series_id = "fis.sky.deep-star-maps-2020-celestial"
+zenodo_status = "not-deposited"
+
+[scope]
+consumer_opt_in_required = true
+scientific_photometry = false
+runtime_code_included = false
+star_catalog_included = false
+
+[source]
+page = "https://svs.gsfc.nasa.gov/4851/"
+url = "https://svs.gsfc.nasa.gov/vis/a000000/a004800/a004851/starmap_2020_4k.exr"
+sha256 = "69b841cd048c2ef35543eb1c5819b322530e78aa4b0cab97ec1de3ef56a4ddcd"
+bytes = 35997085
+
+[producer]
+repository = "https://github.com/Found-in-Space/catalogs"
+commit = "c1616042bab867ad8d0806a082da028e524a8b7e"
+recipe = "publications/20261017.1/recipe/prepare.mjs"
+script_sha256 = "33a2a376d71bb9c187348303b789b84b54c64cad6b01f29675ef556743b9160c"
+lockfile_sha256 = "988094241938fbfe0c6baa19863252d617a3536007939965d09e23cc7a1e05f8"
+three = "0.170.0"
+node = "v24.16.0"
+ffmpeg = "ffmpeg version 4.4.2-0ubuntu0.22.04.1 Copyright (c) 2000-2021 the FFmpeg developers"
+
+[payload]
+url = "https://data.foundin.space/textures/sky/deep-star-maps-2020/20261017.1/deep-star-map-2020-4k.webp"
+sha256 = "ceabaafadf77dc9792cf2ad8e3d80d4c3cba069602bee035763fe9ddeefa4ab4"
+bytes = 2552346
+width = 4096
+height = 2048
+content_type = "image/webp"
+product = "product.json"
+checksums = "payload-checksums.sha256"
+hosting_evidence = "evidence/hosting.json"
+
+[license]
+image = "NASA SVS public-domain usage policy; retain NASA/ESA credits and upstream terms"
+original_recipe_and_documentation = "MIT"
+notice = "NOTICE.md"
+terms = "LICENSE.txt"

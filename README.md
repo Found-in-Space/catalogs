@@ -9,6 +9,10 @@ were used.
 
 Status: public repository with initial catalog publication work in progress.
 
+The [Deep Star Maps 2020 display texture with polar caps](publications/20261017.2/README.md)
+records an optional sky image, its preparation recipe, upstream credits, and
+authenticated S3/CDN payload. Runtime rendering remains in consumer packages.
+
 ## Repository Roles
 
 - `publications/` - citable data publications.

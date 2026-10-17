@@ -1,0 +1,7 @@
+{
+  "name": "fis-deep-star-map-2020-recipe",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "dependencies": { "three": "0.170.0" }
+}
