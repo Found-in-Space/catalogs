@@ -25,10 +25,10 @@ new Zenodo lineage. Publish later snapshots with Zenodo's **New version**
 workflow so each has a new Version DOI while the series keeps its stable
 Concept DOI.
 
-## First Planned Releases
+## Historical Early Releases
 
-- `20260515.1` - first clean mag-11 build publication.
-- `20260515.2` - first Gaia-HIP crossmatch publication.
+- `20260515.1` - Gaia-HIP supplemental visual de-duplication map.
+- `20260515.2` - proposed but never created or published.
 
 The details of each publication belong in that publication's own README and
 manifest.

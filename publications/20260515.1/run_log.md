@@ -1347,24 +1347,59 @@ evidence package.
 
 26. Added a publication-style narrative paper.
 
-    Added `PAPER.md`, a GitHub-flavoured Markdown paper intended to be more
-    readable than the execution log. It includes:
+    Added `PAPER.md`, a concise narrative summary intended to be more readable
+    than the execution log. It includes:
 
-    - abstract;
-    - introduction;
-    - inputs;
-    - magnitude-cutoff evidence;
-    - methodology;
-    - decision-policy table;
-    - findings and result tables;
-    - published output table;
-    - limitations;
-    - conclusion;
-    - references.
+    - the visual-only purpose and scientific boundary;
+    - a brief method and decision-policy summary;
+    - result counts;
+    - VR context captures;
+    - published-data guidance; and
+    - links to detailed provenance, references, and upstream terms.
 
-    The paper embeds the Hipparcos `Hp` versus Gaia `G` plot from
-    `evidence/hip_gaia_magnitude_relationship.png` so the main supporting
-    figure is directly visible on GitHub.
+    Detailed exploratory and execution material remains in this run log and
+    the evidence files rather than being repeated in the reader-facing paper.
+
+27. Added project-supplied VR validation captures.
+
+    Added two qualitative screenshots from the VR experience in which the
+    supplemental display map was assessed:
+
+    ```text
+    evidence/vr_finger_of_god.jpg
+    evidence/vr_from_sun.jpg
+    ```
+
+    Both captures are baseline JPEG files at `3840 x 2160` pixels. Their
+    checksums are:
+
+    ```text
+    b62c7d32ac6c8373398d827dca87c2ef08f278cdd59f459aa4c501ff73703381  evidence/vr_finger_of_god.jpg
+    dc67884825d6181d425649a0de1698837f4d902c433bc4b2db15cac1f7839041  evidence/vr_from_sun.jpg
+    ```
+
+    These images record visual validation context only. They do not change the
+    catalog rows, matching thresholds, or display-map selection policy.
+
+28. Prepared the standalone Zenodo publication metadata.
+
+    Decision:
+
+    - Treat this historical release as a standalone publication, not an
+      evolving catalog series.
+    - Do not assign a `series_id`.
+    - Upload the README and main Parquet directly, plus a path-preserving ZIP
+      of the complete publication payload.
+    - Build the transport ZIP outside this release directory after the final
+      public commit so it is not part of its own checksum manifest.
+    - Record the final catalogs commit, Zenodo identifiers, and deposited-file
+      checksums in post-publication tracking metadata.
+
+    Added:
+
+    ```text
+    zenodo/draft-metadata.md
+    ```
 
 ## Release Artifacts Created So Far
 
@@ -1378,6 +1413,8 @@ publications/20260515.1/
   checksums.sha256
   manifest.toml
   run_log.md
+  zenodo/
+    draft-metadata.md
   catalog/
     fis_gaia_hip_supplemental_display_map.parquet
   evidence/
@@ -1393,6 +1430,8 @@ publications/20260515.1/
     hip_healpix_cone_footprint_summary.csv
     hip_healpix_neighbor_footprint_summary.csv
     hip_healpix_footprint_summary.json
+    vr_finger_of_god.jpg
+    vr_from_sun.jpg
 ```
 
 ## Artifact Checksums

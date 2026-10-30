@@ -2,9 +2,17 @@ format_version = 1
 release = "20260515.1"
 title = "Gaia-HIP supplemental display de-duplication map"
 status = "release-candidate"
+publication_model = "standalone"
 
 [summary]
-description = "Found-In-Space supplemental Gaia-Hipparcos2 display de-duplication map, with source-download and match-policy evidence."
+description = "Found-in-Space Gaia-Hipparcos2 visual de-duplication map. It is a rendering aid and makes no claim that paired records represent the same physical star."
+
+[zenodo]
+status = "not_reserved"
+resource_type = "dataset"
+community = "found-in-space"
+upload_policy = "readme-catalog-plus-path-preserving-publication-archive"
+archive_name = "fis-gaia-hip-supplemental-display-map-20260515.1.zip"
 
 [inputs]
 hipparcos_catalog = "Vizier I/311/hip2"
@@ -25,6 +33,8 @@ magnitude_relationship_plot = "evidence/hip_gaia_magnitude_relationship.png"
 magnitude_relationship_data = "evidence/hip_gaia_magnitude_relationship.parquet"
 magnitude_relationship_outliers = "evidence/hip_gaia_magnitude_outliers.csv"
 magnitude_relationship_summary = "evidence/hip_gaia_magnitude_summary.json"
+vr_finger_of_god_image = "evidence/vr_finger_of_god.jpg"
+vr_from_sun_image = "evidence/vr_from_sun.jpg"
 healpix_cone_footprint_summary = "evidence/hip_healpix_cone_footprint_summary.csv"
 healpix_neighbor_footprint_summary = "evidence/hip_healpix_neighbor_footprint_summary.csv"
 healpix_footprint_summary = "evidence/hip_healpix_footprint_summary.json"
@@ -33,6 +43,7 @@ checksums = "checksums.sha256"
 license = "LICENSE.txt"
 notice = "NOTICE.md"
 references = "REFERENCES.md"
+zenodo_draft_metadata = "zenodo/draft-metadata.md"
 
 [provenance]
 created_by = "Found in Space"

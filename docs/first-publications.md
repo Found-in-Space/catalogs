@@ -1,21 +1,16 @@
-# First Publications
+# Early Publication IDs
 
-We currently know about two planned publications:
+The initial plan assigned `20260515.1` to a clean mag-11 build and
+`20260515.2` to a Gaia-HIP crossmatch. That plan was superseded before either
+description was published under those IDs.
 
 ## `20260515.1`
 
-The first clean mag-11 build publication.
-
-Its job is to record the clean seed build we use as the basis for early quality
-analysis. The publication itself should decide what build config, reports,
-counts, and checksums are worth keeping.
+The actual release directory is the standalone Gaia-HIP supplemental visual
+de-duplication map. Its authoritative scope and contents are recorded in
+`publications/20260515.1/README.md` and `manifest.toml`.
 
 ## `20260515.2`
 
-The first Gaia-HIP crossmatch publication.
-
-Its job is to publish the crossmatch consumed by later cleaned pipeline builds.
-It should reference `20260515.1` if it is derived from that seed build.
-
-Any audit-specific notes, plots, thresholds, tables, or methodology belong
-inside this publication when we create it, not in repository-wide docs.
+This ID was proposed but no publication directory was created. It is not a
+release and has no publication payload or DOI.

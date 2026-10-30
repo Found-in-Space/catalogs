@@ -12,10 +12,11 @@ Before creating a release, decide whether it is:
 - a new immutable snapshot of an existing evolving series, which must use
   Zenodo's **New version** action in the existing record lineage.
 
-Record that decision and a stable `series_id` in the manifest. Never create a
-second independent Zenodo record for a revision of the same evolving catalog.
-An unpublished repository candidate is not a Zenodo version and does not start
-a DOI lineage.
+Record that decision in the manifest. An evolving catalog must also record a
+stable `series_id`; a standalone historical publication does not need one.
+Never create a second independent Zenodo record for a revision of the same
+evolving catalog. An unpublished repository candidate is not a Zenodo version
+and does not start a DOI lineage.
 
 ## DOI and Immutability Rules
 
@@ -37,9 +38,11 @@ a new version.
 
 1. Choose the next release ID.
 2. Create `publications/<release>/`.
-3. Add a README explaining the publication, lifecycle, and citation policy.
-4. Add a manifest recording the series, lifecycle, important inputs, outputs,
-   decisions, and provenance.
+3. Add a README explaining the publication relationship, scope, and citation
+   policy.
+4. Add a manifest recording the publication relationship, important inputs,
+   outputs, decisions, and provenance. Include a stable `series_id` for an
+   evolving catalog.
 5. Keep local scratch paths, credentials, and raw source dumps out of the
    publication.
 6. If the publication includes counts, artifact metadata, or checksums,
@@ -61,7 +64,7 @@ Official Zenodo guidance:
 - <https://help.zenodo.org/docs/deposit/manage-files/>
 - <https://zenodo.org/help/versioning>
 
-The first clean sequence is expected to be:
+Historical note:
 
-- `20260515.1` - first clean mag-11 build publication.
-- `20260515.2` - first Gaia-HIP crossmatch publication.
+- `20260515.1` is the Gaia-HIP supplemental visual de-duplication map.
+- `20260515.2` was proposed but never created or published.
