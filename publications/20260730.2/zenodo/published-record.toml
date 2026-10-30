@@ -1,0 +1,56 @@
+# Post-publication Zenodo status for release 20260730.2.
+#
+# This file was created after the Zenodo record was published. It is repository
+# tracking metadata, not part of the immutable Zenodo upload payload, the
+# publication ZIP, or checksums.sha256.
+
+release = "20260730.2"
+series_id = "fis.overrides"
+checked_at = "2026-07-30T15:11:51+02:00"
+source = "https://zenodo.org/api/records/21703732"
+catalogs_commit = "5b51358673a9bb91ccb36f47a8fb427bead81bdb"
+publication_subtree = "publications/20260730.2"
+
+[zenodo]
+status = "published"
+state = "done"
+submitted = true
+record_id = "21703732"
+concept_record_id = "21703731"
+record_doi = "10.5281/zenodo.21703732"
+concept_doi = "10.5281/zenodo.21703731"
+doi_url = "https://doi.org/10.5281/zenodo.21703732"
+concept_doi_url = "https://doi.org/10.5281/zenodo.21703731"
+record_url = "https://zenodo.org/records/21703732"
+concept_record_url = "https://zenodo.org/records/21703731"
+publication_date = "2026-07-30"
+created_at = "2026-07-30T13:07:25.002936+00:00"
+modified_at = "2026-07-30T13:07:25.724465+00:00"
+title = "Found in Space stellar overrides"
+version = "20260730.2"
+resource_type = "dataset"
+access_right = "open"
+license = "cc-by-4.0"
+community = "found-in-space"
+community_verified = true
+version_index = 0
+is_latest_version = true
+
+[creator]
+name = "Siebert, Kaj Wik"
+affiliation = "University College London"
+orcid = "0009-0009-4500-4316"
+
+[related]
+website = "https://foundin.space/"
+repository = "https://github.com/Found-in-Space/catalogs"
+
+[[uploaded_files]]
+key = "fis-overrides-20260730.2.zip"
+size = 149152
+zenodo_checksum = "md5:c8c377571999d1927188ac5dcf46f84b"
+local_sha256 = "1f4a7544fe1257d50d7f5a00e9626404a05ea077bc1a305c72fb9eee6448981f"
+download_url = "https://zenodo.org/api/records/21703732/files/fis-overrides-20260730.2.zip/content"
+internal_checksums_verified = true
+runtime_override_rows = 51
+runtime_unique_override_ids = 51
