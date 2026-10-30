@@ -1,0 +1,78 @@
+{
+  "verified_at": "2026-10-17T14:24:12.977835+00:00",
+  "bucket": "foundinspace",
+  "prefix": "textures/sky/deep-star-maps-2020/20261017.2/",
+  "base_url": "https://data.foundin.space/textures/sky/deep-star-maps-2020/20261017.2/",
+  "objects": [
+    {
+      "path": "LICENSE.txt",
+      "sha256": "db2c94ea8df5f8e0f9790cd661993851d37cc185a95cdf3871665c3cbbe7f5ac",
+      "bytes": 2085,
+      "content_type": "text/plain; charset=utf-8",
+      "url": "https://data.foundin.space/textures/sky/deep-star-maps-2020/20261017.2/LICENSE.txt",
+      "status": 200,
+      "cors": "*",
+      "cache_control": "public, max-age=31536000, immutable"
+    },
+    {
+      "path": "NOTICE.md",
+      "sha256": "782305cd0e92b382743a45bb7e8b1ef8c4367837ce3bcbc136492c8e8634d5e5",
+      "bytes": 1128,
+      "content_type": "text/markdown; charset=utf-8",
+      "url": "https://data.foundin.space/textures/sky/deep-star-maps-2020/20261017.2/NOTICE.md",
+      "status": 200,
+      "cors": "*",
+      "cache_control": "public, max-age=31536000, immutable"
+    },
+    {
+      "path": "checksums.sha256",
+      "sha256": "35611e25fd7615f3f03c067406534ba23e05e2450761eb2088058e88d1815793",
+      "bytes": 528,
+      "content_type": "text/plain; charset=utf-8",
+      "url": "https://data.foundin.space/textures/sky/deep-star-maps-2020/20261017.2/checksums.sha256",
+      "status": 200,
+      "cors": "*",
+      "cache_control": "public, max-age=31536000, immutable"
+    },
+    {
+      "path": "deep-star-map-2020-4k.webp",
+      "sha256": "ceabaafadf77dc9792cf2ad8e3d80d4c3cba069602bee035763fe9ddeefa4ab4",
+      "bytes": 2552346,
+      "content_type": "image/webp",
+      "url": "https://data.foundin.space/textures/sky/deep-star-maps-2020/20261017.2/deep-star-map-2020-4k.webp",
+      "status": 200,
+      "cors": "*",
+      "cache_control": "public, max-age=31536000, immutable"
+    },
+    {
+      "path": "deep-star-map-2020-north-1024.webp",
+      "sha256": "6021227f1b295e7137afa74d003b5f4578214df0ec8aaf5242345a15f91e5784",
+      "bytes": 1232442,
+      "content_type": "image/webp",
+      "url": "https://data.foundin.space/textures/sky/deep-star-maps-2020/20261017.2/deep-star-map-2020-north-1024.webp",
+      "status": 200,
+      "cors": "*",
+      "cache_control": "public, max-age=31536000, immutable"
+    },
+    {
+      "path": "deep-star-map-2020-south-1024.webp",
+      "sha256": "32ca31e4e20eb7b40fa49a0d6360d3c812f63b9e10ccd2eef177a045c13635ab",
+      "bytes": 1228818,
+      "content_type": "image/webp",
+      "url": "https://data.foundin.space/textures/sky/deep-star-maps-2020/20261017.2/deep-star-map-2020-south-1024.webp",
+      "status": 200,
+      "cors": "*",
+      "cache_control": "public, max-age=31536000, immutable"
+    },
+    {
+      "path": "product.json",
+      "sha256": "a6811e4aab3755ff4051b3caeac772ccbd6d53ff6d1c53f1784f89d1947c2801",
+      "bytes": 3035,
+      "content_type": "application/json",
+      "url": "https://data.foundin.space/textures/sky/deep-star-maps-2020/20261017.2/product.json",
+      "status": 200,
+      "cors": "*",
+      "cache_control": "public, max-age=31536000, immutable"
+    }
+  ]
+}

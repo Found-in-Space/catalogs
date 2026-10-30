@@ -1,0 +1,39 @@
+NASA Deep Star Maps 2020 imagery
+
+The admitted image is distributed by NASA's Scientific Visualization Studio
+(SVS). SVS states that its content is public domain unless otherwise noted.
+The Deep Star Maps 2020 page credits NASA/Goddard Space Flight Center Scientific
+Visualization Studio and ESA/Gaia/DPAC; no separate copyright restriction is
+identified for the celestial 4k EXR used here. This publication retains those
+credits and does not replace upstream terms with a Creative Commons licence.
+
+Source: https://svs.gsfc.nasa.gov/4851/
+SVS usage policy: https://svs.gsfc.nasa.gov/help/
+NASA media guidance: https://www.nasa.gov/nasa-brand-center/images-and-media/
+
+NASA's general guidance describes copyright status in the United States;
+marked third-party material retains its own rights. Acknowledge NASA as the
+source and do not imply endorsement by NASA, ESA, DPAC, or the authors.
+Hosting or converting the image does not change these terms.
+
+Found in Space original recipe and publication documentation: MIT License
+
+Copyright (c) 2026 Found in Space
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

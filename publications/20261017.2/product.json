@@ -1,0 +1,76 @@
+{
+  "formatVersion": 1,
+  "release": "20261017.2",
+  "productId": "deep-star-maps-2020-celestial-4k",
+  "source": {
+    "page": "https://svs.gsfc.nasa.gov/4851/",
+    "url": "https://svs.gsfc.nasa.gov/vis/a000000/a004800/a004851/starmap_2020_4k.exr",
+    "sha256": "69b841cd048c2ef35543eb1c5819b322530e78aa4b0cab97ec1de3ef56a4ddcd",
+    "bytes": 35997085
+  },
+  "credit": "NASA/Goddard Space Flight Center Scientific Visualization Studio; Gaia DR2: ESA/Gaia/DPAC",
+  "projection": {
+    "type": "plate-carree",
+    "frame": "ICRF/J2000",
+    "centreRaDegrees": 0,
+    "raIncreases": "left",
+    "north": "top",
+    "width": 4096,
+    "height": 2048
+  },
+  "representation": "Display imagery; clamped and lossy, not scientific photometry or a selectable star catalog.",
+  "preparation": {
+    "repository": "https://github.com/Found-in-Space/catalogs",
+    "commit": "fa6d0411e41c399fb05ef9eacaaa990d28d2f6f3",
+    "recipe": "publications/20261017.2/recipe/prepare.mjs",
+    "scriptSha256": "923131d575e436d2e1cfc7f372e324c63a3faaabb2e60e80d40bb1b14d91d2a5",
+    "projectionSha256": "3940379135c0696458b1a6b14065728ed839eed4faa7bc9f9099f4beec14dcde",
+    "lockfileSha256": "988094241938fbfe0c6baa19863252d617a3536007939965d09e23cc7a1e05f8",
+    "three": "0.170.0",
+    "node": "v24.16.0",
+    "ffmpeg": "ffmpeg version 4.4.2-0ubuntu0.22.04.1 Copyright (c) 2000-2021 the FFmpeg developers",
+    "transform": "Main map: linear RGB clamped to [0,1], IEC sRGB transfer, nearest 8-bit RGB; no resizing or exposure change; reverse EXRLoader rows. Caps: gnomonic reprojection from the original linear EXR with bilinear sampling before the same display transfer.",
+    "encoding": "Main map: WebP quality 90. Caps: lossless WebP. Compression level 6."
+  },
+  "license": {
+    "image": "NASA SVS public-domain usage policy, subject to noted third-party rights; see LICENSE.txt and NOTICE.md",
+    "policy": "https://svs.gsfc.nasa.gov/help/",
+    "notice": "NOTICE.md"
+  },
+  "output": {
+    "path": "deep-star-map-2020-4k.webp",
+    "sha256": "ceabaafadf77dc9792cf2ad8e3d80d4c3cba069602bee035763fe9ddeefa4ab4",
+    "bytes": 2552346,
+    "contentType": "image/webp",
+    "colorSpace": "sRGB"
+  },
+  "polarCaps": {
+    "projection": "gnomonic",
+    "frame": "ICRF/J2000",
+    "halfAngleDegrees": 35,
+    "rightAxis": "+X",
+    "topAxis": "+Y",
+    "northAxis": "+Z",
+    "southAxis": "-Z",
+    "blendStartDeclinationDegrees": 60,
+    "blendEndDeclinationDegrees": 65,
+    "north": {
+      "path": "deep-star-map-2020-north-1024.webp",
+      "sha256": "6021227f1b295e7137afa74d003b5f4578214df0ec8aaf5242345a15f91e5784",
+      "bytes": 1232442,
+      "width": 1024,
+      "height": 1024,
+      "contentType": "image/webp",
+      "colorSpace": "sRGB"
+    },
+    "south": {
+      "path": "deep-star-map-2020-south-1024.webp",
+      "sha256": "32ca31e4e20eb7b40fa49a0d6360d3c812f63b9e10ccd2eef177a045c13635ab",
+      "bytes": 1228818,
+      "width": 1024,
+      "height": 1024,
+      "contentType": "image/webp",
+      "colorSpace": "sRGB"
+    }
+  }
+}

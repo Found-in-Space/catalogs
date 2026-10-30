@@ -1,0 +1,58 @@
+{
+  "verified_at": "2026-10-17T14:09:23.813898+00:00",
+  "bucket": "foundinspace",
+  "prefix": "textures/sky/deep-star-maps-2020/20261017.1/",
+  "base_url": "https://data.foundin.space/textures/sky/deep-star-maps-2020/20261017.1/",
+  "objects": [
+    {
+      "path": "LICENSE.txt",
+      "sha256": "db2c94ea8df5f8e0f9790cd661993851d37cc185a95cdf3871665c3cbbe7f5ac",
+      "bytes": 2085,
+      "content_type": "text/plain; charset=utf-8",
+      "url": "https://data.foundin.space/textures/sky/deep-star-maps-2020/20261017.1/LICENSE.txt",
+      "status": 200,
+      "cors": "*",
+      "cache_control": "public, max-age=31536000, immutable"
+    },
+    {
+      "path": "NOTICE.md",
+      "sha256": "19b1bb64c43705e544dce03f5a9b3f1053799522dee15b1f03e1b383e70832cb",
+      "bytes": 1099,
+      "content_type": "text/markdown; charset=utf-8",
+      "url": "https://data.foundin.space/textures/sky/deep-star-maps-2020/20261017.1/NOTICE.md",
+      "status": 200,
+      "cors": "*",
+      "cache_control": "public, max-age=31536000, immutable"
+    },
+    {
+      "path": "checksums.sha256",
+      "sha256": "966ca25237091b09e167913a416950a40d3453fc4eb2145d7f9b180dd261588b",
+      "bytes": 326,
+      "content_type": "text/plain; charset=utf-8",
+      "url": "https://data.foundin.space/textures/sky/deep-star-maps-2020/20261017.1/checksums.sha256",
+      "status": 200,
+      "cors": "*",
+      "cache_control": "public, max-age=31536000, immutable"
+    },
+    {
+      "path": "deep-star-map-2020-4k.webp",
+      "sha256": "ceabaafadf77dc9792cf2ad8e3d80d4c3cba069602bee035763fe9ddeefa4ab4",
+      "bytes": 2552346,
+      "content_type": "image/webp",
+      "url": "https://data.foundin.space/textures/sky/deep-star-maps-2020/20261017.1/deep-star-map-2020-4k.webp",
+      "status": 200,
+      "cors": "*",
+      "cache_control": "public, max-age=31536000, immutable"
+    },
+    {
+      "path": "product.json",
+      "sha256": "0038b3b65b12dbe2442e19127b41254ca60225517df110a8098d5c419a5a86f5",
+      "bytes": 1939,
+      "content_type": "application/json",
+      "url": "https://data.foundin.space/textures/sky/deep-star-maps-2020/20261017.1/product.json",
+      "status": 200,
+      "cors": "*",
+      "cache_control": "public, max-age=31536000, immutable"
+    }
+  ]
+}
