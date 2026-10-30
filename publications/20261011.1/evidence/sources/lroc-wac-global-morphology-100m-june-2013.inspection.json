@@ -1,0 +1,175 @@
+{
+  "contract_complete": true,
+  "contract_matches": true,
+  "errors": [],
+  "format_version": 1,
+  "gdalinfo": {
+    "bands": [
+      {
+        "band": 1,
+        "block": [
+          109164,
+          1
+        ],
+        "colorInterpretation": "Gray",
+        "metadata": {},
+        "noDataValue": 0.0,
+        "offset": -0.003952569169961,
+        "scale": 1.00395256917,
+        "type": "Byte"
+      }
+    ],
+    "coordinateSystem": {
+      "dataAxisToSRSAxisMapping": [
+        1,
+        2
+      ],
+      "wkt": "PROJCRS[\"SimpleCylindrical MOON\",\n    BASEGEOGCRS[\"GCS_MOON\",\n        DATUM[\"D_MOON\",\n            ELLIPSOID[\"MOON\",1737400,0,\n                LENGTHUNIT[\"metre\",1,\n                    ID[\"EPSG\",9001]]]],\n        PRIMEM[\"Reference_Meridian\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433,\n                ID[\"EPSG\",9122]]]],\n    CONVERSION[\"Equidistant Cylindrical\",\n        METHOD[\"Equidistant Cylindrical\",\n            ID[\"EPSG\",1028]],\n        PARAMETER[\"Latitude of 1st standard parallel\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8823]],\n        PARAMETER[\"Longitude of natural origin\",0,\n            ANGLEUNIT[\"degree\",0.0174532925199433],\n            ID[\"EPSG\",8802]],\n        PARAMETER[\"False easting\",0,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8806]],\n        PARAMETER[\"False northing\",0,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8807]]],\n    CS[Cartesian,2],\n        AXIS[\"easting\",east,\n            ORDER[1],\n            LENGTHUNIT[\"metre\",1,\n                ID[\"EPSG\",9001]]],\n        AXIS[\"northing\",north,\n            ORDER[2],\n            LENGTHUNIT[\"metre\",1,\n                ID[\"EPSG\",9001]]]]"
+    },
+    "cornerCoordinates": {
+      "center": [
+        -3.0763469,
+        1.5381735
+      ],
+      "lowerLeft": [
+        -5458203.076,
+        -2729098.462
+      ],
+      "lowerRight": [
+        5458196.924,
+        -2729098.462
+      ],
+      "upperLeft": [
+        -5458203.076,
+        2729101.538
+      ],
+      "upperRight": [
+        5458196.924,
+        2729101.538
+      ]
+    },
+    "description": "${RUN_ROOT}/source/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif",
+    "driverLongName": "GeoTIFF",
+    "driverShortName": "GTiff",
+    "extent": {
+      "coordinates": [
+        [
+          [
+            -180.0,
+            90.0
+          ],
+          [
+            -180.0,
+            -89.9998985
+          ],
+          [
+            179.9997971,
+            -89.9998985
+          ],
+          [
+            179.9997971,
+            90.0
+          ],
+          [
+            -180.0,
+            90.0
+          ]
+        ]
+      ],
+      "type": "Polygon"
+    },
+    "files": [
+      "${RUN_ROOT}/source/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif"
+    ],
+    "geoTransform": [
+      -5458203.0763469,
+      100.0,
+      0.0,
+      2729101.53817345,
+      0.0,
+      -100.0
+    ],
+    "metadata": {
+      "": {
+        "AREA_OR_POINT": "Area"
+      },
+      "IMAGE_STRUCTURE": {
+        "INTERLEAVE": "BAND"
+      }
+    },
+    "size": [
+      109164,
+      54582
+    ]
+  },
+  "gdalinfo_command": [
+    "gdalinfo",
+    "-json",
+    "${RUN_ROOT}/source/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif"
+  ],
+  "inspected_at": "2026-10-02T13:35:39Z",
+  "observed": {
+    "band_count": 1,
+    "data_types": [
+      "Byte"
+    ],
+    "declared_source_crs_proj4": "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +R=1737400 +units=m +no_defs",
+    "geo_transform": [
+      -5458203.0763469,
+      100.0,
+      0.0,
+      2729101.53817345,
+      0.0,
+      -100.0
+    ],
+    "height": 54582,
+    "mask_flags": [
+      [
+        "ALL_VALID"
+      ]
+    ],
+    "nodata_values": [
+      0.0
+    ],
+    "offsets": [
+      -0.003952569169961
+    ],
+    "scales": [
+      1.00395256917
+    ],
+    "source_crs_proj4": "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +R=1737400 +units=m +no_defs",
+    "width": 109164
+  },
+  "producer": {
+    "code_tree_sha256": "d8920ac966ab675e21086af194d61c354ce03b636b3833f172b9c103de335fdf",
+    "git_dirty": false,
+    "git_sha": "56fd7a789cf31eea613d2f770a1042846090d587",
+    "package_version": "0.1.0"
+  },
+  "source": {
+    "filename": "Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif",
+    "sha256": "87159ead1888ae31bb647e957ec60943022b707ec804cb5353a304575936fd55",
+    "size_bytes": 5959263751
+  },
+  "source_crs_resource_sha256": "c94ad4845ec109791b0cb9e79b1480b9b6add7b2dc9cab0d89e33f19eed66616",
+  "source_id": "lroc-wac-global-morphology-100m-june-2013",
+  "source_status": "admitted",
+  "spatial_reference_commands": [
+    [
+      "gdalsrsinfo",
+      "-o",
+      "proj4",
+      "${PRODUCER_ROOT}/projects/moon/lroc-wac-global-100m/sources/../../../../resources/crs/moon-simple-cylindrical-1737400.wkt"
+    ],
+    [
+      "gdalsrsinfo",
+      "-o",
+      "proj4",
+      "${RUN_ROOT}/source/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif"
+    ]
+  ],
+  "tool_versions": {
+    "gdal": "GDAL 3.4.1, released 2021/12/27",
+    "proj": "Rel. 8.2.1, January 1st, 2022"
+  }
+}

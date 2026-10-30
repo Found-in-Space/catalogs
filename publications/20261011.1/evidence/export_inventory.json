@@ -1,0 +1,150 @@
+{
+  "assembly_commit": "049176767d26d2e9d99ce151d69f568dca9f2b58",
+  "format_version": 1,
+  "path_tokens": {
+    "${PRODUCER_ROOT}": "producer checkout root",
+    "${RUN_ROOT}": "original run directory"
+  },
+  "records": [
+    {
+      "original_sha256": "b5ca7b3971dd42d27b0aaa51d812873e615d4a0d262d7056f9d61347dbfae0b9",
+      "published_path": "evidence/preflight.json",
+      "published_sha256": "915a00b3a6a848dae9e88abd132df1dea870a09528a26273ca93419ed07324f7",
+      "source_role": "evidence/preflight.json",
+      "transformation": "portable-json"
+    },
+    {
+      "original_sha256": "e16245d44c374b9d341ebe478c56d549116dc2971cef5bcb6a246fdc27bb50b1",
+      "published_path": "evidence/tiles.validation.json",
+      "published_sha256": "6c15615ae9dbc3ac083c9bd56ce89104354465576d7fdcd4e73369e7242c72af",
+      "source_role": "evidence/tiles.validation.json",
+      "transformation": "portable-json"
+    },
+    {
+      "original_sha256": "e26d51255067f8a5c0bbc8a16d99ed526ef12e57209a50be5bae3e8f59557b3b",
+      "published_path": "evidence/sources/lroc-wac-global-morphology-100m-june-2013.inspection.json",
+      "published_sha256": "aa7bc93a53008f8f6e5017e360cfabdba7fda65f8d1b5bc7fb0fdbf8656345f6",
+      "source_role": "evidence/sources/lroc-wac-global-morphology-100m-june-2013.inspection.json",
+      "transformation": "portable-json"
+    },
+    {
+      "original_sha256": "7cf097b8de86c16e2ce8590d73da1da94a206d93aea953d671f3f35a94ce5e5e",
+      "published_path": "evidence/work/state/build-base.json",
+      "published_sha256": "853fe4c65cc6bb9259d6f856c0f7ca4ef4d621392107a1b2adacfb2ccd29c24b",
+      "source_role": "work/state/build-base.json",
+      "transformation": "portable-json"
+    },
+    {
+      "original_sha256": "75bb82ecba0cbaf62dfb1cae588e9e261f95864d593b7623833775536b256f86",
+      "published_path": "evidence/work/state/build-level-0.json",
+      "published_sha256": "c98c24bdb6f9899d266c9d5f398586fa8fd00d391818b4c2763a389dab2d3800",
+      "source_role": "work/state/build-level-0.json",
+      "transformation": "portable-json"
+    },
+    {
+      "original_sha256": "029b34737dc7de8384fe78f60652173f26f78d36527273c3475164716272e517",
+      "published_path": "evidence/work/state/build-level-1.json",
+      "published_sha256": "ba08c8f6f65f47d0906ac2032d012ec096aa7c6486a1d324874483c9b9a4f936",
+      "source_role": "work/state/build-level-1.json",
+      "transformation": "portable-json"
+    },
+    {
+      "original_sha256": "d0b6fbf92dcea2938d60b874f2ad83c49f819f9a9990f31026ca741d396df3e3",
+      "published_path": "evidence/work/state/build-level-2.json",
+      "published_sha256": "8ff77c2fc84858f811d770633a36569d86dcb30ca4e3a91159ae404003669768",
+      "source_role": "work/state/build-level-2.json",
+      "transformation": "portable-json"
+    },
+    {
+      "original_sha256": "ff6ea1c40c91dafe3a40ae1a03f48b9f4f72723c2c24b995262186b0fd594cfc",
+      "published_path": "evidence/work/state/build-level-3.json",
+      "published_sha256": "3e8e37e38d51aa69e005fb42e1d2cd3ba079a3f6e9a6a3a7d9891753049a165b",
+      "source_role": "work/state/build-level-3.json",
+      "transformation": "portable-json"
+    },
+    {
+      "original_sha256": "952924d5c7ffd28e3379a30decee16c1be17fcfa5fd1ed3b574f99f94a419c1a",
+      "published_path": "evidence/work/state/build-level-4.json",
+      "published_sha256": "abc9d6f84e5fc5d67dbe86cc896b1e6fecbd03d3362e0d7344ff1fde48917163",
+      "source_role": "work/state/build-level-4.json",
+      "transformation": "portable-json"
+    },
+    {
+      "original_sha256": "6dceb1e24e8d5dc016981bb23502ea012e0ae294ca33fbb4392e9b0e47f89d40",
+      "published_path": "evidence/work/state/build-level-5.json",
+      "published_sha256": "2932ac4bff65fa8389a6cd957c707fe74ba2f0dec5ad8cc3521e65425d83ad7a",
+      "source_role": "work/state/build-level-5.json",
+      "transformation": "portable-json"
+    },
+    {
+      "original_sha256": "dfd4d9a79a2e25aecb10c2872d0509fdc2c1a1d7e68753242fb90e8269beecd1",
+      "published_path": "evidence/work/state/build-level-6.json",
+      "published_sha256": "beb63a740ba7782173b95babfa3a8cbe2ec4d67cec6e5f82004445c32e864586",
+      "source_role": "work/state/build-level-6.json",
+      "transformation": "portable-json"
+    },
+    {
+      "original_sha256": "9078c37e50e263246fde5c1abedb6c0ddd47e36bbb5925b96eb4636bccc47305",
+      "published_path": "evidence/work/state/build-level-7.json",
+      "published_sha256": "6c9f8deedca3cfbfde1161ec8e1b914ddd3b24c7b0dca6895cb16ded6dd58a9f",
+      "source_role": "work/state/build-level-7.json",
+      "transformation": "portable-json"
+    },
+    {
+      "original_sha256": "2c806a2a4fb05dfaf6573707e9294792cf313b609d6fd01024cec84542084aeb",
+      "published_path": "evidence/work/state/emit-tiles.json",
+      "published_sha256": "e34f50011d8decf80093d1d6719193a4c47117b218ae8aad24441b76737e14a0",
+      "source_role": "work/state/emit-tiles.json",
+      "transformation": "portable-json"
+    },
+    {
+      "original_sha256": "2e48babf7cb536012895abfeb6c838050b44b541e9f6a804483c1822ab5b4dd6",
+      "published_path": "evidence/work/state/validate-tiles.json",
+      "published_sha256": "18f4f02a9117fbf63122fea1ec22510d42598992dd68f6ba0080d47b71f36443",
+      "source_role": "work/state/validate-tiles.json",
+      "transformation": "portable-json"
+    },
+    {
+      "original_sha256": "531e452e0653d71d8e9a058d3365f7751cd30f024001e2163c5b9e7db968d043",
+      "published_path": "evidence/source/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif.download.json",
+      "published_sha256": "531e452e0653d71d8e9a058d3365f7751cd30f024001e2163c5b9e7db968d043",
+      "source_role": "source/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif.download.json",
+      "transformation": "portable-json"
+    },
+    {
+      "original_sha256": "7cf097b8de86c16e2ce8590d73da1da94a206d93aea953d671f3f35a94ce5e5e",
+      "published_path": "evidence/logs/build-base.log",
+      "published_sha256": "36e90a1521cf116306bc5c55cf56bde3931b9bd8b0d26b9111448f48b973f99a",
+      "source_role": "logs/build-base.log",
+      "transformation": "portable-text-in-json"
+    },
+    {
+      "original_sha256": "9569c719f94416034d36277acd4f515328890a5c925d3020158d27b6caf8dfae",
+      "published_path": "evidence/logs/build-levels.log",
+      "published_sha256": "bf792f8c8aaa1334ec200dd9a5e41466c13d7e65427d214109c48e0b25f719cb",
+      "source_role": "logs/build-levels.log",
+      "transformation": "portable-text-in-json"
+    },
+    {
+      "original_sha256": "d2dc95489a2cceaf13b11ee35e0f83c3f0b348b47269a7a3ed646c661afd4fef",
+      "published_path": "evidence/logs/download.log",
+      "published_sha256": "4df6f581c0a6b335a0f7c7c15292d6a374884332cbd3832c30d376fcb261d970",
+      "source_role": "logs/download.log",
+      "transformation": "portable-text-in-json"
+    },
+    {
+      "original_sha256": "2c806a2a4fb05dfaf6573707e9294792cf313b609d6fd01024cec84542084aeb",
+      "published_path": "evidence/logs/emit-tiles.log",
+      "published_sha256": "3556ff3e8728c6bcb474722ece2797383f5bbda4969f31e98119fc9b68e096c7",
+      "source_role": "logs/emit-tiles.log",
+      "transformation": "portable-text-in-json"
+    },
+    {
+      "original_sha256": "e16245d44c374b9d341ebe478c56d549116dc2971cef5bcb6a246fdc27bb50b1",
+      "published_path": "evidence/logs/validate-tiles.log",
+      "published_sha256": "2f67ba9237cd7a6f99244e52cff7feedd29ba09b1d3c2bba30a011d44d241f4d",
+      "source_role": "logs/validate-tiles.log",
+      "transformation": "portable-text-in-json"
+    }
+  ]
+}

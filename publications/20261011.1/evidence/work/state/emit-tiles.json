@@ -1,0 +1,602 @@
+{
+  "completed_at": "2026-10-02T15:20:22Z",
+  "elapsed_seconds": 3154.638962244,
+  "format_version": 1,
+  "identity": {
+    "levels": [
+      {
+        "dimension": 512,
+        "sha256": "d21ab405f0c1cf6f4cd28c8447f40b8d4ff6d53f957a610b55874b10f9cc0076",
+        "size_bytes": 204737,
+        "tile_count": 1,
+        "zoom": 0
+      },
+      {
+        "dimension": 1024,
+        "sha256": "632ec18eb518ffb9c7576c9b497a8871bd2ca35d6904db32b0360ee5de544f08",
+        "size_bytes": 816140,
+        "tile_count": 4,
+        "zoom": 1
+      },
+      {
+        "dimension": 2048,
+        "sha256": "3c65febf0716bab17ba11071d64d0af0e438cf062e8a4efe43f927aad60ac0e0",
+        "size_bytes": 3158914,
+        "tile_count": 16,
+        "zoom": 2
+      },
+      {
+        "dimension": 4096,
+        "sha256": "54a39630b2e24d917e1758f76b735aae80fa6c9d790ba54d56d9de0df1f6ab49",
+        "size_bytes": 12258712,
+        "tile_count": 64,
+        "zoom": 3
+      },
+      {
+        "dimension": 8192,
+        "sha256": "52d46df6ff4cf9b84e5a129b3177e8a253f672981e243b0ef7c3d46e0d3cdd5a",
+        "size_bytes": 46659388,
+        "tile_count": 256,
+        "zoom": 4
+      },
+      {
+        "dimension": 16384,
+        "sha256": "27da1212b02852c81114cc022737a6b2f555623b51a80e3529af041c63a22b6b",
+        "size_bytes": 173850764,
+        "tile_count": 1024,
+        "zoom": 5
+      },
+      {
+        "dimension": 32768,
+        "sha256": "e183d815de43880209d4c5b3d48e1db1336f7c0d68b03a4b8370cc52342d6e94",
+        "size_bytes": 630155816,
+        "tile_count": 4096,
+        "zoom": 6
+      },
+      {
+        "dimension": 65536,
+        "sha256": "796e84ccea0aec336f50ac435815d44136224bfc54cd7db2e9e43c611e4d04d3",
+        "size_bytes": 2204886512,
+        "tile_count": 16384,
+        "zoom": 7
+      },
+      {
+        "dimension": 131072,
+        "sha256": "aa7f6d78a5d5e6c9454889558a9f55aa47c30a9616b48f7132a1eae4a98bc1a1",
+        "size_bytes": 7113790774,
+        "tile_count": 65536,
+        "zoom": 8
+      }
+    ],
+    "png": {
+      "bit_depth": 8,
+      "color_type": 0,
+      "opaque": true,
+      "zlevel": 6
+    },
+    "producer": {
+      "code_tree_sha256": "b195490f9609eee304c8f6644c85115c74f6f9b770915ad9b94039ec32b3c1ee",
+      "git_dirty": false,
+      "git_sha": "deca93d4872bbbb3c75ccfa4083c9e865f331d86",
+      "package_version": "0.1.0"
+    },
+    "project": {
+      "composite": {
+        "missing_pixel": 0,
+        "policy": "priority"
+      },
+      "format_version": 1,
+      "product": {
+        "bounds": [
+          -180.0,
+          -90.0,
+          180.0,
+          90.0
+        ],
+        "channels": "grayscale",
+        "format": "png",
+        "kind": "display-texture",
+        "maximum_zoom": 8,
+        "opaque": true,
+        "path_template": "imagery/{z}/{x}/{y}.png",
+        "pixel_type": "uint8",
+        "pyramid_resampling": "average",
+        "reprojection_resampling": "bilinear",
+        "tile_size": 512
+      },
+      "product_id": "moon-lroc-wac-global-morphology-100m-v1",
+      "sources": [
+        {
+          "acquisition": {
+            "citation": "LROC Team; Arizona State University; USGS Astrogeology Science Center.",
+            "expected": {
+              "band_count": 1,
+              "data_type": "Byte",
+              "geo_transform": [
+                -5458203.0763469,
+                100.0,
+                0.0,
+                2729101.53817345,
+                0.0,
+                -100.0
+              ],
+              "height": 54582,
+              "mask_flags": [
+                "ALL_VALID"
+              ],
+              "nodata": 0.0,
+              "offset": -0.003952569169961,
+              "scale": 1.00395256917,
+              "sha256": "87159ead1888ae31bb647e957ec60943022b707ec804cb5353a304575936fd55",
+              "size_bytes": 5959263751,
+              "width": 109164
+            },
+            "filename": "Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif",
+            "format_version": 1,
+            "landing_page": "https://astrogeology.usgs.gov/search/map/moon_lro_lroc_wac_global_morphology_mosaic_100m",
+            "reported": {
+              "approximate_size": "5.5 GB",
+              "band_count": 1,
+              "data_type": "Byte",
+              "height": 54582,
+              "projection": "Simple Cylindrical; planetocentric latitude; positive-east longitude",
+              "width": 109164
+            },
+            "source_crs": "../../../../resources/crs/moon-simple-cylindrical-1737400.wkt",
+            "source_id": "lroc-wac-global-morphology-100m-june-2013",
+            "status": "admitted",
+            "title": "Moon LRO LROC WAC Global Morphology Mosaic 100m",
+            "url": "https://planetarymaps.usgs.gov/mosaic/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif"
+          },
+          "id": "lroc-wac-global-morphology-100m-june-2013",
+          "priority": 100
+        }
+      ],
+      "target": {
+        "crs": "../../../resources/crs/moon-geographic-1737400.wkt",
+        "id": "moon",
+        "latitude_range": [
+          -90.0,
+          90.0
+        ],
+        "longitude_range": [
+          -180.0,
+          180.0
+        ]
+      }
+    },
+    "tools": {
+      "gdal": "GDAL 3.4.1, released 2021/12/27",
+      "gdal_retile.py_sha256": "39e068c52e96b0fc6ef0506d2f89faf0cb7cef11a178e2fada2572d56082eb76",
+      "proj": "Rel. 8.2.1, January 1st, 2022"
+    }
+  },
+  "identity_sha256": "2e04ab3c7d0cdb5ec0be34ba24ef1d110aa716b4a6197111da89f08b74b27f86",
+  "levels": [
+    {
+      "commands": [
+        [
+          "gdal_translate",
+          "-q",
+          "-of",
+          "VRT",
+          "-a_nodata",
+          "none",
+          "${RUN_ROOT}/work/levels/0.tif",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/level-0.vrt"
+        ],
+        [
+          "gdal_retile.py",
+          "-q",
+          "-resume",
+          "-of",
+          "PNG",
+          "-ot",
+          "Byte",
+          "-ps",
+          "512",
+          "512",
+          "-overlap",
+          "0",
+          "-co",
+          "ZLEVEL=6",
+          "-useDirForEachRow",
+          "-targetDir",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/retile-0",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/level-0.vrt"
+        ]
+      ],
+      "completed_at": "2026-10-02T14:27:48Z",
+      "dimension": 512,
+      "format_version": 1,
+      "identity_sha256": "26545bab9bf9742785c4bda80564e54931bf7cc9c795f4b4bffc0cdc96fe016f",
+      "level_raster_sha256": "d21ab405f0c1cf6f4cd28c8447f40b8d4ff6d53f957a610b55874b10f9cc0076",
+      "manifest_path": "manifests/tiles-z0.sha256",
+      "manifest_sha256": "bd4aa5b36c25c23540a9edc72c3b60561e6945beed3bccb779d2a42f933a9f78",
+      "stage": "emit-tiles-z0",
+      "status": "complete",
+      "tile_bytes": 179971,
+      "tile_count": 1,
+      "zoom": 0
+    },
+    {
+      "commands": [
+        [
+          "gdal_translate",
+          "-q",
+          "-of",
+          "VRT",
+          "-a_nodata",
+          "none",
+          "${RUN_ROOT}/work/levels/1.tif",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/level-1.vrt"
+        ],
+        [
+          "gdal_retile.py",
+          "-q",
+          "-resume",
+          "-of",
+          "PNG",
+          "-ot",
+          "Byte",
+          "-ps",
+          "512",
+          "512",
+          "-overlap",
+          "0",
+          "-co",
+          "ZLEVEL=6",
+          "-useDirForEachRow",
+          "-targetDir",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/retile-1",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/level-1.vrt"
+        ]
+      ],
+      "completed_at": "2026-10-02T14:27:48Z",
+      "dimension": 1024,
+      "format_version": 1,
+      "identity_sha256": "1a228467aa9fe59f8b89b5026da76273ea399f255cf47c5dad4d170a97728534",
+      "level_raster_sha256": "632ec18eb518ffb9c7576c9b497a8871bd2ca35d6904db32b0360ee5de544f08",
+      "manifest_path": "manifests/tiles-z1.sha256",
+      "manifest_sha256": "a7d6b70a436d6a55b270a350d7fc2763e0941079e48f965f48686693bc009f31",
+      "stage": "emit-tiles-z1",
+      "status": "complete",
+      "tile_bytes": 718859,
+      "tile_count": 4,
+      "zoom": 1
+    },
+    {
+      "commands": [
+        [
+          "gdal_translate",
+          "-q",
+          "-of",
+          "VRT",
+          "-a_nodata",
+          "none",
+          "${RUN_ROOT}/work/levels/2.tif",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/level-2.vrt"
+        ],
+        [
+          "gdal_retile.py",
+          "-q",
+          "-resume",
+          "-of",
+          "PNG",
+          "-ot",
+          "Byte",
+          "-ps",
+          "512",
+          "512",
+          "-overlap",
+          "0",
+          "-co",
+          "ZLEVEL=6",
+          "-useDirForEachRow",
+          "-targetDir",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/retile-2",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/level-2.vrt"
+        ]
+      ],
+      "completed_at": "2026-10-02T14:27:48Z",
+      "dimension": 2048,
+      "format_version": 1,
+      "identity_sha256": "8c74927ba3c28beffbfd53c0b7fb05bf8a5509ca9c081c4c1373ab2756cad2c9",
+      "level_raster_sha256": "3c65febf0716bab17ba11071d64d0af0e438cf062e8a4efe43f927aad60ac0e0",
+      "manifest_path": "manifests/tiles-z2.sha256",
+      "manifest_sha256": "a63bd65d23828c7ae2c4e558fdc251a3def5a5ab17f5df066c518cd43e46b4b0",
+      "stage": "emit-tiles-z2",
+      "status": "complete",
+      "tile_bytes": 2792544,
+      "tile_count": 16,
+      "zoom": 2
+    },
+    {
+      "commands": [
+        [
+          "gdal_translate",
+          "-q",
+          "-of",
+          "VRT",
+          "-a_nodata",
+          "none",
+          "${RUN_ROOT}/work/levels/3.tif",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/level-3.vrt"
+        ],
+        [
+          "gdal_retile.py",
+          "-q",
+          "-resume",
+          "-of",
+          "PNG",
+          "-ot",
+          "Byte",
+          "-ps",
+          "512",
+          "512",
+          "-overlap",
+          "0",
+          "-co",
+          "ZLEVEL=6",
+          "-useDirForEachRow",
+          "-targetDir",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/retile-3",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/level-3.vrt"
+        ]
+      ],
+      "completed_at": "2026-10-02T14:27:50Z",
+      "dimension": 4096,
+      "format_version": 1,
+      "identity_sha256": "bcb7aac4599c4d443f803ed1ebca143e0ca9612520dedc37e5c32fb2aa38b621",
+      "level_raster_sha256": "54a39630b2e24d917e1758f76b735aae80fa6c9d790ba54d56d9de0df1f6ab49",
+      "manifest_path": "manifests/tiles-z3.sha256",
+      "manifest_sha256": "52cca17dcd3cba07892d648ad8328bc39b50292c1d9608a0f1c84756bf96045b",
+      "stage": "emit-tiles-z3",
+      "status": "complete",
+      "tile_bytes": 10711536,
+      "tile_count": 64,
+      "zoom": 3
+    },
+    {
+      "commands": [
+        [
+          "gdal_translate",
+          "-q",
+          "-of",
+          "VRT",
+          "-a_nodata",
+          "none",
+          "${RUN_ROOT}/work/levels/4.tif",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/level-4.vrt"
+        ],
+        [
+          "gdal_retile.py",
+          "-q",
+          "-resume",
+          "-of",
+          "PNG",
+          "-ot",
+          "Byte",
+          "-ps",
+          "512",
+          "512",
+          "-overlap",
+          "0",
+          "-co",
+          "ZLEVEL=6",
+          "-useDirForEachRow",
+          "-targetDir",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/retile-4",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/level-4.vrt"
+        ]
+      ],
+      "completed_at": "2026-10-02T14:27:54Z",
+      "dimension": 8192,
+      "format_version": 1,
+      "identity_sha256": "39591db720b86df7037c837739448eb166372a4129c9c17e267ed1d0e3d0257f",
+      "level_raster_sha256": "52d46df6ff4cf9b84e5a129b3177e8a253f672981e243b0ef7c3d46e0d3cdd5a",
+      "manifest_path": "manifests/tiles-z4.sha256",
+      "manifest_sha256": "3acae00be7a541f66b95dcfc929e9690cceecff0baf1d735f8a2730759529b48",
+      "stage": "emit-tiles-z4",
+      "status": "complete",
+      "tile_bytes": 40199077,
+      "tile_count": 256,
+      "zoom": 4
+    },
+    {
+      "commands": [
+        [
+          "gdal_translate",
+          "-q",
+          "-of",
+          "VRT",
+          "-a_nodata",
+          "none",
+          "${RUN_ROOT}/work/levels/5.tif",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/level-5.vrt"
+        ],
+        [
+          "gdal_retile.py",
+          "-q",
+          "-resume",
+          "-of",
+          "PNG",
+          "-ot",
+          "Byte",
+          "-ps",
+          "512",
+          "512",
+          "-overlap",
+          "0",
+          "-co",
+          "ZLEVEL=6",
+          "-useDirForEachRow",
+          "-targetDir",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/retile-5",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/level-5.vrt"
+        ]
+      ],
+      "completed_at": "2026-10-02T14:28:11Z",
+      "dimension": 16384,
+      "format_version": 1,
+      "identity_sha256": "f046c1e64bf76dc9ace09d2ac1af94480b16a6055d9205c6f288947c6e6ab3cb",
+      "level_raster_sha256": "27da1212b02852c81114cc022737a6b2f555623b51a80e3529af041c63a22b6b",
+      "manifest_path": "manifests/tiles-z5.sha256",
+      "manifest_sha256": "e0b24cdf794ff5ec2902216ba806b0c956ae7690644c0aa5346d6b8a57163b8a",
+      "stage": "emit-tiles-z5",
+      "status": "complete",
+      "tile_bytes": 147182201,
+      "tile_count": 1024,
+      "zoom": 5
+    },
+    {
+      "commands": [
+        [
+          "gdal_translate",
+          "-q",
+          "-of",
+          "VRT",
+          "-a_nodata",
+          "none",
+          "${RUN_ROOT}/work/levels/6.tif",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/level-6.vrt"
+        ],
+        [
+          "gdal_retile.py",
+          "-q",
+          "-resume",
+          "-of",
+          "PNG",
+          "-ot",
+          "Byte",
+          "-ps",
+          "512",
+          "512",
+          "-overlap",
+          "0",
+          "-co",
+          "ZLEVEL=6",
+          "-useDirForEachRow",
+          "-targetDir",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/retile-6",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/level-6.vrt"
+        ]
+      ],
+      "completed_at": "2026-10-02T14:29:45Z",
+      "dimension": 32768,
+      "format_version": 1,
+      "identity_sha256": "8520e71e3e772628b58eb7249783f03582166a282c51e6ae7743a7d436efdfb4",
+      "level_raster_sha256": "e183d815de43880209d4c5b3d48e1db1336f7c0d68b03a4b8370cc52342d6e94",
+      "manifest_path": "manifests/tiles-z6.sha256",
+      "manifest_sha256": "9fda7f4f41cb15b722a430e33a8579c5a2a7e58d3f44636669d9db8d2865a702",
+      "stage": "emit-tiles-z6",
+      "status": "complete",
+      "tile_bytes": 524040407,
+      "tile_count": 4096,
+      "zoom": 6
+    },
+    {
+      "commands": [
+        [
+          "gdal_translate",
+          "-q",
+          "-of",
+          "VRT",
+          "-a_nodata",
+          "none",
+          "${RUN_ROOT}/work/levels/7.tif",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/level-7.vrt"
+        ],
+        [
+          "gdal_retile.py",
+          "-q",
+          "-resume",
+          "-of",
+          "PNG",
+          "-ot",
+          "Byte",
+          "-ps",
+          "512",
+          "512",
+          "-overlap",
+          "0",
+          "-co",
+          "ZLEVEL=6",
+          "-useDirForEachRow",
+          "-targetDir",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/retile-7",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/level-7.vrt"
+        ]
+      ],
+      "completed_at": "2026-10-02T14:38:56Z",
+      "dimension": 65536,
+      "format_version": 1,
+      "identity_sha256": "a412ef3e1112cf583ff90b86f51457d9d19afa54e9413267b4df884021889545",
+      "level_raster_sha256": "796e84ccea0aec336f50ac435815d44136224bfc54cd7db2e9e43c611e4d04d3",
+      "manifest_path": "manifests/tiles-z7.sha256",
+      "manifest_sha256": "b7566d05b9e47c6a5af7109e1814d7a998bbc55011e36f42ea141d07d5f41426",
+      "stage": "emit-tiles-z7",
+      "status": "complete",
+      "tile_bytes": 1788161094,
+      "tile_count": 16384,
+      "zoom": 7
+    },
+    {
+      "commands": [
+        [
+          "gdal_translate",
+          "-q",
+          "-of",
+          "VRT",
+          "-a_nodata",
+          "none",
+          "${RUN_ROOT}/work/levels/8.tif",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/level-8.vrt"
+        ],
+        [
+          "gdal_retile.py",
+          "-q",
+          "-resume",
+          "-of",
+          "PNG",
+          "-ot",
+          "Byte",
+          "-ps",
+          "512",
+          "512",
+          "-overlap",
+          "0",
+          "-co",
+          "ZLEVEL=6",
+          "-useDirForEachRow",
+          "-targetDir",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/retile-8",
+          "${RUN_ROOT}/.output.emit-tiles-2e04ab3c7d0cdb5e.tmp/.work/level-8.vrt"
+        ]
+      ],
+      "completed_at": "2026-10-02T15:20:22Z",
+      "dimension": 131072,
+      "format_version": 1,
+      "identity_sha256": "4fe94e68a0923afd55b119bb05e26cd2cd9d2234e4709ae7e1b22585ad7929cc",
+      "level_raster_sha256": "aa7f6d78a5d5e6c9454889558a9f55aa47c30a9616b48f7132a1eae4a98bc1a1",
+      "manifest_path": "manifests/tiles-z8.sha256",
+      "manifest_sha256": "4ce1e8c93255950be856569e41b5489ee8aa80a444946c5aa3adac9b25ed019d",
+      "stage": "emit-tiles-z8",
+      "status": "complete",
+      "tile_bytes": 5646736295,
+      "tile_count": 65536,
+      "zoom": 8
+    }
+  ],
+  "output": {
+    "manifest_set_sha256": "e591f87a0e2655dfc23a623bdabeb64a7f07bf79e6b6a09c86b6fdc37a10a928",
+    "product_identity_sha256": "63733f3a6aa9bb6ebd437a5e6132474ac7949fdccfc5daddc2e5234b1db01393",
+    "product_json_sha256": "949c8fa57b2a31c7f1eeb52a70be4b91d6facce98216c4997c229d0373c7afc5",
+    "root": "${RUN_ROOT}/output",
+    "tile_bytes": 8160721984,
+    "tile_count": 87381
+  },
+  "stage": "emit-tiles",
+  "started_at": "2026-10-02T14:27:47Z",
+  "status": "complete"
+}

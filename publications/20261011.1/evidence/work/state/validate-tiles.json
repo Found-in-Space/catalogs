@@ -1,0 +1,392 @@
+{
+  "completed_at": "2026-10-02T15:44:41Z",
+  "elapsed_seconds": 1333.3181562879981,
+  "format_version": 1,
+  "identity": {
+    "levels": [
+      {
+        "sha256": "d21ab405f0c1cf6f4cd28c8447f40b8d4ff6d53f957a610b55874b10f9cc0076",
+        "zoom": 0
+      },
+      {
+        "sha256": "632ec18eb518ffb9c7576c9b497a8871bd2ca35d6904db32b0360ee5de544f08",
+        "zoom": 1
+      },
+      {
+        "sha256": "3c65febf0716bab17ba11071d64d0af0e438cf062e8a4efe43f927aad60ac0e0",
+        "zoom": 2
+      },
+      {
+        "sha256": "54a39630b2e24d917e1758f76b735aae80fa6c9d790ba54d56d9de0df1f6ab49",
+        "zoom": 3
+      },
+      {
+        "sha256": "52d46df6ff4cf9b84e5a129b3177e8a253f672981e243b0ef7c3d46e0d3cdd5a",
+        "zoom": 4
+      },
+      {
+        "sha256": "27da1212b02852c81114cc022737a6b2f555623b51a80e3529af041c63a22b6b",
+        "zoom": 5
+      },
+      {
+        "sha256": "e183d815de43880209d4c5b3d48e1db1336f7c0d68b03a4b8370cc52342d6e94",
+        "zoom": 6
+      },
+      {
+        "sha256": "796e84ccea0aec336f50ac435815d44136224bfc54cd7db2e9e43c611e4d04d3",
+        "zoom": 7
+      },
+      {
+        "sha256": "aa7f6d78a5d5e6c9454889558a9f55aa47c30a9616b48f7132a1eae4a98bc1a1",
+        "zoom": 8
+      }
+    ],
+    "producer": {
+      "code_tree_sha256": "b195490f9609eee304c8f6644c85115c74f6f9b770915ad9b94039ec32b3c1ee",
+      "git_dirty": false,
+      "git_sha": "deca93d4872bbbb3c75ccfa4083c9e865f331d86",
+      "package_version": "0.1.0"
+    },
+    "product_json_sha256": "949c8fa57b2a31c7f1eeb52a70be4b91d6facce98216c4997c229d0373c7afc5",
+    "project": {
+      "composite": {
+        "missing_pixel": 0,
+        "policy": "priority"
+      },
+      "format_version": 1,
+      "product": {
+        "bounds": [
+          -180.0,
+          -90.0,
+          180.0,
+          90.0
+        ],
+        "channels": "grayscale",
+        "format": "png",
+        "kind": "display-texture",
+        "maximum_zoom": 8,
+        "opaque": true,
+        "path_template": "imagery/{z}/{x}/{y}.png",
+        "pixel_type": "uint8",
+        "pyramid_resampling": "average",
+        "reprojection_resampling": "bilinear",
+        "tile_size": 512
+      },
+      "product_id": "moon-lroc-wac-global-morphology-100m-v1",
+      "sources": [
+        {
+          "acquisition": {
+            "citation": "LROC Team; Arizona State University; USGS Astrogeology Science Center.",
+            "expected": {
+              "band_count": 1,
+              "data_type": "Byte",
+              "geo_transform": [
+                -5458203.0763469,
+                100.0,
+                0.0,
+                2729101.53817345,
+                0.0,
+                -100.0
+              ],
+              "height": 54582,
+              "mask_flags": [
+                "ALL_VALID"
+              ],
+              "nodata": 0.0,
+              "offset": -0.003952569169961,
+              "scale": 1.00395256917,
+              "sha256": "87159ead1888ae31bb647e957ec60943022b707ec804cb5353a304575936fd55",
+              "size_bytes": 5959263751,
+              "width": 109164
+            },
+            "filename": "Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif",
+            "format_version": 1,
+            "landing_page": "https://astrogeology.usgs.gov/search/map/moon_lro_lroc_wac_global_morphology_mosaic_100m",
+            "reported": {
+              "approximate_size": "5.5 GB",
+              "band_count": 1,
+              "data_type": "Byte",
+              "height": 54582,
+              "projection": "Simple Cylindrical; planetocentric latitude; positive-east longitude",
+              "width": 109164
+            },
+            "source_crs": "../../../../resources/crs/moon-simple-cylindrical-1737400.wkt",
+            "source_id": "lroc-wac-global-morphology-100m-june-2013",
+            "status": "admitted",
+            "title": "Moon LRO LROC WAC Global Morphology Mosaic 100m",
+            "url": "https://planetarymaps.usgs.gov/mosaic/Lunar_LRO_LROC-WAC_Mosaic_global_100m_June2013.tif"
+          },
+          "id": "lroc-wac-global-morphology-100m-june-2013",
+          "priority": 100
+        }
+      ],
+      "target": {
+        "crs": "../../../resources/crs/moon-geographic-1737400.wkt",
+        "id": "moon",
+        "latitude_range": [
+          -90.0,
+          90.0
+        ],
+        "longitude_range": [
+          -180.0,
+          180.0
+        ]
+      }
+    },
+    "tools": {
+      "gdal": "GDAL 3.4.1, released 2021/12/27",
+      "proj": "Rel. 8.2.1, January 1st, 2022"
+    }
+  },
+  "identity_sha256": "d177b03c6562302755db7f788e08156bed6f8968bce068182ebcfc114272afbe",
+  "levels": [
+    {
+      "all_tiles_opaque_grayscale": true,
+      "antimeridian_wrap_rows_covered": 1,
+      "dimension": 512,
+      "exact_streaming_reconstruction": true,
+      "horizontal_adjacencies_covered": 0,
+      "manifest_sha256": "bd4aa5b36c25c23540a9edc72c3b60561e6945beed3bccb779d2a42f933a9f78",
+      "north_pole_tiles_covered": 1,
+      "pixel_sha256": "484032c11d679f79f6aa27e5ab2ce59eef1489f4c86779b39e5b44ba103e8a75",
+      "source_export_command": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${RUN_ROOT}/work/levels/0.tif",
+        "${RUN_ROOT}/work/tmp/validate-z0-1d1a445e10d54007a59b44209f5d2200.pgm"
+      ],
+      "south_pole_tiles_covered": 1,
+      "tile_bytes": 179971,
+      "tile_count": 1,
+      "vertical_adjacencies_covered": 0,
+      "zoom": 0
+    },
+    {
+      "all_tiles_opaque_grayscale": true,
+      "antimeridian_wrap_rows_covered": 2,
+      "dimension": 1024,
+      "exact_streaming_reconstruction": true,
+      "horizontal_adjacencies_covered": 2,
+      "manifest_sha256": "a7d6b70a436d6a55b270a350d7fc2763e0941079e48f965f48686693bc009f31",
+      "north_pole_tiles_covered": 2,
+      "pixel_sha256": "2bb7ccb0e78912d640d72ae3e58f8519b08f9504a1598c5d90136f49950b50a0",
+      "source_export_command": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${RUN_ROOT}/work/levels/1.tif",
+        "${RUN_ROOT}/work/tmp/validate-z1-1e2ba58fd1364dd8b455e49d521ba6b2.pgm"
+      ],
+      "south_pole_tiles_covered": 2,
+      "tile_bytes": 718859,
+      "tile_count": 4,
+      "vertical_adjacencies_covered": 2,
+      "zoom": 1
+    },
+    {
+      "all_tiles_opaque_grayscale": true,
+      "antimeridian_wrap_rows_covered": 4,
+      "dimension": 2048,
+      "exact_streaming_reconstruction": true,
+      "horizontal_adjacencies_covered": 12,
+      "manifest_sha256": "a63bd65d23828c7ae2c4e558fdc251a3def5a5ab17f5df066c518cd43e46b4b0",
+      "north_pole_tiles_covered": 4,
+      "pixel_sha256": "43f560bf7607707bc02f623ce7ee696a0668e531f756148adac18d5c4a3e1fc4",
+      "source_export_command": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${RUN_ROOT}/work/levels/2.tif",
+        "${RUN_ROOT}/work/tmp/validate-z2-1878d396ebb54078912f6a73ca9d4ad7.pgm"
+      ],
+      "south_pole_tiles_covered": 4,
+      "tile_bytes": 2792544,
+      "tile_count": 16,
+      "vertical_adjacencies_covered": 12,
+      "zoom": 2
+    },
+    {
+      "all_tiles_opaque_grayscale": true,
+      "antimeridian_wrap_rows_covered": 8,
+      "dimension": 4096,
+      "exact_streaming_reconstruction": true,
+      "horizontal_adjacencies_covered": 56,
+      "manifest_sha256": "52cca17dcd3cba07892d648ad8328bc39b50292c1d9608a0f1c84756bf96045b",
+      "north_pole_tiles_covered": 8,
+      "pixel_sha256": "9e82b29e4acd3014d331e64fae69a3ce1e5162d05663c050044b0ae851265848",
+      "source_export_command": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${RUN_ROOT}/work/levels/3.tif",
+        "${RUN_ROOT}/work/tmp/validate-z3-6d021c9b8345426282badb0db88b8554.pgm"
+      ],
+      "south_pole_tiles_covered": 8,
+      "tile_bytes": 10711536,
+      "tile_count": 64,
+      "vertical_adjacencies_covered": 56,
+      "zoom": 3
+    },
+    {
+      "all_tiles_opaque_grayscale": true,
+      "antimeridian_wrap_rows_covered": 16,
+      "dimension": 8192,
+      "exact_streaming_reconstruction": true,
+      "horizontal_adjacencies_covered": 240,
+      "manifest_sha256": "3acae00be7a541f66b95dcfc929e9690cceecff0baf1d735f8a2730759529b48",
+      "north_pole_tiles_covered": 16,
+      "pixel_sha256": "2b0cde23a46c6e37faff4bb7c87e1872e1ae1ab9a190ea969e3c94855afd5ff2",
+      "source_export_command": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${RUN_ROOT}/work/levels/4.tif",
+        "${RUN_ROOT}/work/tmp/validate-z4-42710efdceeb4175a0f2c48c282ddd8f.pgm"
+      ],
+      "south_pole_tiles_covered": 16,
+      "tile_bytes": 40199077,
+      "tile_count": 256,
+      "vertical_adjacencies_covered": 240,
+      "zoom": 4
+    },
+    {
+      "all_tiles_opaque_grayscale": true,
+      "antimeridian_wrap_rows_covered": 32,
+      "dimension": 16384,
+      "exact_streaming_reconstruction": true,
+      "horizontal_adjacencies_covered": 992,
+      "manifest_sha256": "e0b24cdf794ff5ec2902216ba806b0c956ae7690644c0aa5346d6b8a57163b8a",
+      "north_pole_tiles_covered": 32,
+      "pixel_sha256": "3596a0b581b81fdb0161af42d57048f90d1a94f8ed4fb8bceeb9f924e7811779",
+      "source_export_command": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${RUN_ROOT}/work/levels/5.tif",
+        "${RUN_ROOT}/work/tmp/validate-z5-9c37b1282a984dd584e89ded0ba834cc.pgm"
+      ],
+      "south_pole_tiles_covered": 32,
+      "tile_bytes": 147182201,
+      "tile_count": 1024,
+      "vertical_adjacencies_covered": 992,
+      "zoom": 5
+    },
+    {
+      "all_tiles_opaque_grayscale": true,
+      "antimeridian_wrap_rows_covered": 64,
+      "dimension": 32768,
+      "exact_streaming_reconstruction": true,
+      "horizontal_adjacencies_covered": 4032,
+      "manifest_sha256": "9fda7f4f41cb15b722a430e33a8579c5a2a7e58d3f44636669d9db8d2865a702",
+      "north_pole_tiles_covered": 64,
+      "pixel_sha256": "f761f04938e0ad9813c661521001b68e9ff650331c10a465dbbf86199162d636",
+      "source_export_command": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${RUN_ROOT}/work/levels/6.tif",
+        "${RUN_ROOT}/work/tmp/validate-z6-6bff6ef5b2854e27849f075966c0dc63.pgm"
+      ],
+      "south_pole_tiles_covered": 64,
+      "tile_bytes": 524040407,
+      "tile_count": 4096,
+      "vertical_adjacencies_covered": 4032,
+      "zoom": 6
+    },
+    {
+      "all_tiles_opaque_grayscale": true,
+      "antimeridian_wrap_rows_covered": 128,
+      "dimension": 65536,
+      "exact_streaming_reconstruction": true,
+      "horizontal_adjacencies_covered": 16256,
+      "manifest_sha256": "b7566d05b9e47c6a5af7109e1814d7a998bbc55011e36f42ea141d07d5f41426",
+      "north_pole_tiles_covered": 128,
+      "pixel_sha256": "0309132614ef23330eb16f4d8febe1918532ec648a6a1fdd726af9c18a9bb641",
+      "source_export_command": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${RUN_ROOT}/work/levels/7.tif",
+        "${RUN_ROOT}/work/tmp/validate-z7-1518e3ab612f4cd7b41bab73b8f1f76b.pgm"
+      ],
+      "south_pole_tiles_covered": 128,
+      "tile_bytes": 1788161094,
+      "tile_count": 16384,
+      "vertical_adjacencies_covered": 16256,
+      "zoom": 7
+    },
+    {
+      "all_tiles_opaque_grayscale": true,
+      "antimeridian_wrap_rows_covered": 256,
+      "dimension": 131072,
+      "exact_streaming_reconstruction": true,
+      "horizontal_adjacencies_covered": 65280,
+      "manifest_sha256": "4ce1e8c93255950be856569e41b5489ee8aa80a444946c5aa3adac9b25ed019d",
+      "north_pole_tiles_covered": 256,
+      "pixel_sha256": "becf7bb8f3485cd88be52da3869d3d68532f6f4e9acf4e0a6aef6d114dd22b9f",
+      "source_export_command": [
+        "gdal_translate",
+        "-q",
+        "-of",
+        "PNM",
+        "-ot",
+        "Byte",
+        "-a_nodata",
+        "none",
+        "${RUN_ROOT}/work/levels/8.tif",
+        "${RUN_ROOT}/work/tmp/validate-z8-5f78580d7d434d56aacaf9ed9c9b68da.pgm"
+      ],
+      "south_pole_tiles_covered": 256,
+      "tile_bytes": 5646736295,
+      "tile_count": 65536,
+      "vertical_adjacencies_covered": 65280,
+      "zoom": 8
+    }
+  ],
+  "report": "${RUN_ROOT}/evidence/tiles.validation.json",
+  "report_sha256": "e16245d44c374b9d341ebe478c56d549116dc2971cef5bcb6a246fdc27bb50b1",
+  "stage": "validate-tiles",
+  "started_at": "2026-10-02T15:22:27Z",
+  "status": "complete"
+}

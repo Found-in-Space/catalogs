@@ -1,0 +1,25 @@
+{
+  "completed": {
+    "admitted_source_rehashed": true,
+    "every_tile_rehashed": true,
+    "immutable_hosting": true,
+    "portable_evidence_exported": true,
+    "producer_pixel_validation_recorded": true,
+    "public_producer_commits": true,
+    "recorded_process_and_locked_python_dependencies": true,
+    "recorded_producer_trees_authenticated": true,
+    "representative_checks_recorded": true,
+    "upstream_reuse_terms": true
+  },
+  "format_version": 1,
+  "limitations": {
+    "full_independent_rebuild": "not performed; not a publication requirement for these display textures",
+    "historical_python_patch": "not recorded; verification interpreter is recorded separately"
+  },
+  "pending": {
+    "consumer_acceptance": "Record viewer acceptance at poles, antimeridian, tile joins, and zoom transitions.",
+    "zenodo_deposit": "Reserve the initial Version DOI, confirm metadata and actual publication date, and assemble the final deposit from a clean public catalogs commit."
+  },
+  "publication_ready": false,
+  "reproducibility_standard": "recorded-process-and-representative-display-checks; byte-identical-regeneration-not-required"
+}
